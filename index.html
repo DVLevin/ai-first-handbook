@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building an AI-first Company · Dima Levin</title>
+<meta name="description" content="A field handbook on how to turn a team into a compounding knowledge organism. By Dima Levin, CAIO at Cone Red AI.">
+<meta property="og:title" content="Building an AI-first Company">
+<meta property="og:description" content="Not by adding AI — by re-architecting around it. A field handbook by Dima Levin, CAIO at Cone Red AI.">
+<meta property="og:type" content="article">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --conered: #FF4D4D;
+    --coneblack: #0A0A0A;
+    --conegrey: #141414;
+    --conepanel: #1A1A1A;
+    --conetext: #E8E8E5;
+    --conemuted: #9CA3AF;
+    --conesoft: #71757A;
+    --coneborder: rgba(255,255,255,0.08);
+    --conegold: #D4A574;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(ellipse at top right, rgba(255,77,77,0.08), transparent 60%), var(--coneblack);
+    color: var(--conetext);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6vh 6vw 10vh;
+  }
+
+  /* Header strip */
+  .top {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--conered);
+  }
+  .top .bar { height: 1px; width: 48px; background: var(--conered); }
+  .top .meta { color: var(--conesoft); margin-left: auto; }
+
+  /* Hero */
+  h1 {
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    margin: 0 0 1.5rem;
+    color: #fff;
+  }
+  h1 .accent { color: var(--conered); }
+
+  .subtitle {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.4;
+    color: var(--conetext);
+    max-width: 680px;
+    margin: 0 0 3rem;
+  }
+  .subtitle .muted { color: var(--conemuted); }
+
+  /* Cards */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+    margin: 3rem 0 4rem;
+  }
+  .card {
+    display: block;
+    background: var(--conegrey);
+    border: 1px solid var(--coneborder);
+    border-radius: 14px;
+    padding: 2rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::after {
+    content: "→";
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--conesoft);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .card:hover {
+    border-color: var(--conered);
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, rgba(255,77,77,0.06) 0%, var(--conegrey) 60%);
+  }
+  .card:hover::after { color: var(--conered); transform: translateX(4px); }
+  .card .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--conered);
+    margin-bottom: 1rem;
+  }
+  .card h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .card p {
+    color: var(--conemuted);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.55;
+    max-width: 90%;
+  }
+  .card .meta {
+    margin-top: 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--conesoft);
+    letter-spacing: 0.05em;
+  }
+
+  /* Why-section */
+  .why {
+    margin: 5rem 0 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--coneborder);
+  }
+  .why h3 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 700;
+    margin: 0 0 2rem;
+    color: #fff;
+    letter-spacing: -0.015em;
+  }
+  .why h3 .accent { color: var(--conered); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .why-item {
+    padding: 1.25rem;
+    border-left: 2px solid var(--conered);
+    background: rgba(255,255,255,0.015);
+  }
+  .why-item strong { color: #fff; display: block; margin-bottom: 0.35rem; font-size: 0.95rem; }
+  .why-item span { color: var(--conemuted); font-size: 0.88rem; line-height: 1.5; }
+
+  /* Author */
+  .author {
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--coneborder);
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .author .strip { width: 3px; align-self: stretch; background: var(--conered); border-radius: 2px; }
+  .author .body { flex: 1; min-width: 280px; }
+  .author .name { font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0 0 0.25rem; }
+  .author .role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--conered);
+    margin-bottom: 1rem;
+  }
+  .author p { color: var(--conemuted); font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.75rem; max-width: 60ch; }
+  .author a { color: var(--conegold); text-decoration: none; border-bottom: 1px solid rgba(212,165,116,0.3); }
+  .author a:hover { border-bottom-color: var(--conegold); }
+
+  /* Footer */
+  footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--coneborder);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--conesoft);
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  footer a { color: var(--conemuted); text-decoration: none; }
+  footer a:hover { color: var(--conered); }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 5vh 6vw 8vh; }
+    .top { margin-bottom: 2.5rem; }
+    .top .meta { display: none; }
+    .card { padding: 1.5rem; }
+    .card::after { right: 1.25rem; bottom: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <span class="bar"></span>
+    <span>A Field Handbook · v1 · 2026</span>
+    <span class="meta">Cone Red AI</span>
+  </div>
+
+  <h1>Building an<br><span class="accent">AI-first</span> company.</h1>
+
+  <p class="subtitle">
+    Not by <span class="muted">adding</span> AI — by <span style="color:var(--conered)">re-architecting</span> around it.
+    A practical handbook on turning a team into a compounding knowledge organism.
+  </p>
+
+  <div class="cards">
+    <a class="card" href="handbook.html">
+      <div class="tag">The long-read</div>
+      <h2>The Handbook</h2>
+      <p>End-to-end essay. The thesis, the four shifts, the architecture, the AI-PM pipeline, the first 90 days, failure modes.</p>
+      <div class="meta">~30 min read · single page · printable</div>
+    </a>
+    <a class="card" href="deck.html">
+      <div class="tag">The deck</div>
+      <h2>The Slide Deck</h2>
+      <p>37 slides for live talks, founder offsites, board calls, all-hands. Same content, presentation-ready. Press <code>F</code> for fullscreen.</p>
+      <div class="meta">~25 min talk · keyboard nav · mobile-friendly</div>
+    </a>
+  </div>
+
+  <section class="why">
+    <h3>Why every company <span class="accent">should adopt this</span>.</h3>
+    <div class="why-grid">
+      <div class="why-item">
+        <strong>Speed compounds, not stalls.</strong>
+        <span>A 90-min meeting becomes 5–10 tickets in 20 minutes, not 3 hours. The bottleneck moves from typing to thinking.</span>
+      </div>
+      <div class="why-item">
+        <strong>Knowledge stays when people leave.</strong>
+        <span>The vault is the institutional memory. When the hero leaves, intelligence stays. Bus factor &gt; 1, by design.</span>
+      </div>
+      <div class="why-item">
+        <strong>You stop paying the SaaS tax.</strong>
+        <span>One git repo. No vendor lock-in. SaaS apps become render layers, not sources of truth.</span>
+      </div>
+      <div class="why-item">
+        <strong>Every project gets smarter.</strong>
+        <span>Cross-project memory means month 3's project starts where month 1's ended. Skip a week of discovery, every time.</span>
+      </div>
+      <div class="why-item">
+        <strong>AI actually pays back.</strong>
+        <span>Most "AI rollouts" are tools bolted onto SaaS. AI-first re-architects so AI is the substrate — that's where the compounding wins live.</span>
+      </div>
+      <div class="why-item">
+        <strong>Cheap to install. Expensive to skip.</strong>
+        <span>Five commands, ~90 minutes, one co-work session. Companies that delay this don't catch up — they fall further behind, monthly.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="author">
+    <div class="strip"></div>
+    <div class="body">
+      <p class="name">Dima Levin</p>
+      <p class="role">CAIO · Cone Red AI</p>
+      <p>Co-founder and Chief AI Officer at <a href="https://cone.red" target="_blank" rel="noopener">Cone Red AI</a>. Has architected 50+ production AI systems for Fortune 500 companies, delivering $100M+ in measurable savings. This handbook distills what works — and what kills AI rollouts — across hundreds of engagements.</p>
+      <p>If your team is "adding AI" but not seeing compounding returns, this is the playbook to fix that. Reach out: <a href="mailto:dima@cone.red">dima@cone.red</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Dima Levin · Cone Red AI</span>
+    <span><a href="https://github.com/DVLevin/ai-first-handbook">GitHub →</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

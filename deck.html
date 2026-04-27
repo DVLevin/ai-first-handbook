@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-First Company · Deck · Dima Levin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          conered: '#FF4D4D',
+          coneblack: '#0A0A0A',
+          conegrey: '#141414',
+          conepanel: '#1A1A1A',
+          conetext: '#E8E8E5',
+          conemuted: '#9CA3AF',
+          conesoft: '#71757A',
+          coneborder: 'rgba(255,255,255,0.08)',
+          conegold: '#D4A574'
+        },
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html, body { height: 100%; margin: 0; padding: 0; background: #0A0A0A; color: #E8E8E5; font-family: 'Inter', sans-serif; overflow: hidden; }
+  body.fullscreen { cursor: none; }
+  body.fullscreen.show-cursor { cursor: default; }
+
+  .deck { position: relative; width: 100vw; height: 100vh; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; align-items: safe center; justify-content: safe center;
+    padding: 5vh 8vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+    transform: translateY(16px) scale(0.985);
+    filter: blur(4px);
+  }
+  .slide.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); filter: blur(0); }
+  .slide-content { width: 100%; max-width: 1200px; }
+  /* Hide scrollbar but keep scrollability */
+  .slide::-webkit-scrollbar { width: 0; height: 0; }
+  .slide { scrollbar-width: none; }
+
+  /* Slide types */
+  .slide-cover { background: radial-gradient(ellipse at top right, rgba(255,77,77,0.08), transparent 60%), #0A0A0A; }
+  .slide-divider { background: #0A0A0A; }
+  .slide-divider-red { background: linear-gradient(135deg, #FF4D4D 0%, #cc3a3a 100%); color: white; }
+  .slide-statement { background: #0A0A0A; }
+  .slide-end { background: radial-gradient(ellipse at center, rgba(255,77,77,0.12), transparent 60%), #0A0A0A; }
+
+  /* Typography scale */
+  .display-1 { font-size: clamp(3rem, 8vw, 7rem); line-height: 1.02; font-weight: 800; letter-spacing: -0.03em; color: #fff; }
+  .display-2 { font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.025em; color: #fff; }
+  .display-3 { font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; color: #fff; }
+  .display-4 { font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.25; font-weight: 600; color: #fff; }
+  .lead { font-size: clamp(1.1rem, 1.6vw, 1.5rem); line-height: 1.5; color: #9CA3AF; max-width: 56ch; }
+  .lead-large { font-size: clamp(1.4rem, 2vw, 1.8rem); line-height: 1.45; color: #E8E8E5; max-width: 56ch; }
+  .small-caps { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.78em; font-weight: 600; }
+
+  /* Color accents */
+  .accent { color: #FF4D4D; }
+  .gold { color: #D4A574; }
+  .muted { color: #9CA3AF; }
+  .soft { color: #71757A; }
+
+  /* Section divider styling */
+  .section-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.25em; color: #71757A; text-transform: uppercase; }
+
+  /* Code block */
+  code, pre { font-family: 'JetBrains Mono', monospace; }
+  pre { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 1.5rem 2rem; border-radius: 12px; font-size: clamp(0.9rem, 1.4vw, 1.1rem); line-height: 1.7; color: #E8E8E5; overflow-x: auto; }
+  .inline-code { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 0.15em 0.5em; border-radius: 4px; font-size: 0.78em; color: #D4A574; }
+
+  /* Chrome (nav, counter) */
+  .chrome { position: fixed; z-index: 100; pointer-events: auto; }
+  .progress-bar { top: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.06); }
+  .progress-fill { height: 100%; background: #FF4D4D; transition: width 0.4s ease; }
+  .counter { bottom: 1.5rem; right: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #71757A; letter-spacing: 0.1em; }
+  .nav-hint { bottom: 1.5rem; left: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #71757A; letter-spacing: 0.05em; }
+  .nav-hint kbd { background: #141414; border: 1px solid rgba(255,255,255,0.1); padding: 1px 6px; border-radius: 3px; font-family: inherit; color: #9CA3AF; }
+
+  /* Click zones for tap navigation */
+  .click-zone { position: fixed; top: 0; height: 100vh; width: 25vw; z-index: 50; cursor: pointer; }
+  .click-zone-prev { left: 0; }
+  .click-zone-next { right: 0; }
+
+  /* Mermaid */
+  .mermaid { background: transparent !important; }
+
+  /* Pull list */
+  .big-list li { font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.4; padding: 0.5em 0; color: #fff; font-weight: 500; }
+  .big-list li::marker { color: #FF4D4D; }
+  .big-list .muted-item { color: #9CA3AF; font-weight: 400; }
+
+  /* Compact list — for dense slides like Six anti-patterns */
+  .compact-list li { font-size: clamp(0.95rem, 1.5vw, 1.15rem); line-height: 1.45; padding: 0.35em 0; color: #fff; font-weight: 500; }
+  .compact-list li::marker { color: #FF4D4D; font-weight: 700; }
+  .compact-list .muted-item { color: #9CA3AF; font-weight: 400; }
+
+  /* Pipeline cards */
+  .stage-card { background: #141414; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 2rem; }
+
+  /* Print = each slide on a new page */
+  @media print {
+    body { overflow: visible; background: white; color: black; }
+    .deck { height: auto; }
+    .slide { position: relative; opacity: 1 !important; pointer-events: auto !important; transform: none !important; page-break-after: always; min-height: 100vh; padding: 5vh 8vw; }
+    .chrome, .click-zone { display: none !important; }
+    .display-1, .display-2, .display-3, .display-4 { color: black; }
+    pre { background: #f5f5f5; border-color: #ddd; color: black; }
+    .slide-divider-red { color: white; }
+  }
+
+  /* Speaker hint stays on first slide only */
+  .first-load-hint { animation: fade-out 6s ease forwards; animation-delay: 4s; }
+  @keyframes fade-out { to { opacity: 0; visibility: hidden; } }
+
+  /* ============== MOBILE ============== */
+  @media (max-width: 768px) {
+    .slide { padding: 7vh 6vw 9vh; }
+    .display-1 { font-size: clamp(2.25rem, 9vw, 3.5rem); line-height: 1.05; }
+    .display-2 { font-size: clamp(2rem, 8vw, 3rem); line-height: 1.08; }
+    .display-3 { font-size: clamp(1.6rem, 6.5vw, 2.4rem); line-height: 1.15; }
+    .display-4 { font-size: clamp(1.25rem, 5vw, 1.6rem); line-height: 1.3; }
+    .lead { font-size: clamp(0.95rem, 3.8vw, 1.15rem); }
+    .lead-large { font-size: clamp(1.05rem, 4.2vw, 1.3rem); }
+    .big-list li { font-size: clamp(1.1rem, 4.2vw, 1.4rem); padding: 0.4em 0; }
+    .compact-list li { font-size: clamp(0.9rem, 3.6vw, 1.05rem); padding: 0.3em 0; }
+    pre { padding: 1rem 1.25rem; font-size: 0.8rem; }
+    .stage-card { padding: 1.25rem; }
+    .counter { right: 1rem; bottom: 1rem; font-size: 0.7rem; }
+    .nav-hint { display: none; }
+    .click-zone { width: 30vw; }
+  }
+
+  /* Very small screens */
+  @media (max-width: 420px) {
+    .slide { padding: 6vh 5vw 8vh; }
+    .compact-list li { font-size: 0.92rem; }
+  }
+</style>
+</head>
+<body class="font-sans">
+
+<!-- ====================== CHROME ====================== -->
+<div class="chrome progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+<div class="chrome counter"><span id="current">01</span> <span class="soft">/</span> <span id="total">37</span></div>
+<div class="chrome nav-hint first-load-hint"><kbd>→</kbd> next · <kbd>←</kbd> prev · <kbd>F</kbd> fullscreen · <kbd>?</kbd> overview</div>
+<div class="click-zone click-zone-prev" id="prev-zone"></div>
+<div class="click-zone click-zone-next" id="next-zone"></div>
+
+<!-- ====================== DECK ====================== -->
+<div class="deck">
+
+<!-- ============== SLIDE 01 — COVER ============== -->
+<section class="slide slide-cover active">
+  <div class="slide-content">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="h-px w-12 bg-conered"></div>
+      <div class="small-caps accent">A Field Handbook · v1 · 2026</div>
+    </div>
+    <h1 class="display-1">Building an<br><span class="accent">AI-first</span> company.</h1>
+    <p class="lead-large mt-12 max-w-3xl" style="font-family: 'Source Serif 4', serif;">
+      How to turn a team into a compounding<br>knowledge organism.
+    </p>
+    <div class="flex items-end justify-between mt-20">
+      <div>
+        <div class="text-white font-semibold text-lg">Dima Levin</div>
+        <div class="muted text-sm">Co-Founder & AI Chief, Cone Red AI</div>
+      </div>
+      <div class="text-right text-xs muted font-mono">
+        <div>37 slides · ≈ 25 min</div>
+        <div class="soft mt-1">2026-04-27</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 02 — SUBTITLE ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content text-center">
+    <p class="display-3 max-w-4xl mx-auto" style="font-family: 'Source Serif 4', serif;">
+      Not by <span class="muted">adding</span> AI<br>—<br>by <span class="accent">re-architecting</span> around it.
+    </p>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 01 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">01 — Section</div>
+    <h2 class="display-2">The thesis.</h2>
+  </div>
+</section>
+
+<!-- ============== SLIDE 04 — STATEMENT ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content max-w-5xl">
+    <p class="display-3 mb-6">Most companies <span class="muted">have added</span> AI.</p>
+    <p class="display-3 mb-6">Few are <span class="accent">AI-first</span>.</p>
+    <p class="lead mt-12">The difference matters.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 05 — AI is good at 3 things ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag mb-6">Why AI-first works</div>
+    <h2 class="display-3 mb-12">AI is genuinely good at three things.</h2>
+    <ul class="big-list space-y-3 list-decimal list-inside">
+      <li><span class="accent font-semibold">Text</span> — markdown, frontmatter, plain English</li>
+      <li><span class="accent font-semibold">Conversation</span> — colleague, not search engine</li>
+      <li><span class="accent font-semibold">Memory</span> — compounds when memory is durable</li>
+    </ul>
+    <p class="lead mt-12 muted">Your operating model is probably hostile to all three.</p>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 02 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">02 — Section</div>
+    <h2 class="display-2">The four shifts.</h2>
+    <p class="lead mt-6">What changes, in plain English.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 07 — SHIFT 1 ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag mb-4 accent">Shift 1</div>
+    <p class="display-4 muted mb-6" style="font-family: 'Source Serif 4', serif;">From SaaS-as-truth...</p>
+    <h2 class="display-2 accent">...to vault-as-truth.</h2>
+    <p class="lead mt-12 max-w-3xl">One git repository owns everything that matters. Markdown for the body, YAML frontmatter for the structure, git for the history. <span class="text-white font-semibold">SaaS apps become render layers.</span></p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 08 — SHIFT 2 ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag mb-4 accent">Shift 2</div>
+    <p class="display-4 muted mb-6" style="font-family: 'Source Serif 4', serif;">From hand-authored work...</p>
+    <h2 class="display-2 accent">...to AI-drafted, human-reviewed.</h2>
+    <p class="lead mt-12 max-w-3xl">The bottleneck isn't thinking — it's transcription. Three agents (Conversa, Prody, PM-Vault) read what humans read and draft what humans then review. <span class="text-white font-semibold">Humans edit, never start blank.</span></p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 09 — SHIFT 3 ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag mb-4 accent">Shift 3</div>
+    <p class="display-4 muted mb-6" style="font-family: 'Source Serif 4', serif;">From documents-as-files...</p>
+    <h2 class="display-2 accent">...to documents-as-graph.</h2>
+    <p class="lead mt-12 max-w-3xl">Every document is a node. <code class="inline-code">/graphify</code> walks the repo and produces a navigable map of how your company actually thinks. <span class="text-white font-semibold">Knowledge becomes inspectable.</span></p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 10 — SHIFT 4 ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag mb-4 accent">Shift 4</div>
+    <p class="display-4 muted mb-6" style="font-family: 'Source Serif 4', serif;">From individual heroics...</p>
+    <h2 class="display-2 accent">...to compounding institutional memory.</h2>
+    <p class="lead mt-12 max-w-3xl">Knowledge lives in the vault, indexed in the graph, queryable by any teammate. <span class="text-white font-semibold">When the hero leaves, intelligence stays.</span></p>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 03 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">03 — Section</div>
+    <h2 class="display-2">Architecture.</h2>
+    <p class="lead mt-6">Four layers. Each one cheap to install, expensive to skip.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 12 — Architecture diagram ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <h2 class="display-3 mb-8 text-center">The four-layer model.</h2>
+    <div class="bg-conegrey border border-coneborder rounded-2xl p-8">
+      <div class="mermaid">
+flowchart TB
+    subgraph L1 [" "]
+        V[("📁 Vault — md + git")]
+    end
+    subgraph L2 [" "]
+        S["📐 Schema — frontmatter conventions"]
+    end
+    subgraph L3 [" "]
+        A["🧭 Agents — Conny · Prody · Riot · Conversa · Council"]
+    end
+    subgraph L4 [" "]
+        G["🕸 Graph + 🧠 Memory"]
+    end
+    V --> S --> A
+    A -.-> V
+    V --> G
+    style V fill:#FF4D4D,stroke:#FF4D4D,color:#fff,stroke-width:2px
+    style S fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5,stroke-width:2px
+    style A fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5,stroke-width:2px
+    style G fill:#1A1A1A,stroke:#D4A574,color:#E8E8E5,stroke-width:2px
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 13 — Layer 1 ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag accent mb-4">Layer 1</div>
+    <h2 class="display-2 mb-8">The Vault.</h2>
+    <p class="lead-large max-w-3xl mb-6">One git repository. Every document, ticket, transcript, decision. <span class="accent">Plain markdown.</span></p>
+    <p class="lead muted">Version history. Branching. <span class="text-white font-semibold">No vendor.</span> The repo is yours.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 14 — Layer 2 ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag accent mb-4">Layer 2</div>
+    <h2 class="display-2 mb-8">The Schema.</h2>
+    <p class="lead-large max-w-3xl mb-6">Markdown without conventions is a swamp. Markdown with consistent <span class="accent">YAML frontmatter</span> is a database.</p>
+    <p class="lead muted">Pre-commit hook validates every change. <span class="text-white font-semibold">Invalid output blocks the commit.</span></p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 15 — Layer 3 ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag accent mb-4">Layer 3</div>
+    <h2 class="display-2 mb-8">The Agents.</h2>
+    <p class="lead-large max-w-3xl mb-8">Each role gets a counterpart.</p>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8 max-w-4xl">
+      <div class="stage-card"><div class="text-white font-semibold mb-1">🧭 Conny</div><div class="text-sm muted">Strategy · McKinsey-grade</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">📝 Prody</div><div class="text-sm muted">Product · estimates · roadmap</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">🎨 Riot</div><div class="text-sm muted">Design · critique · direction</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">🎤 Conversa</div><div class="text-sm muted">Transcripts · pains · decisions</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">⚖️ Council</div><div class="text-sm muted">Negotiation · 3-lens stress test</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">🤝 Preston-X</div><div class="text-sm muted">Presales · proposals · win plans</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 16 — Layer 4 ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag accent mb-4">Layer 4</div>
+    <h2 class="display-2 mb-8">The Graph + Memory.</h2>
+    <p class="lead-large max-w-3xl mb-6">After six months, you can't read all of the vault. <span class="accent">Two systems make sure that's fine.</span></p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 max-w-4xl">
+      <div class="stage-card">
+        <div class="text-white font-semibold mb-2">🕸 Knowledge Graph</div>
+        <div class="text-sm muted">Built by <code class="inline-code">/graphify</code>. Nodes, edges, communities. Reveals clusters you didn't know you had.</div>
+      </div>
+      <div class="stage-card">
+        <div class="text-white font-semibold mb-2">🧠 Cross-project Memory</div>
+        <div class="text-sm muted">At <code class="inline-code">~/.knowledge/</code>. Persistent across sessions. Bootstrap once with <code class="inline-code">/init-memory</code>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 04 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">04 — Section</div>
+    <h2 class="display-2">The init-* family.</h2>
+    <p class="lead mt-6">Five commands. ~90 minutes. Your OS is up.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 18 — Five commands ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <h2 class="display-3 mb-12">Five commands. One operating system.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl">
+      <div class="stage-card">
+        <div class="font-mono text-conered text-lg mb-2">/init-os</div>
+        <div class="muted text-sm">CLAUDE.md · BOARD · JOURNAL · DECISIONS · commands · agents · settings.</div>
+      </div>
+      <div class="stage-card">
+        <div class="font-mono text-conered text-lg mb-2">/init-knowledge</div>
+        <div class="muted text-sm">Wires this project into the cross-project knowledge hub at <code class="inline-code">~/.knowledge/</code>.</div>
+      </div>
+      <div class="stage-card">
+        <div class="font-mono text-conered text-lg mb-2">/init-memory</div>
+        <div class="muted text-sm">Durable memory layer. Survives across sessions. Knows you tomorrow.</div>
+      </div>
+      <div class="stage-card">
+        <div class="font-mono text-conered text-lg mb-2">/init-agents</div>
+        <div class="muted text-sm">Audit + install personas from the central library. Keeps Conny et al. current.</div>
+      </div>
+      <div class="stage-card md:col-span-2">
+        <div class="font-mono text-conered text-lg mb-2">/graphify</div>
+        <div class="muted text-sm">Walks the vault, produces a navigable knowledge graph. <span class="text-white">First run is a revelation.</span></div>
+      </div>
+    </div>
+    <p class="lead muted mt-10">Run in this order. Idempotent — re-runs upgrade gaps.</p>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 05 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">05 — Section</div>
+    <h2 class="display-2">The AI-PM pipeline.</h2>
+    <p class="lead mt-6">Tickets stop being typed. They start being drafted.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 20 — Pipeline diagram ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <h2 class="display-3 mb-12 text-center">Three agents. One human. One safety net.</h2>
+    <div class="bg-conegrey border border-coneborder rounded-2xl p-8">
+      <div class="mermaid">
+flowchart LR
+    T["📜 Transcript"] --> C["🎤 Conversa<br/>extract"]
+    C --> P["📝 Prody<br/>synthesize"]
+    P --> V["📁 PM-Vault<br/>generate"]
+    V --> H["🛡 Pre-commit hook<br/>validate"]
+    H --> R["👤 Human<br/>review · edit · commit"]
+    style T fill:#1A1A1A,stroke:#71757A,color:#E8E8E5
+    style C fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style P fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style V fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style H fill:#1A1A1A,stroke:#D4A574,color:#E8E8E5
+    style R fill:#FF4D4D,stroke:#FF4D4D,color:#fff
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 21 — The math ============== -->
+<section class="slide">
+  <div class="slide-content max-w-6xl">
+    <div class="section-tag mb-4">The math</div>
+    <h2 class="display-3 mb-12">A 90-min meeting<br>= 5 to 10 tickets.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="stage-card text-center py-12">
+        <div class="muted small-caps text-xs mb-4">By hand</div>
+        <div class="display-2 muted">~3 hrs</div>
+        <div class="text-base muted mt-6 max-w-xs mx-auto">Tired PM at 5pm.<br>Details lost. Quality variable.</div>
+      </div>
+      <div class="stage-card text-center py-12" style="border-color: #FF4D4D; background: linear-gradient(135deg, rgba(255,77,77,0.08) 0%, transparent 100%);">
+        <div class="accent small-caps text-xs mb-4">By pipeline</div>
+        <div class="display-2 accent">~20 min</div>
+        <div class="text-base muted mt-6 max-w-xs mx-auto">5 min agents · 15 min review.<br><span class="text-white">Every line cited.</span></div>
+      </div>
+    </div>
+    <p class="lead-large mt-12 text-center">Hand-authoring: default → <span class="accent">exception</span>.</p>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 06 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">06 — Section</div>
+    <h2 class="display-2">This week.</h2>
+    <p class="lead mt-6">The only week with friction. Get through it.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 23 — Day-by-day ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <h2 class="display-3 mb-10">Day by day.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-5xl">
+      <div class="stage-card">
+        <div class="accent small-caps text-xs mb-2">Mon</div>
+        <div class="font-semibold text-white mb-2">Install Claude Code</div>
+        <div class="text-sm muted">Everyone. Tech AND non-tech. 30 min max.</div>
+      </div>
+      <div class="stage-card">
+        <div class="accent small-caps text-xs mb-2">Mon</div>
+        <div class="font-semibold text-white mb-2">Clone the repo</div>
+        <div class="text-sm muted">Three commands: clone · cd · claude.</div>
+      </div>
+      <div class="stage-card">
+        <div class="accent small-caps text-xs mb-2">Tue</div>
+        <div class="font-semibold text-white mb-2">Read CLAUDE.md</div>
+        <div class="text-sm muted">30 min. Then quiz Claude on what you read.</div>
+      </div>
+      <div class="stage-card" style="border-color: #FF4D4D;">
+        <div class="accent small-caps text-xs mb-2">Wed</div>
+        <div class="font-semibold text-white mb-2">Co-work · 90 min</div>
+        <div class="text-sm muted">I run the init-* family live. You watch + ask.</div>
+      </div>
+      <div class="stage-card">
+        <div class="accent small-caps text-xs mb-2">Thu</div>
+        <div class="font-semibold text-white mb-2">First real task</div>
+        <div class="text-sm muted">Pick something real. Do it in Claude Code.</div>
+      </div>
+      <div class="stage-card">
+        <div class="accent small-caps text-xs mb-2">Fri</div>
+        <div class="font-semibold text-white mb-2">/journal + retro</div>
+        <div class="text-sm muted">30 min. What worked. What was clunky.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 24 — Tech path ============== -->
+<section class="slide">
+  <div class="slide-content max-w-4xl">
+    <div class="section-tag accent mb-4">For engineers</div>
+    <h2 class="display-3 mb-10">The tech path.</h2>
+    <pre><code><span class="muted"># install (one time)</span>
+npm install -g @anthropic-ai/claude-code
+
+<span class="muted"># auth (one time)</span>
+claude login
+
+<span class="muted"># every day</span>
+cd company-os
+claude
+&gt; /whoami
+&gt; /journal
+&gt; /task init T-042</code></pre>
+    <p class="lead muted mt-8">Branches per work. PRs for shared files. Merge to main when reviewed.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 25 — Non-tech path ============== -->
+<section class="slide">
+  <div class="slide-content max-w-4xl">
+    <div class="section-tag accent mb-4">For everyone else</div>
+    <h2 class="display-3 mb-10">The non-tech path.</h2>
+    <p class="lead-large mb-8">You're not coding. <span class="accent">You're chatting.</span></p>
+    <pre><code>cd ~/Desktop/company-os
+claude
+
+&gt; What's the latest on Tampere?
+&gt; Summarize Tuesday's call.
+&gt; What did we decide about pricing last quarter?
+&gt; Draft an email to Mike.</code></pre>
+    <p class="lead muted mt-8"><span class="text-white">Stop searching. Start asking.</span></p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 26 — Co-work session ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content text-center">
+    <div class="section-tag accent mb-6">Wednesday</div>
+    <h2 class="display-2 mb-8">90 minutes.<br>Screens shared.</h2>
+    <p class="lead-large max-w-2xl mx-auto" style="font-family: 'Source Serif 4', serif;">
+      No homework. No prep. <span class="accent">Bring one real question</span> you'd normally ask in Slack.
+    </p>
+    <p class="lead muted mt-12">Most non-tech teammates flip the switch in this session.</p>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 07 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">07 — Section</div>
+    <h2 class="display-2">Culture.</h2>
+    <p class="lead mt-6">Trees · PRs · Merges · Journal.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 28 — Culture primitives ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <h2 class="display-3 mb-12">Four primitives. Old behaviors. New venue.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl">
+      <div class="stage-card">
+        <div class="text-conered text-2xl mb-2">🌳</div>
+        <div class="font-semibold text-white mb-2">Trees / branches</div>
+        <div class="text-sm muted">Your private thinking space. Cheap to create, cheaper to throw away.</div>
+      </div>
+      <div class="stage-card">
+        <div class="text-conered text-2xl mb-2">🔀</div>
+        <div class="font-semibold text-white mb-2">PRs / conversations</div>
+        <div class="text-sm muted">Not paperwork. Reviewers catch what you missed. 24-hour turnaround.</div>
+      </div>
+      <div class="stage-card">
+        <div class="text-conered text-2xl mb-2">✅</div>
+        <div class="font-semibold text-white mb-2">Merges / commits to the future</div>
+        <div class="text-sm muted">Your future self reads commit messages. Be intentional.</div>
+      </div>
+      <div class="stage-card">
+        <div class="text-conered text-2xl mb-2">📓</div>
+        <div class="font-semibold text-white mb-2">Journal / company diary</div>
+        <div class="text-sm muted">Telegram is now-talk. Journal is forever-talk. Don't confuse them.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SLIDE 29 — Quote ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content text-center max-w-4xl mx-auto">
+    <p class="display-3" style="font-family: 'Source Serif 4', serif; line-height: 1.3;">
+      "Tools shape behavior. Behaviors shape culture. <br>The behaviors that make AI-first work are <span class="accent">old</span>:<br>write things down, review each other's work, <span class="accent">leave a trail</span>."
+    </p>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 08 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">08 — Section</div>
+    <h2 class="display-2">The first 90 days.</h2>
+    <p class="lead mt-6">Milestones to expect.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 31 — Timeline ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <h2 class="display-3 mb-12">From friction to compounding.</h2>
+    <div class="space-y-6 relative">
+      <div class="absolute top-0 bottom-0 left-3 w-px bg-coneborder"></div>
+      <div class="relative pl-12">
+        <div class="absolute left-0 w-7 h-7 rounded-full bg-conered flex items-center justify-center text-xs font-bold text-white">1</div>
+        <div class="font-semibold text-white text-xl">Week 1 — Friction week</div>
+        <div class="text-sm muted mt-1">Install · clone · co-work. Friction highest now. Friday retro.</div>
+      </div>
+      <div class="relative pl-12">
+        <div class="absolute left-0 w-7 h-7 rounded-full bg-conegrey border border-conered flex items-center justify-center text-xs font-bold text-white">2</div>
+        <div class="font-semibold text-white text-xl">Week 2 — Habit-forming</div>
+        <div class="text-sm muted mt-1">Daily journal becomes routine. First non-tech PRs. <span class="text-white">No one opens ClickUp out of habit.</span></div>
+      </div>
+      <div class="relative pl-12">
+        <div class="absolute left-0 w-7 h-7 rounded-full bg-conegrey border border-conered flex items-center justify-center text-xs font-bold text-white">3</div>
+        <div class="font-semibold text-white text-xl">Month 1 — First /graphify</div>
+        <div class="text-sm muted mt-1">The team "sees itself." Use the graph to decide what's next.</div>
+      </div>
+      <div class="relative pl-12">
+        <div class="absolute left-0 w-7 h-7 rounded-full bg-conegrey border border-conered flex items-center justify-center text-xs font-bold text-white">4</div>
+        <div class="font-semibold text-white text-xl">Month 2 — AI-PM lights up</div>
+        <div class="text-sm muted mt-1">80% of new tickets from the pipeline. 20% hand-authored (the truly novel work).</div>
+      </div>
+      <div class="relative pl-12">
+        <div class="absolute left-0 w-7 h-7 rounded-full bg-conered flex items-center justify-center text-xs font-bold text-white">5</div>
+        <div class="font-semibold text-white text-xl accent">Month 3 — First compounding win</div>
+        <div class="text-sm muted mt-1">A new project lands. Cross-project synthesis from <code class="inline-code">~/.knowledge/</code> skips a week of discovery. <span class="text-white">Mark the date.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 09 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">09 — Section</div>
+    <h2 class="display-2">Failure modes.</h2>
+    <p class="lead mt-6">What kills this if you're not paying attention.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 33 — Failure modes ============== -->
+<section class="slide">
+  <div class="slide-content max-w-4xl">
+    <h2 class="display-3 mb-6 md:mb-8">Six anti-patterns.</h2>
+    <ol class="compact-list list-decimal list-inside">
+      <li>Treating Claude Code as a <span class="muted-item">search engine</span> — talk to it, don't query it</li>
+      <li>Letting AI <span class="muted-item">write but not reason</span> — use it for thinking, not just typing</li>
+      <li><span class="muted-item">Skipping the schema</span> — pre-commit hook on Day 1, no exceptions</li>
+      <li><span class="muted-item">One person owns the OS</span> — bus factor &gt; 1, always</li>
+      <li><span class="muted-item">Over-engineering before the team uses it</span> — ship MVP, add layers later</li>
+      <li>Letting Slack/Telegram <span class="muted-item">eat the journal</span> — move it or lose it</li>
+    </ol>
+    <p class="lead muted mt-6 md:mt-8" style="font-size: clamp(0.9rem, 1.4vw, 1.1rem);">Avoid these six and you'll succeed. Don't, and the failure will look like <em>"AI just doesn't work for our company."</em></p>
+  </div>
+</section>
+
+<!-- ============== SECTION DIVIDER 10 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">10 — Section</div>
+    <h2 class="display-2">Closing.</h2>
+  </div>
+</section>
+
+<!-- ============== SLIDE 35 — The headline ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content text-center max-w-5xl">
+    <p class="display-2 muted mb-8" style="font-family: 'Source Serif 4', serif; font-style: italic;">This is not a tool stack.</p>
+    <p class="display-1 accent" style="font-size: clamp(3.5rem, 9vw, 8rem);">It's an<br>operating&nbsp;system.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 36 — Three things ============== -->
+<section class="slide">
+  <div class="slide-content max-w-4xl">
+    <h2 class="display-3 mb-12">Three things this week.</h2>
+    <ol class="big-list space-y-6 list-decimal list-inside">
+      <li><span class="text-white"><strong>Install Claude Code today.</strong></span> Not Friday. <span class="muted">Five minutes.</span></li>
+      <li><span class="text-white"><strong>Clone the company repo. Run <code class="inline-code">claude</code>.</strong></span> <span class="muted">Ask it "what is this project?"</span></li>
+      <li><span class="text-white"><strong>Show up to the co-work Wednesday.</strong></span> <span class="muted">Bring one real question.</span></li>
+    </ol>
+    <p class="lead-large mt-12 max-w-3xl">Do those three. The rest is downhill.</p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 37 — Sign-off ============== -->
+<section class="slide slide-end">
+  <div class="slide-content text-center max-w-4xl">
+    <p class="display-1 mb-16" style="font-family: 'Source Serif 4', serif; font-style: italic; font-size: clamp(3rem, 7vw, 6rem);">
+      I'll see you<br>in the repo.
+    </p>
+    <div class="inline-flex items-center gap-4 mt-8">
+      <div class="h-px w-12 bg-conered"></div>
+      <div class="text-left">
+        <div class="text-conered font-semibold text-xl">Dima Levin</div>
+        <div class="muted text-xs mt-1 small-caps">Co-Founder & AI Chief, Cone Red AI</div>
+        <div class="soft text-xs mt-1 font-mono">dima@cone.red · 2026-04-27</div>
+      </div>
+      <div class="h-px w-12 bg-conered"></div>
+    </div>
+    <div class="muted text-xs mt-16 font-mono">Press <kbd style="background:#141414;border:1px solid rgba(255,255,255,0.1);padding:2px 8px;border-radius:3px;color:#9CA3AF;">Home</kbd> to start over · <kbd style="background:#141414;border:1px solid rgba(255,255,255,0.1);padding:2px 8px;border-radius:3px;color:#9CA3AF;">?</kbd> for overview</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  document.getElementById('total').textContent = String(total).padStart(2, '0');
+
+  function show(i) {
+    if (i < 0 || i >= total) return;
+    slides[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    document.getElementById('current').textContent = String(current + 1).padStart(2, '0');
+    document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+    history.replaceState(null, '', '#s' + (current + 1));
+  }
+
+  function next() { show(Math.min(current + 1, total - 1)); }
+  function prev() { show(Math.max(current - 1, 0)); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'j') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'k') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { e.preventDefault(); show(0); }
+    else if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+    else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+    else if (e.key === '?') { showOverview(); }
+    else if (e.key === 'Escape') { closeOverview(); }
+  });
+
+  document.getElementById('prev-zone').addEventListener('click', prev);
+  document.getElementById('next-zone').addEventListener('click', next);
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+      document.body.classList.add('fullscreen');
+    } else {
+      document.exitFullscreen?.();
+      document.body.classList.remove('fullscreen');
+    }
+  }
+
+  // Cursor reveal on motion when fullscreen
+  let cursorTimer;
+  document.addEventListener('mousemove', () => {
+    if (document.body.classList.contains('fullscreen')) {
+      document.body.classList.add('show-cursor');
+      clearTimeout(cursorTimer);
+      cursorTimer = setTimeout(() => document.body.classList.remove('show-cursor'), 2000);
+    }
+  });
+
+  // Hash navigation on load
+  if (location.hash.startsWith('#s')) {
+    const i = parseInt(location.hash.slice(2)) - 1;
+    if (!isNaN(i) && i >= 0 && i < total) show(i);
+  }
+
+  // Overview mode (press '?')
+  function showOverview() {
+    let overlay = document.getElementById('overview');
+    if (overlay) { overlay.remove(); return; }
+    overlay = document.createElement('div');
+    overlay.id = 'overview';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,10,0.97);z-index:1000;overflow-y:auto;padding:4vh 4vw;';
+    overlay.innerHTML = `<div style="max-width:1400px;margin:0 auto;">
+      <h2 style="font-family:Inter;color:#fff;font-size:2rem;margin-bottom:2rem;font-weight:700;">Slide overview <span style="color:#71757A;font-size:1rem;font-weight:400;">— click to jump · Esc to close</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;"></div>
+    </div>`;
+    const grid = overlay.querySelector('div div');
+    slides.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1.25rem;cursor:pointer;transition:all 0.15s;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;';
+      const titleEl = s.querySelector('h1, h2, p.display-3, p.display-2');
+      const title = titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim().slice(0, 80) : '(slide)';
+      card.innerHTML = `<div style="font-family:JetBrains Mono;font-size:11px;color:#71757A;letter-spacing:0.15em;">${String(i+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}</div>
+                        <div style="font-family:Inter;color:#E8E8E5;font-size:0.95rem;line-height:1.35;margin-top:0.5rem;">${title}</div>`;
+      if (i === current) card.style.borderColor = '#FF4D4D';
+      card.addEventListener('mouseenter', () => card.style.borderColor = '#FF4D4D');
+      card.addEventListener('mouseleave', () => card.style.borderColor = i === current ? '#FF4D4D' : 'rgba(255,255,255,0.08)');
+      card.addEventListener('click', () => { show(i); closeOverview(); });
+      grid.appendChild(card);
+    });
+    document.body.appendChild(overlay);
+  }
+  function closeOverview() {
+    const overlay = document.getElementById('overview');
+    if (overlay) overlay.remove();
+  }
+
+  // Initial
+  if (window.mermaid) {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        background: '#141414',
+        primaryColor: '#1A1A1A',
+        primaryTextColor: '#E8E8E5',
+        primaryBorderColor: '#FF4D4D',
+        lineColor: '#FF4D4D',
+        secondaryColor: '#0A0A0A',
+        tertiaryColor: '#0A0A0A'
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
