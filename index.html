@@ -252,20 +252,46 @@
   .practice-item .depth.deep { color: var(--conered); }
   .practice-also { color: var(--conesoft); font-size: 0.85rem; line-height: 1.6; }
 
-  /* ================ Practice Lead (Author) ================ */
-  .practice-lead {
-    display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap;
+  /* ================ Practice Leadership (cards) ================ */
+  .leadership-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+  .leader-card {
+    background: var(--conegrey); border: 1px solid var(--coneborder); border-radius: 14px;
+    padding: 1.75rem;
+    display: flex; align-items: flex-start; gap: 1.25rem;
   }
-  .practice-lead .strip { width: 3px; align-self: stretch; background: var(--conered); border-radius: 2px; }
-  .practice-lead .body { flex: 1; min-width: 280px; }
-  .practice-lead .name { font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0 0 0.25rem; }
-  .practice-lead .role {
-    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--conered); margin-bottom: 1rem;
+  .leader-card .strip { width: 3px; align-self: stretch; background: var(--conered); border-radius: 2px; flex-shrink: 0; }
+  .leader-card .body { flex: 1; min-width: 0; }
+  .leader-card .name { font-size: 1.1rem; font-weight: 700; color: #fff; margin: 0 0 0.25rem; letter-spacing: -0.005em; }
+  .leader-card .role {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--conered); margin-bottom: 0.85rem;
   }
-  .practice-lead p { color: var(--conemuted); font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.75rem; max-width: 60ch; }
-  .practice-lead a { color: var(--conegold); text-decoration: none; border-bottom: 1px solid rgba(212,165,116,0.3); }
-  .practice-lead a:hover { border-bottom-color: var(--conegold); }
+  .leader-card p { color: var(--conemuted); font-size: 0.9rem; line-height: 1.55; margin: 0 0 0.5rem; }
+  .leader-card a { color: var(--conegold); text-decoration: none; border-bottom: 1px solid rgba(212,165,116,0.3); }
+  .leader-card a:hover { border-bottom-color: var(--conegold); }
+
+  /* ================ Practice Team (compact grid) ================ */
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin: 1rem 0 1.5rem; }
+  .team-member {
+    padding: 0.85rem 1rem; background: var(--conegrey); border: 1px solid var(--coneborder);
+    border-radius: 8px; display: flex; flex-direction: column; gap: 0.2rem;
+  }
+  .team-member .tm-name { font-size: 0.92rem; font-weight: 600; color: #fff; }
+  .team-member .tm-spec {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--conesoft);
+  }
+  .team-note { color: var(--conesoft); font-size: 0.85rem; line-height: 1.6; margin-top: 1rem; }
+  .team-note strong { color: var(--conetext); }
+
+  /* Talk-to-practice block */
+  .talk-block {
+    margin-top: 2rem; padding: 1.5rem; background: rgba(255,77,77,0.04);
+    border: 1px solid rgba(255,77,77,0.15); border-radius: 12px;
+  }
+  .talk-block strong { color: #fff; display: block; margin-bottom: 0.5rem; }
+  .talk-block a { color: var(--conegold); text-decoration: none; border-bottom: 1px solid rgba(212,165,116,0.3); }
+  .talk-block a:hover { border-bottom-color: var(--conegold); }
 
   /* ================ Footer ================ */
   footer {
@@ -303,7 +329,7 @@
   <h1>Building an<br><span class="accent">AI-first</span> company.</h1>
   <p class="subtitle">
     Not by <span class="muted">adding</span> AI — by <span style="color:var(--conered)">re-architecting</span> around it.
-    The field handbook from Cone Red's AI-First Transformation Practice — the system, the diagnostic, the proof.
+    The architects' handbook for companies going AI-first — built by the team that ships AI-first foundations across Fortune 500.
   </p>
 
   <div class="hero-stats">
@@ -507,19 +533,69 @@
     <p class="practice-also">Also serving: <em>EdTech · Real Estate · Defense · Gambling · B2B Data · Software</em>.</p>
   </section>
 
-  <!-- ========= PRACTICE LEAD ========= -->
-  <section id="practice-lead">
-    <h2>Practice <span class="accent">lead</span>.</h2>
-    <p class="lead-sub">The handbook is authored by the practice lead based on hundreds of real engagements.</p>
-    <div class="practice-lead">
-      <div class="strip"></div>
-      <div class="body">
-        <p class="name">Dima Levin</p>
-        <p class="role">Practice Lead · Co-founder & Chief AI Officer</p>
-        <p>Architect of <strong>50+ production AI systems for Fortune 500 companies</strong>, delivering <strong>$100M+ in measurable savings</strong>. Leads Cone Red's AI-First Transformation Practice across Financial Services, Healthcare, Industrial, and Enterprise sectors.</p>
-        <p>This handbook distills what consistently works — and what consistently kills AI rollouts — across hundreds of engagements. <a href="https://cone.red" target="_blank" rel="noopener">Cone Red AI →</a></p>
-        <p style="margin-top:1.25rem;"><strong style="color:#fff;">Talk to the practice:</strong> <a href="mailto:dima@cone.red?subject=AI-First%20Practice%20Inquiry">dima@cone.red</a></p>
+  <!-- ========= PRACTICE LEADERSHIP ========= -->
+  <section id="practice-leadership">
+    <h2>Practice <span class="accent">leadership</span>.</h2>
+    <p class="lead-sub">The handbook is authored by the practice lead based on hundreds of real engagements. Cone Red is co-founded and run by two operators with complementary disciplines.</p>
+
+    <div class="leadership-grid">
+      <div class="leader-card">
+        <div class="strip"></div>
+        <div class="body">
+          <p class="name">Dima Levin</p>
+          <p class="role">Practice Lead · Co-founder · CAIO</p>
+          <p>Architect of <strong>50+ production AI systems for Fortune 500 companies</strong>, delivering <strong>$100M+ in documented savings</strong>. Leads the AI-First Transformation Practice across Financial Services, Healthcare, Industrial, and Enterprise sectors.</p>
+        </div>
       </div>
+
+      <div class="leader-card">
+        <div class="strip"></div>
+        <div class="body">
+          <p class="name">Alex Korobeynikov</p>
+          <p class="role">CEO · Co-founder · Web3 · Blockchain · AI</p>
+          <p>4× founder. <strong>8 years in Web3</strong> with $560M+ AUM in prior portfolios. Leads Cone Red's go-to-market and the practice's Web3 / Blockchain / AI convergence work — where on-chain meets on-vault.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1rem;font-weight:600;color:var(--conetext);margin:2rem 0 0.75rem;letter-spacing:0.005em;">Practice team</h3>
+    <p class="lead-sub" style="margin-bottom:1rem;font-size:0.92rem;">Senior practitioners delivering production AI across the engagement portfolio.</p>
+
+    <div class="team-grid">
+      <div class="team-member">
+        <span class="tm-name">Michael</span>
+        <span class="tm-spec">Senior AI Eng · Agentic systems · MLOps</span>
+      </div>
+      <div class="team-member">
+        <span class="tm-name">Illia</span>
+        <span class="tm-spec">AI Engineer · Computer Vision · Industrial</span>
+      </div>
+      <div class="team-member">
+        <span class="tm-name">Nijat</span>
+        <span class="tm-spec">Senior AI Engineer</span>
+      </div>
+      <div class="team-member">
+        <span class="tm-name">Stanislau</span>
+        <span class="tm-spec">Senior AI Engineer</span>
+      </div>
+      <div class="team-member">
+        <span class="tm-name">Takhir</span>
+        <span class="tm-spec">Senior AI Engineer</span>
+      </div>
+      <div class="team-member">
+        <span class="tm-name">Alim</span>
+        <span class="tm-spec">Senior AI Engineer</span>
+      </div>
+      <div class="team-member">
+        <span class="tm-name">Martin</span>
+        <span class="tm-spec">Practice Operations · Proposals</span>
+      </div>
+    </div>
+    <p class="team-note">Every engineer on the practice has shipped <strong>production</strong> AI systems — not just prototypes. Extended network of vetted specialists scales the practice for larger engagements.</p>
+
+    <div class="talk-block">
+      <strong>Talk to the practice</strong>
+      Engagement-grade conversations: <a href="mailto:dima@cone.red?subject=AI-First%20Practice%20Inquiry">dima@cone.red</a> · <a href="https://cone.red" target="_blank" rel="noopener">cone.red</a>
     </div>
   </section>
 
@@ -532,12 +608,16 @@
 
 <script>
   // ============== Diagnostic widget ==============
+  // TODO: Replace CALENDLY_URL with the practice's actual booking handle
+  // (e.g., "https://calendly.com/dimalevin/30min" or "https://cal.com/dimalevin")
+  const CALENDLY_URL = "https://calendly.com/dimalevin/30min-ai-first-diagnostic";
+
   const answers = [null, null, null, null, null, null];
   const tierData = [
-    { name: "AI-First Operator", className: "tier-0", msg: "You're already doing what most companies haven't started. The handbook will read as confirmation, not instruction. The interesting question now: how do you compound this advantage faster than the market closes the gap?", cta: "Talk strategy with the practice", subject: "AI-First Operator · Strategy conversation" },
-    { name: "On the curve", className: "tier-1", msg: "You're close. One quarter of focused work away from AI-first. The handbook + a single co-work session typically closes the remaining gap. The risk now is plateauing here — most companies do.", cta: "Book a 30-min readiness review", subject: "AI-First Readiness Score · 1–2 anti-patterns" },
-    { name: "Stuck where 80% are stuck", className: "tier-2", msg: "This is where most companies stall, sometimes for 18+ months. The patterns are fixable, but each month you stay here, the gap to AI-first competitors widens. Recovery is straightforward; delay is not.", cta: "Book a 30-min diagnostic", subject: "AI-First Readiness Score · 3–4 anti-patterns" },
-    { name: "Losing ground every month", className: "tier-3", msg: "You're paying the AI tax without the AI dividend. Companies in this tier rarely recover without intervention — the cultural and architectural gravity is too strong. Worth a structured conversation this week, not next quarter.", cta: "Book a diagnostic this week", subject: "AI-First Readiness Score · 5–6 anti-patterns" },
+    { name: "AI-First Operator", className: "tier-0", msg: "You're already doing what most companies haven't started. The handbook will read as confirmation, not instruction. The interesting question now: how do you compound this advantage faster than the market closes the gap?", cta: "Talk strategy with the practice", subject: "AI-First Operator · Strategy conversation", useCalendly: false },
+    { name: "On the curve", className: "tier-1", msg: "You're close. One quarter of focused work away from AI-first. The handbook + a single co-work session typically closes the remaining gap. The risk now is plateauing here — most companies do.", cta: "Book a 30-min readiness review", subject: "AI-First Readiness Score · 1–2 anti-patterns", useCalendly: false },
+    { name: "Stuck where 80% are stuck", className: "tier-2", msg: "This is where most companies stall, sometimes for 18+ months. The patterns are fixable, but each month you stay here, the gap to AI-first competitors widens. Recovery is straightforward; delay is not.", cta: "Book the 30-min diagnostic", subject: "AI-First Readiness Score · 3–4 anti-patterns", useCalendly: true },
+    { name: "Losing ground every month", className: "tier-3", msg: "You're paying the AI tax without the AI dividend. Companies in this tier rarely recover without intervention — the cultural and architectural gravity is too strong. Worth a structured conversation this week, not next quarter.", cta: "Book a diagnostic this week", subject: "AI-First Readiness Score · 5–6 anti-patterns", useCalendly: true },
   ];
 
   function tierFor(score) {
@@ -574,7 +654,17 @@
     tierName.textContent = t.name;
     msg.textContent = t.msg;
     cta.textContent = t.cta + " →";
-    cta.href = `mailto:dima@cone.red?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent("Hi Dima,\n\nI scored " + score + "/6 on the AI-First Readiness Score (" + t.name + " tier). I'd like to book a 30-minute conversation.\n\n— ")}`;
+    if (t.useCalendly) {
+      // Tier 2/3: high-intent traffic gets a direct booking link
+      cta.href = `${CALENDLY_URL}?utm_source=ai-first-handbook&utm_medium=diagnostic&utm_campaign=tier-${score}&a1=${encodeURIComponent("Score: " + score + "/6 · " + t.name)}`;
+      cta.target = "_blank";
+      cta.rel = "noopener";
+    } else {
+      // Tier 0/1: lower-friction email path
+      cta.href = `mailto:dima@cone.red?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent("Hi Dima,\n\nI scored " + score + "/6 on the AI-First Readiness Score (" + t.name + " tier). I'd like to book a 30-minute conversation.\n\n— ")}`;
+      cta.removeAttribute("target");
+      cta.removeAttribute("rel");
+    }
     cta.style.display = "inline-flex";
   }
 
