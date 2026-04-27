@@ -293,6 +293,21 @@
   .talk-block a { color: var(--conegold); text-decoration: none; border-bottom: 1px solid rgba(212,165,116,0.3); }
   .talk-block a:hover { border-bottom-color: var(--conegold); }
 
+  /* Deep-dive cards */
+  .deepdive-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .deepdive-card {
+    display: block; text-decoration: none; padding: 1.5rem 1.75rem;
+    background: linear-gradient(135deg, rgba(255,77,77,0.05), rgba(255,77,77,0.01));
+    border: 1px solid rgba(255,77,77,0.2); border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  .deepdive-card:hover { border-color: rgba(255,77,77,0.5); transform: translateY(-2px); }
+  .deepdive-card .label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--conered); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.5rem; display: block; }
+  .deepdive-card h3 { font-size: 1.4rem; font-weight: 700; color: #fff; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+  .deepdive-card p { color: var(--conemuted); font-size: 0.9rem; line-height: 1.55; margin: 0 0 0.75rem; }
+  .deepdive-card .links { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--conegold); }
+  .deepdive-card .links span { color: var(--conesoft); margin: 0 0.5rem; }
+
   /* ================ Footer ================ */
   footer {
     margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--coneborder);
@@ -531,6 +546,25 @@
       <div class="practice-item"><span>Healthcare / MedTech</span><span class="depth">Active · 7+ cases</span></div>
     </div>
     <p class="practice-also">Also serving: <em>EdTech · Real Estate · Defense · Gambling · B2B Data · Software</em>.</p>
+  </section>
+
+  <!-- ========= PRACTICE DEEP-DIVES ========= -->
+  <section id="practice-deepdives">
+    <h2>Practice <span class="accent">deep-dives</span>.</h2>
+    <p class="lead-sub">Cross-vertical specialty offerings. The architectural patterns we ship inside engagements, packaged for buyers ready to go a layer deeper than the AI-First handbook.</p>
+
+    <div class="deepdive-grid">
+      <div class="deepdive-card">
+        <span class="label">Specialty · for CTOs &amp; AI leads</span>
+        <h3><a href="memory.html" style="color:#fff; text-decoration:none;">Memory Layer · Memory, engineered →</a></h3>
+        <p>The cognitive substrate for AI agents that remember — across sessions, across languages, across years. Five layers, three-tier formation, hybrid retrieval, locked eval methodology. <strong style="color:#fff;">Not chat history with retrieval. Architecture.</strong></p>
+        <div class="links">
+          <a href="memory.html" style="color:var(--conegold); border-bottom:1px solid rgba(212,165,116,0.3);">Long-read →</a>
+          <span>·</span>
+          <a href="memory-deck.html" style="color:var(--conegold); border-bottom:1px solid rgba(212,165,116,0.3);">Deck →</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ========= PRACTICE LEADERSHIP ========= -->

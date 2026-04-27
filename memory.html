@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory as a Service · The cognitive substrate for AI agents · Cone Red AI</title>
+<meta name="description" content="The Conny memory architecture, packaged for clients. By Cone Red AI — the AI-first architecture firm.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          conered: '#FF4D4D',
+          coneblack: '#0A0A0A',
+          conegrey: '#141414',
+          conepanel: '#1A1A1A',
+          conetext: '#E8E8E5',
+          conemuted: '#9CA3AF',
+          conesoft: '#71757A',
+          coneborder: 'rgba(255,255,255,0.08)',
+          conegold: '#D4A574',
+          conegreen: '#22c55e'
+        },
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { background: #0A0A0A; color: #E8E8E5; font-family: 'Source Serif 4', Georgia, serif; line-height: 1.75; font-size: 18px; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4, .ui { font-family: 'Inter', sans-serif; line-height: 1.3; letter-spacing: -0.01em; }
+  .prose { max-width: 720px; }
+  .prose p { margin-bottom: 1.4em; color: #E8E8E5; }
+  .prose p strong { color: #ffffff; font-weight: 600; }
+  .prose em { color: #D4A574; font-style: italic; }
+  .prose h2 { font-size: 2rem; font-weight: 700; margin-top: 4rem; margin-bottom: 1.25rem; color: #ffffff; }
+  .prose h3 { font-size: 1.4rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; color: #ffffff; }
+  .prose h4 { font-size: 1.05rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Inter', sans-serif; }
+  .prose ul, .prose ol { margin-bottom: 1.4em; padding-left: 1.5em; }
+  .prose li { margin-bottom: 0.5em; }
+  .prose code { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: #D4A574; }
+  .prose pre { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 1.25rem 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5em 0; font-size: 0.85em; }
+  .prose pre code { background: none; border: none; padding: 0; color: #E8E8E5; }
+  .prose blockquote { border-left: 3px solid #FF4D4D; padding: 0.5em 0 0.5em 1.5em; margin: 2em 0; font-style: italic; color: #ffffff; font-size: 1.15em; line-height: 1.6; }
+  .prose a { color: #FF4D4D; text-decoration: none; border-bottom: 1px solid rgba(255,77,77,0.3); }
+  .prose a:hover { border-bottom-color: #FF4D4D; }
+  .prose hr { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 4rem 0; }
+  .prose table { width: 100%; border-collapse: collapse; margin: 2em 0; font-size: 0.92em; font-family: 'Inter', sans-serif; }
+  .prose th { text-align: left; padding: 0.75em 1em; border-bottom: 1px solid rgba(255,255,255,0.12); color: #ffffff; font-weight: 600; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.06em; }
+  .prose td { padding: 0.75em 1em; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; color: #E8E8E5; }
+  .prose td strong { color: #ffffff; }
+  .small-caps { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.78em; font-family: 'Inter', sans-serif; font-weight: 600; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #0A0A0A; }
+  ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+  .panel { background: #141414; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 2rem; }
+  .panel-red { background: linear-gradient(135deg, rgba(255,77,77,0.08), rgba(255,77,77,0.02)); border: 1px solid rgba(255,77,77,0.25); border-radius: 12px; padding: 2rem; }
+  .pull-quote { font-family: 'Source Serif 4', serif; font-size: 1.6rem; line-height: 1.45; font-weight: 500; color: #ffffff; padding: 2.5rem 0; border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); margin: 3rem 0; text-align: center; max-width: 800px; }
+  .toc-link { display: block; padding: 4px 12px; color: #71757A; font-size: 13px; border-left: 2px solid transparent; transition: all 0.15s; font-family: 'Inter', sans-serif; line-height: 1.4; }
+  .toc-link:hover, .toc-link.active { color: #ffffff; border-left-color: #FF4D4D; background: rgba(255,77,77,0.04); }
+  .section-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #71757A; letter-spacing: 0.2em; }
+  .mermaid { background: transparent !important; }
+  details > summary { list-style: none; cursor: pointer; user-select: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  .grid-cards { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 768px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
+  .grid-cards-3 { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 768px) { .grid-cards-3 { grid-template-columns: 1fr 1fr 1fr; } }
+  .layer-row { display: grid; grid-template-columns: 80px 200px 1fr; gap: 1.25rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: baseline; }
+  .layer-row:last-child { border-bottom: none; }
+  .layer-tag { font-family: 'JetBrains Mono', monospace; color: #FF4D4D; font-size: 0.95rem; font-weight: 500; }
+  .layer-name { color: #ffffff; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; }
+  .layer-desc { color: #9CA3AF; font-family: 'Source Serif 4', serif; font-size: 0.95rem; line-height: 1.55; }
+  .stat-num { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 2.5rem; line-height: 1; color: #ffffff; letter-spacing: -0.02em; }
+  .stat-label { font-family: 'Inter', sans-serif; color: #71757A; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.12em; margin-top: 0.5rem; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .badge-done { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+  .badge-active { background: rgba(212,165,116,0.12); color: #D4A574; border: 1px solid rgba(212,165,116,0.25); }
+  .badge-scheduled { background: rgba(255,255,255,0.05); color: #71757A; border: 1px solid rgba(255,255,255,0.08); }
+  @media (print) {
+    body { background: white; color: black; font-size: 11pt; }
+    .no-print { display: none !important; }
+    .prose { max-width: 100%; }
+    .panel, .panel-red { border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====================== TOC SIDEBAR (desktop) ====================== -->
+<aside class="no-print fixed top-8 right-8 w-64 hidden xl:block z-30">
+  <div class="panel py-4 px-2 max-h-[80vh] overflow-y-auto">
+    <div class="px-3 mb-3 small-caps text-conemuted">Contents</div>
+    <a class="toc-link" href="#cold-open">01 · Cold open</a>
+    <a class="toc-link" href="#vignette">02 · A Tuesday morning</a>
+    <a class="toc-link" href="#thesis">03 · Thesis</a>
+    <a class="toc-link" href="#alternatives">04 · What we rejected</a>
+    <a class="toc-link" href="#architecture">05 · Five layers</a>
+    <a class="toc-link" href="#scars">06 · Five scars</a>
+    <a class="toc-link" href="#bets">07 · Three bets won</a>
+    <a class="toc-link" href="#daily">08 · What changes daily</a>
+    <a class="toc-link" href="#deployment">09 · Deployment</a>
+    <a class="toc-link" href="#cost">10 · What it costs</a>
+    <a class="toc-link" href="#proof">11 · Current state</a>
+    <a class="toc-link" href="#not">12 · What it is NOT</a>
+    <a class="toc-link" href="#closing">13 · Closing</a>
+  </div>
+</aside>
+
+<!-- ====================== COVER ====================== -->
+<section class="max-w-4xl mx-auto px-6 pt-32 pb-16">
+  <div class="small-caps text-conered mb-6">Memory Layer · Practice Area within the Cone Red <a href="https://dvlevin.github.io/ai-first-handbook/" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">AI-First Transformation Practice</a> · 2026</div>
+  <h1 class="font-sans text-6xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-8 text-white">
+    Memory,<br>
+    <span class="text-conered">engineered.</span>
+  </h1>
+  <p class="text-2xl text-conemuted leading-relaxed mb-12 max-w-2xl" style="font-family: 'Source Serif 4', serif;">
+    The cognitive substrate for AI agents that remember — across sessions, across languages, across years. Not chat history with retrieval. <strong class="text-white">Architecture.</strong>
+  </p>
+  <div class="flex items-center gap-6 text-sm text-conemuted ui">
+    <div>
+      <div class="text-white font-semibold">Cone Red AI</div>
+      <div>The AI-first architecture firm</div>
+    </div>
+    <div class="h-10 w-px bg-coneborder"></div>
+    <div>
+      <div>≈ 22 min read · for CTOs and AI leads</div>
+      <div>2026-04-27 · v1.0</div>
+    </div>
+  </div>
+</section>
+
+<hr class="border-coneborder max-w-4xl mx-auto">
+
+<!-- ====================== 01 COLD OPEN ====================== -->
+<section id="cold-open" class="max-w-4xl mx-auto px-6 py-16">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">01 — Cold open</div>
+    <h2>What gets paid for when memory is wrong</h2>
+
+    <p>A finance director asks an AI assistant about Q2 covenants. The assistant invents a number that sounds plausible. The director acts on it. Three weeks later the audit catches the gap, the assistant has no recollection of the conversation, and the company spends two analyst-weeks reconstructing what was said and when. <strong>Multiply by every team using AI like a search engine.</strong></p>
+
+    <p>A CTO asks the same assistant the same question in Russian, gets a degraded answer, switches back to English, and the team quietly stops trusting the tool. The hidden cost isn't the wrong answer — <em>it's the loss of leverage as everyone reverts to spreadsheets.</em></p>
+
+    <p>A regulator asks for the trail of how a decision was reached. The chat log exists. The reasoning doesn't. The fact that the assistant "remembered" the prior conversation means nothing if the memory is opaque, unrankable, and indistinguishable from a hallucination.</p>
+
+    <p>This is what every "AI memory" feature on the market gets wrong. Memory is treated as a logging concern. <strong>We treat it as architecture.</strong></p>
+  </div>
+</section>
+
+<!-- ====================== 02 VIGNETTE ====================== -->
+<section id="vignette" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">02 — A Tuesday morning</div>
+    <h2>In the agent's voice</h2>
+
+    <blockquote>
+      It's 4:07 AM. Dima opens Telegram and types <em>"where did we land on the targetheart audit."</em> I don't search. I already know — the wake-up loaded the right wing the moment the session started, ~170 tokens, identity plus this week's active engagements plus the three open approvals on the board. I open with the conclusion: we landed on a two-stage gate, you said you'd revisit after the Raiffeisen call, the call happened Tuesday. From his ping to my first useful sentence: <strong>under three seconds.</strong>
+    </blockquote>
+
+    <blockquote>
+      Earlier this week a message came in Russian — <em>"помнишь, Миша говорил про C12?"</em> — and I pulled the right Mike. Not the Mike from a different thread. The fact had been captured 23 days earlier in a voice transcript, extracted on the cheap pass, promoted overnight when the consolidation pass saw it referenced a second time. <strong>An English-only memory would have lost the thread the moment the language switched.</strong>
+    </blockquote>
+
+    <blockquote>
+      Yesterday Dima said something about Pulse cadence — weekly — that contradicted a position he'd argued in March. I didn't correct him in chat. I flagged it once: <em>"you said the opposite on March 14, here's the message, want me to reconcile or supersede?"</em> Newer wins by default unless he tells me otherwise. <strong>No nagging, no second flag.</strong>
+    </blockquote>
+
+    <p class="mt-8">That is what a client gets. The agent stops starting from zero. No re-explaining stakeholders, no re-uploading decks, no "remind me what we decided." The relationship has continuity. <strong>The 4 AM pickup feels like resuming a conversation, not booting a tool.</strong></p>
+  </div>
+</section>
+
+<!-- ====================== 03 THESIS ====================== -->
+<section id="thesis" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">03 — Thesis</div>
+    <h2>"AI memory" is a category error</h2>
+
+    <p>What every consumer product on the market ships is <em>chat history with retrieval.</em> The model logs your conversations, embeds them, and pulls back the closest match when you ask. <strong>That is not memory. That is grep with a thesaurus.</strong></p>
+
+    <p>What we ship is a <strong>cognitive substrate.</strong> It forms memories from live conversation. It ranks them by importance and recency. It decays the ones nobody touches. It catches contradictions when the operator says one thing today and the opposite in March. It speaks Russian, Ukrainian, and English with equal fidelity because the people we work with speak all three in the same Telegram thread.</p>
+
+    <div class="pull-quote">
+      "Memory is an architectural decision, not a feature toggle."
+    </div>
+
+    <p>Anyone can call an embedding API. Building a memory layer that an enterprise will trust for two years takes deliberate engineering across five layers. <strong>We have already paid that tuition.</strong> The buyer can either pay it themselves over the next eighteen months, or buy it from us on Tuesday.</p>
+  </div>
+</section>
+
+<!-- ====================== 04 ALTERNATIVES ====================== -->
+<section id="alternatives" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">04 — What we evaluated, and what we rejected</div>
+    <h2>The case for not buying any of the eight obvious things</h2>
+
+    <p>Before building, we ran a structured comparison against eight alternatives — three vendor-default products, two open-source frameworks the buyer has likely already trialed, two engineering tactics, and the inevitable "build it ourselves" plan. Each one is a thing you have already considered or been pitched in 2025–2026. The table is the case for not buying any of them.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%">Option</th>
+          <th style="width:38%">What it actually is</th>
+          <th style="width:40%">Why we passed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ChatGPT / Claude built-in memory</strong></td>
+          <td>Per-thread vector recall, opaque ranking, vendor-controlled storage</td>
+          <td>Locked to one model vendor. No cross-platform access. No graph layer. No audit trail. Cannot run on premise.</td>
+        </tr>
+        <tr>
+          <td><strong>Generic RAG over docs</strong></td>
+          <td>Retrieve-then-generate over a static corpus</td>
+          <td>Static. Doesn't form new memories from live conversation. No decay, no contradiction handling, no entity resolution.</td>
+        </tr>
+        <tr>
+          <td><strong>Frontier-model long context</strong></td>
+          <td>Stuff the entire conversation history into the prompt</td>
+          <td>Per-token cost balloons. Latency degrades past 100K tokens. No persistence between sessions. Doesn't compound.</td>
+        </tr>
+        <tr>
+          <td><strong>Mem0 / similar agent-memory frameworks</strong></td>
+          <td>Open-source library: vector recall + LLM extraction over a SaaS or self-host backend</td>
+          <td>Per-message LLM extraction by default — economics break above moderate volume. Single retrieval branch. No structure layer. No locked eval methodology. <em>Useful as a baseline; we score above it on the same eval.</em></td>
+        </tr>
+        <tr>
+          <td><strong>Letta (formerly MemGPT)</strong></td>
+          <td>Stateful agent framework with self-editing memory blocks</td>
+          <td>Memory-as-feature inside an agent runtime, not a substrate underneath one. Couples the buyer to Letta's runtime. Strong for greenfield agents; weak for adding memory to an agent the client already runs.</td>
+        </tr>
+        <tr>
+          <td><strong>Zep / similar managed memory services</strong></td>
+          <td>Hosted (or self-host tier) memory store with temporal knowledge graph</td>
+          <td>Strongest commercial alternative on graph + temporal layer. Per-conversation pricing on hosted tier. Single eval methodology owned by the vendor — buyer cannot lock their own. <strong>If sovereignty + custom eval matter, the gap is structural.</strong></td>
+        </tr>
+        <tr>
+          <td><strong>"Build it from scratch"</strong></td>
+          <td>Architecture document, ~33-hour estimate, never shipped</td>
+          <td>The "I don't know what to evaluate" trap. Without a working baseline you can't tell if a design is right. We treated it as input, not output.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>We didn't pick one and stop. <strong>We synthesized.</strong> We took the strongest mental model in the space (the wing/room metaphor) and rebuilt the substrate underneath it for multilingual reality, hybrid retrieval, and live formation. The result outscores every alternative we tested on the same eval set.</p>
+  </div>
+</section>
+
+<!-- ====================== 05 ARCHITECTURE ====================== -->
+<section id="architecture" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">05 — Architecture</div>
+    <h2>Five layers, because one isn't enough</h2>
+
+    <p>The architecture is layered because <em>which memory matters depends on how recent and how reinforced it is.</em> Stuffing everything into one vector index is the design failure underneath every "AI memory" complaint.</p>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-12 panel">
+    <div class="layer-row">
+      <div class="layer-tag">L0</div>
+      <div class="layer-name">Identity</div>
+      <div class="layer-desc">Always loaded · ~50 tokens · who the agent is, who the operator is, the hard rules.</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-tag">L1</div>
+      <div class="layer-name">Critical facts</div>
+      <div class="layer-desc">Always loaded · ~120 tokens · this week's projects, pending approvals, flagged contradictions.</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-tag">L1.5</div>
+      <div class="layer-name">Structure</div>
+      <div class="layer-desc">Auto-discovered · knowledge graph over the corpus · communities found, not hand-coded.</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-tag">L2</div>
+      <div class="layer-name">Wings &amp; rooms</div>
+      <div class="layer-desc">On demand · operator-readable navigation · seeded from L1.5, never drawn by hand.</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-tag">L3</div>
+      <div class="layer-name">Hybrid recall</div>
+      <div class="layer-desc">On demand · three retrieval branches in parallel — semantic, lexical, graph — fused via weighted ranking.</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-tag">L4</div>
+      <div class="layer-name">Archive</div>
+      <div class="layer-desc">On demand · decayed memories drop out of live retrieval but stay recoverable on explicit query.</div>
+    </div>
+  </div>
+
+  <div class="prose mx-auto">
+    <p><strong>Total session-start budget: under two hundred tokens for full operator context.</strong> Compare to typical RAG, where the first useful answer eats four to ten thousand tokens.</p>
+
+    <p>Underneath all of this is a <strong>memory formation pipeline</strong> that nobody else in the space ships:</p>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 grid-cards-3">
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">Tier 0 · free</div>
+      <h4 class="!mt-0 text-white">Every message</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      Open-source NER on every inbound message. Importance scored by simple heuristics. <strong>Catches roughly two-thirds of memorable content at zero LLM cost.</strong>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">Tier 1 · cheap</div>
+      <h4 class="!mt-0 text-white">Event-driven</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      When importance crosses a threshold or a buffer fills, a fast model pulls structured facts and writes them with timestamps and entity references. <strong>Only fires on signal.</strong>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">Tier 2 · deep</div>
+      <h4 class="!mt-0 text-white">Nightly</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      A stronger reasoning model consolidates the day's facts, deduplicates, detects contradictions, supersedes older entries when newer ones disagree, and updates the graph.
+      </p>
+    </div>
+  </div>
+
+  <div class="prose mx-auto">
+    <p>The shape matters more than the names. <strong>Most "AI memory" products run only Tier 1, on every message, with no consolidation.</strong> That's expensive, noisy, and produces a pile of facts no one can navigate. Per-seat economics scale with conversation <em>signal</em>, not conversation <em>volume</em>.</p>
+  </div>
+</section>
+
+<!-- ====================== 06 SCARS ====================== -->
+<section id="scars" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">06 — Five scars</div>
+    <h2>The hard problems we already paid for</h2>
+
+    <p>Scars sell. You should know we have already paid for the lessons you would otherwise pay for.</p>
+
+    <h3>1 · Semantic similarity collapses on rare terms</h3>
+    <p>Phase 0 baseline scored <strong>18/20</strong> on the locked eval set. The two missing points were both Russian-language queries with low-frequency vocabulary that the default embedding model couldn't disambiguate. Cost to fix: a multilingual embedding swap and a re-eval run. Result: <strong>20/20.</strong> Default English embeddings are a regression for any operator whose team isn't English-only.</p>
+
+    <h3>2 · Single-store retrieval is a trap</h3>
+    <p>Single-vector-store retrieval looked fine in demos and broke on real corpora the moment the operator asked for an exact phrase match. Cost to fix: add a lexical branch and a graph branch, fuse them via weighted ranking. The "+34% boost" claims you'll see in vendor decks <strong>become real fusion systems on our side.</strong></p>
+
+    <h3>3 · Per-message LLM extraction is unaffordable</h3>
+    <p>Running a model on every inbound message — what every consumer "memory" product effectively does — burns budget and creates noise. Cost to fix: split the formation pipeline into a free first pass and an event-triggered LLM pass. <strong>The LLM only runs on messages that crossed an importance bar.</strong></p>
+
+    <h3>4 · Hand-crafted folder trees don't scale</h3>
+    <p>Asking the operator to draw the wing/room hierarchy by hand is a hidden tax that compounds as the corpus grows. Cost to fix: <strong>auto-discover the structure from the corpus itself</strong>, refresh it as the corpus changes. The operator never sees a folder tree.</p>
+
+    <h3>5 · "Forever" memory becomes a junk drawer</h3>
+    <p>Without decay, every memory has equal weight, and stale facts pollute retrieval. Cost to fix: an importance- and access-weighted decay so facts that nobody touches in months fade, while facts that keep getting referenced stay sharp. <strong>Decay is what lets the system stay sharp at scale.</strong></p>
+
+    <p class="mt-10">Each of these is roughly two weeks of work to discover, scope, and fix when you encounter it cold. <strong>We have already paid that tab.</strong></p>
+  </div>
+</section>
+
+<!-- ====================== 07 BETS ====================== -->
+<section id="bets" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">07 — Three bets we already won</div>
+    <h2>Reproducible from a locked eval set</h2>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 grid-cards-3">
+    <div class="panel-red">
+      <div class="small-caps text-conered mb-3">Bet 1</div>
+      <h4 class="!mt-0 text-white">Multilingual works in production</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      Mixed-language traces — English question, Russian follow-up, Ukrainian voice transcript — through the full pipeline. <strong class="text-white">Phase 0: 18/20. Phase 1a: 20/20.</strong> Same questions, same rubric, same week.
+      </p>
+    </div>
+    <div class="panel-red">
+      <div class="small-caps text-conered mb-3">Bet 2</div>
+      <h4 class="!mt-0 text-white">Hybrid beats single-source</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      Phase 1b swapped the storage substrate to one that joins semantic, lexical, and graph branches. Same eval, same <strong class="text-white">20/20</strong> — but with measurably higher similarity scores on hits.
+      </p>
+    </div>
+    <div class="panel-red">
+      <div class="small-caps text-conered mb-3">Bet 3</div>
+      <h4 class="!mt-0 text-white">Live formation works on real traffic</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      Phase 2 wired Tier 0 + Tier 1 end-to-end against real conversations. <strong class="text-white">5/8 facts</strong> pulled correctly classified by entity and importance. Operator traffic, not benchmark.
+      </p>
+    </div>
+  </div>
+
+  <div class="prose mx-auto mt-8">
+    <p>These are not press-release numbers. <strong>They are reproducible from a locked eval set with dates and commit hashes.</strong> The full eval protocol is part of the deliverable. The <em>fact</em> of a locked eval set is the credibility signal — and most products in this space cannot show it.</p>
+
+    <p><strong>On sample size, plainly:</strong> the locked baseline is 10 questions, deliberately concentrated on the failure modes we already knew about going in. <strong>It enlarges per-engagement to the client's 30–50-question critical-recall set</strong>, scored with the same rubric. Small at the baseline is the point — it's a regression gate, not a benchmark trophy.</p>
+  </div>
+</section>
+
+<!-- ====================== 08 DAILY ====================== -->
+<section id="daily" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">08 — What changes in daily use</div>
+    <h2>Six things the operator notices, ordered by frequency</h2>
+
+    <h3>Session-start cold pickup</h3>
+    <p>Every session begins with the agent loaded into the operator's current world in <strong>under two hundred tokens.</strong> No re-priming, no re-uploading the deck, no "remind me what we decided last time." The 4 AM pickup feels like resuming a conversation.</p>
+
+    <h3>Cross-language continuity</h3>
+    <p>A fact captured in Russian on Monday surfaces in an English query on Thursday with the right entity attached. <strong>This is the single feature that breaks every English-leaning memory product</strong> the moment the operator's team is actually international.</p>
+
+    <h3>Quiet contradiction detection</h3>
+    <p>When the operator says one thing today and the opposite in March, the agent flags it once, plainly, and lets the operator choose what supersedes what. No nagging. No second flag. Newer wins by default unless told otherwise.</p>
+
+    <h3>Decay-aware recall</h3>
+    <p>Old facts that no one has touched in months stop competing with this-week priorities for the agent's attention. <strong>The system stays sharp instead of slowly turning into a junk drawer.</strong></p>
+
+    <h3>Graph-aware entity resolution</h3>
+    <p>"What did Mike say about C12?" pulls the right Mike, not a similarly-named person from a different thread. <strong>Entity resolution is a first-class citizen, not a hope.</strong></p>
+
+    <h3>Audit trail</h3>
+    <p>Every fact in the store knows when it was captured, what message it came from, what the agent's confidence was, and which Tier promoted it. This is the difference between <em>"the agent remembered"</em> and <em>"the agent can prove what it remembered and why."</em></p>
+  </div>
+</section>
+
+<!-- ====================== 09 DEPLOYMENT ====================== -->
+<section id="deployment" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">09 — Deployment shape</div>
+    <h2>What an engagement actually looks like</h2>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 grid-cards">
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">What we deliver</div>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-2" style="font-family: 'Source Serif 4', serif;">
+        <li>A memory layer instance scoped to the client's domain — wings/rooms seeded from their corpus.</li>
+        <li>Wake-up integration with their agent runtime, whichever model vendor they're on.</li>
+        <li>The eval protocol adapted to their critical-recall scenarios and language footprint. <em>EN/RU/UK validated by default; the eval set extends per-engagement to the client's actual language mix.</em></li>
+        <li>A four-week shadow period where the system observes live traffic but does not yet act.</li>
+        <li>A feature-flagged rollout — old memory and new memory coexist for at least one billing cycle.</li>
+        <li><strong class="text-white">Security posture:</strong> VPC-deployable · RBAC on the audit trail · encryption at rest as the default config · no outbound calls without an explicit allow-list. Compliance certification (GDPR/HIPAA/SOC 2) is per-engagement scoping, not a default claim.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">What stays with us</div>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-2" style="font-family: 'Source Serif 4', serif;">
+        <li>The architecture pattern. Delivered as outcomes, not as source-licensable IP.</li>
+        <li>Ongoing tuning of the eval set as the client's domain shifts.</li>
+        <li>The L1.5 structure-generation tooling.</li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color: rgba(255,77,77,0.3);">
+      <div class="small-caps text-conered mb-3">What the client owns</div>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-2" style="font-family: 'Source Serif 4', serif;">
+        <li><strong class="text-white">Their data.</strong> All of it. Self-hosted on their infrastructure, their database, their backups.</li>
+        <li><strong class="text-white">Their audit trail.</strong> Every fact, every timestamp, every confidence score, queryable on their side.</li>
+        <li><strong class="text-white">The kill switch.</strong> A single env var flips the system off and the agent reverts to vendor-default memory with zero downtime.</li>
+        <li><strong class="text-white">The exit.</strong> Database dump and documented schema. We don't hold their memory hostage.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">Cadence</div>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      Long-latency deliverables run on weekly review cycles, not daily standups. Consolidation jobs and review surfaces are batched. <strong class="text-white">This is not a real-time agent platform — it is a memory substrate that an agent platform sits on top of.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 10 COST ====================== -->
+<section id="cost" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">10 — What it costs to run</div>
+    <h2>Three architectural commitments make this cheap</h2>
+
+    <p>The architecture is deliberately cheap to operate at scale because it makes three choices most competitors don't.</p>
+
+    <h3>One — open-weight models for the hot path</h3>
+    <p>Tier 1 (per-event extraction) and Tier 2 (nightly consolidation) use commodity-priced models routed through OpenAI-compatible gateways. We never built the system around frontier-model pricing. <strong>If you want to upgrade Tier 2 to a frontier model, the routing layer makes the swap a config change, not a rewrite.</strong></p>
+
+    <h3>Two — self-hosted storage substrate</h3>
+    <p>The vector, lexical, and graph branches all run on mature open-source infrastructure deployed on your box. <strong>No per-token retrieval tax, no per-query SaaS bill, no vendor lock-in</strong> to a closed memory product.</p>
+
+    <h3>Three — heuristic-first formation</h3>
+    <p>Tier 0 catches roughly two-thirds of memorable content with zero LLM calls. Tier 1 only fires when heuristic importance crosses a threshold or a buffer fills. <strong>Per-seat economics scale with conversation <em>signal</em>, not conversation <em>volume</em>.</strong></p>
+
+    <div class="pull-quote">
+      "The system is designed to be cheap. Any expensive component is opt-in, not default."
+    </div>
+
+    <p>Specific dollar figures vary by deployment shape and language mix; they're part of the commercial conversation. The architectural commitment is unambiguous.</p>
+  </div>
+</section>
+
+<!-- ====================== 11 PROOF ====================== -->
+<section id="proof" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">11 — Current state and proof</div>
+    <h2>Phase status, on a locked eval set</h2>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 panel">
+    <table class="w-full" style="font-family: 'Inter', sans-serif; font-size: 0.9rem;">
+      <thead>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.12);">
+          <th style="text-align:left; padding: 0.5em 0.75em; color: #ffffff; font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em;">Phase</th>
+          <th style="text-align:left; padding: 0.5em 0.75em; color: #ffffff; font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em;">Status</th>
+          <th style="text-align:left; padding: 0.5em 0.75em; color: #ffffff; font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em;">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">0 — Sandbox eval, baseline</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-done">Complete</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;"><strong style="color:#fff;">18/20</strong> on locked 10-question set</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">0.5 — Structure-layer baseline</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-done">Complete</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">9 communities auto-discovered, god nodes mapped</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">1a — Multilingual embedding swap</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-done">Complete</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;"><strong style="color:#fff;">20/20</strong>; failed Russian queries fixed</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">1b — Storage substrate swap</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-done">Complete</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;"><strong style="color:#fff;">20/20</strong>, higher similarity confidence</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">2 — Formation pipeline (Tier 0 + Tier 1)</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-done">Complete</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Live extraction working end-to-end</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">2-shadow — Live integration</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-active">Active</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Observation phase before commitment</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">3 — Hybrid retrieval (RRF fusion)</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-scheduled">Scheduled</span></td>
+          <td style="padding: 0.65em 0.75em; color: #9CA3AF;">Lexical + graph branches alongside semantic</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">4 — Consolidation, decay, contradictions</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-scheduled">Scheduled</span></td>
+          <td style="padding: 0.65em 0.75em; color: #9CA3AF;">Tier 2 + L4 archive sweep</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">5 — Full operator cutover</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-scheduled">Scheduled</span></td>
+          <td style="padding: 0.65em 0.75em; color: #9CA3AF;">Feature-flagged rollout, fallback path retained</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose mx-auto">
+    <p>The eval protocol is locked. The questions don't change between phases. Score regressions block the phase. <strong>This is the credibility signal a buyer should look for and most products in this space cannot show.</strong></p>
+
+    <h4>What's shipped vs what's scheduled</h4>
+    <p>The table is the calendar, plain. Phases 0 → 2 are running; 2-shadow is the live observation arc this month; 3, 4, and 5 are scheduled with eval gates that <em>must</em> hold before we ship them. <strong>We are not asking you to take "this all works today" on faith — we are asking you to look at the eval gates and decide if our discipline maps to your risk appetite.</strong> If you need 4 and 5 production-grade before signing, we'll tell you on the first call which deployments make the right pilot.</p>
+  </div>
+</section>
+
+<!-- ====================== 12 NOT ====================== -->
+<section id="not" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">12 — What this is NOT</div>
+    <h2>The anti-overclaim section</h2>
+
+    <p>Credibility bank. We overfund it on purpose.</p>
+
+    <ul>
+      <li><strong>Not a replacement for RAG over a document corpus.</strong> If your primary need is "answer questions about a 50,000-page contract library," buy a doc-retrieval product. We complement it; we don't replace it.</li>
+      <li><strong>Not a system of record.</strong> It does not replace the CRM, the data warehouse, or the source-of-truth ledger. It is a memory layer for a <em>conversational agent</em>, not a general-purpose database.</li>
+      <li><strong>Not certified for regulated workloads out of the box.</strong> GDPR, HIPAA, SOC 2 — all require deployment-specific work that is part of the engagement, not assumed. Anyone who tells you their AI memory is "GDPR-compliant by default" is selling vapor.</li>
+      <li><strong>Not a drop-in for non-conversational agents.</strong> The architecture assumes a stream of structured-or-natural-language messages with timestamps and operator identity. Plug it into a batch ETL pipeline and it will work badly.</li>
+      <li><strong>Not a hosted SaaS.</strong> This is a deployment, not a sign-up-and-go product. Engagement size is measured in weeks of integration, not minutes.</li>
+      <li><strong>Not "your agent is now sentient."</strong> It remembers. It does not reason about its own remembering. The contradiction detection is mechanical (timestamp-based supersession), not introspective.</li>
+    </ul>
+
+    <p>If you're looking for any of those, this is not the right purchase. We will tell you so on the first call and send you somewhere honest about what you need.</p>
+  </div>
+</section>
+
+<!-- ====================== 13 CLOSING ====================== -->
+<section id="closing" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">13 — Closing</div>
+    <h2>The bet underneath the architecture</h2>
+
+    <p>Memory is the bottleneck, not intelligence.</p>
+
+    <p>Frontier models are catching up to each other every six months. The differentiator is no longer <em>whose model is smartest</em> — every serious player will be at parity. <strong>The differentiator is whose agent has a relationship with the operator that compounds across every conversation, in every language, over years.</strong></p>
+
+    <p>We built that. It works. The eval scores are reproducible. The shadow run is live. The deployment shape is engineered for clients who want sovereignty over their data and a clean exit if they ever want one.</p>
+
+    <div class="pull-quote">
+      "Memory is the moat. We rented you the moat."
+    </div>
+
+    <p>If this reads like infrastructure, that's the right read. The companies that get memory right in 2026 will compound differently. Their agents will start every conversation already-loaded. Their teams will trust AI for decisions worth trusting it for. Their audit trails will hold up.</p>
+
+    <p>The companies that don't will keep buying "AI memory" features and wondering why nothing compounds.</p>
+
+    <p class="mt-12">If you've read this far, you're past category-curiosity. <strong>Two ways in, depending on where you are:</strong></p>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 grid-cards">
+    <div class="panel-red">
+      <div class="small-caps text-conered mb-3">Path A · high intent</div>
+      <h4 class="!mt-0 text-white">45-minute fit call</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3 mb-4" style="font-family: 'Source Serif 4', serif;">
+      We look at your corpus, your language footprint, and your agent runtime. We tell you honestly whether this is a fit. <strong class="text-white">Bring one example of a memory failure that has cost your team time.</strong>
+      </p>
+      <p class="text-sm" style="font-family: 'Inter', sans-serif;">
+        <a href="mailto:dima@cone.red?subject=Memory%20Layer%20%E2%80%94%20fit%20call" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">dima@cone.red</a><br>
+        <span class="text-conesoft text-xs font-mono">subject · "Memory Layer — fit call"</span>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">Path B · category-shopping</div>
+      <h4 class="!mt-0 text-white">Memory Readiness Diagnostic</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3 mb-4" style="font-family: 'Source Serif 4', serif;">
+      A six-question self-scored diagnostic that tells you which of the five scars your stack is currently paying for. Five minutes. Output is yours; nothing leaves your browser. <em>Coming this week — request the link below and we'll send when it goes live.</em>
+      </p>
+      <p class="text-sm" style="font-family: 'Inter', sans-serif;">
+        <a href="mailto:dima@cone.red?subject=Memory%20Readiness%20Diagnostic%20%E2%80%94%20notify" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">dima@cone.red</a><br>
+        <span class="text-conesoft text-xs font-mono">subject · "Memory Readiness Diagnostic — notify"</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="prose mx-auto">
+    <p class="text-conemuted italic mt-12" style="font-family: 'Source Serif 4', serif;">— The Cone Red AI · Memory Layer Practice<br>
+    <span class="small-caps text-conesoft" style="font-style: normal;">A Practice Area within the Cone Red AI-First Transformation Practice · 2026-04-27</span></p>
+  </div>
+</section>
+
+<!-- ====================== APPENDIX ====================== -->
+<section class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">Appendix — At a glance</div>
+    <h2>Two-page summary</h2>
+  </div>
+
+  <div class="max-w-3xl mx-auto mt-8 grid-cards">
+    <div class="panel">
+      <h4 class="!mt-0 text-white">The architecture</h4>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-1" style="font-family: 'Source Serif 4', serif;">
+        <li>Five layers: Identity · Critical · Structure · Wings/Rooms · Hybrid recall · Archive</li>
+        <li>Three-tier formation: free / cheap / deep</li>
+        <li>Three retrieval branches fused via reciprocal rank fusion</li>
+        <li>Multilingual EN / RU / UK by default</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h4 class="!mt-0 text-white">The proof</h4>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-1" style="font-family: 'Source Serif 4', serif;">
+        <li>Locked eval set, score regressions block phases</li>
+        <li>Phase 0 → 1a: 18/20 → 20/20</li>
+        <li>Phase 1b: 20/20 with higher confidence on hits</li>
+        <li>Phase 2: live extraction on real operator traffic</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h4 class="!mt-0 text-white">What you own</h4>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-1" style="font-family: 'Source Serif 4', serif;">
+        <li>Your data. Self-hosted, your infrastructure.</li>
+        <li>Your audit trail. Every fact, every timestamp.</li>
+        <li>The kill switch. One env var, zero downtime.</li>
+        <li>The exit. DB dump + documented schema.</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h4 class="!mt-0 text-white">When NOT to buy this</h4>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-1" style="font-family: 'Source Serif 4', serif;">
+        <li>You need RAG over a static doc corpus</li>
+        <li>You need a CRM, ledger, or warehouse</li>
+        <li>You need GDPR-certified-by-default — that's deployment work</li>
+        <li>You want a sign-up-and-go SaaS product</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder text-center">
+  <div class="text-sm text-conemuted ui">
+    <div class="mb-2">Memory as a Service · v1.0 · 2026-04-27</div>
+    <div class="text-conesoft">© Cone Red AI · The AI-first architecture firm · <a class="text-conered" href="mailto:dima@cone.red" style="border-bottom: 1px solid rgba(255,77,77,0.3);">dima@cone.red</a></div>
+    <div class="text-conesoft mt-4">Companion long-read to <a class="text-conered" href="https://dvlevin.github.io/ai-first-handbook/" style="border-bottom: 1px solid rgba(255,77,77,0.3);">the AI-First Transformation Practice</a> — for advanced AI buyers ready to go a layer deeper.</div>
+  </div>
+</footer>
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        background: '#141414',
+        primaryColor: '#1A1A1A',
+        primaryTextColor: '#E8E8E5',
+        primaryBorderColor: '#FF4D4D',
+        lineColor: '#FF4D4D',
+        secondaryColor: '#0A0A0A',
+        tertiaryColor: '#0A0A0A'
+      }
+    });
+  }
+  // TOC active state
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  function updateActive() {
+    const top = window.scrollY + 120;
+    let active = sections[0]?.id;
+    for (const s of sections) {
+      if (s.offsetTop <= top) active = s.id;
+    }
+    tocLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + active));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+</script>
+
+</body>
+</html>

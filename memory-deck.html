@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory as a Service · Deck · Cone Red AI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          conered: '#FF4D4D',
+          coneblack: '#0A0A0A',
+          conegrey: '#141414',
+          conepanel: '#1A1A1A',
+          conetext: '#E8E8E5',
+          conemuted: '#9CA3AF',
+          conesoft: '#71757A',
+          coneborder: 'rgba(255,255,255,0.08)',
+          conegold: '#D4A574'
+        },
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html, body { height: 100%; margin: 0; padding: 0; background: #0A0A0A; color: #E8E8E5; font-family: 'Inter', sans-serif; overflow: hidden; }
+  body.fullscreen { cursor: none; }
+  body.fullscreen.show-cursor { cursor: default; }
+
+  .deck { position: relative; width: 100vw; height: 100vh; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; align-items: safe center; justify-content: safe center;
+    padding: 5vh 8vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+    transform: translateY(16px) scale(0.985);
+    filter: blur(4px);
+  }
+  .slide.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); filter: blur(0); }
+  .slide-content { width: 100%; max-width: 1200px; }
+  .slide::-webkit-scrollbar { width: 0; height: 0; }
+  .slide { scrollbar-width: none; }
+
+  /* Slide types */
+  .slide-cover { background: radial-gradient(ellipse at top right, rgba(255,77,77,0.08), transparent 60%), #0A0A0A; }
+  .slide-divider { background: #0A0A0A; }
+  .slide-divider-red { background: linear-gradient(135deg, #FF4D4D 0%, #cc3a3a 100%); color: white; }
+  .slide-statement { background: #0A0A0A; }
+  .slide-end { background: radial-gradient(ellipse at center, rgba(255,77,77,0.12), transparent 60%), #0A0A0A; }
+
+  /* Typography scale */
+  .display-1 { font-size: clamp(3rem, 8vw, 7rem); line-height: 1.02; font-weight: 800; letter-spacing: -0.03em; color: #fff; }
+  .display-2 { font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.025em; color: #fff; }
+  .display-3 { font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; color: #fff; }
+  .display-4 { font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.25; font-weight: 600; color: #fff; }
+  .lead { font-size: clamp(1.1rem, 1.6vw, 1.5rem); line-height: 1.5; color: #9CA3AF; max-width: 56ch; }
+  .lead-large { font-size: clamp(1.4rem, 2vw, 1.8rem); line-height: 1.45; color: #E8E8E5; max-width: 56ch; }
+  .small-caps { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.78em; font-weight: 600; }
+
+  /* Color accents */
+  .accent { color: #FF4D4D; }
+  .gold { color: #D4A574; }
+  .muted { color: #9CA3AF; }
+  .soft { color: #71757A; }
+
+  /* Section divider styling */
+  .section-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.25em; color: #71757A; text-transform: uppercase; }
+
+  /* Code block */
+  code, pre { font-family: 'JetBrains Mono', monospace; }
+  pre { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 1.5rem 2rem; border-radius: 12px; font-size: clamp(0.9rem, 1.4vw, 1.1rem); line-height: 1.7; color: #E8E8E5; overflow-x: auto; }
+  .inline-code { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 0.15em 0.5em; border-radius: 4px; font-size: 0.78em; color: #D4A574; }
+
+  /* Chrome */
+  .chrome { position: fixed; z-index: 100; pointer-events: auto; }
+  .progress-bar { top: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.06); }
+  .progress-fill { height: 100%; background: #FF4D4D; transition: width 0.4s ease; }
+  .counter { bottom: 1.5rem; right: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #71757A; letter-spacing: 0.1em; }
+  .nav-hint { bottom: 1.5rem; left: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #71757A; letter-spacing: 0.05em; }
+  .nav-hint kbd { background: #141414; border: 1px solid rgba(255,255,255,0.1); padding: 1px 6px; border-radius: 3px; font-family: inherit; color: #9CA3AF; }
+
+  /* Click zones */
+  .click-zone { position: fixed; top: 0; height: 100vh; width: 25vw; z-index: 50; cursor: pointer; }
+  .click-zone-prev { left: 0; }
+  .click-zone-next { right: 0; }
+
+  .mermaid { background: transparent !important; }
+
+  /* Lists */
+  .big-list li { font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.4; padding: 0.5em 0; color: #fff; font-weight: 500; }
+  .big-list li::marker { color: #FF4D4D; }
+  .big-list .muted-item { color: #9CA3AF; font-weight: 400; }
+  .compact-list li { font-size: clamp(0.95rem, 1.5vw, 1.15rem); line-height: 1.45; padding: 0.35em 0; color: #fff; font-weight: 500; }
+  .compact-list li::marker { color: #FF4D4D; font-weight: 700; }
+  .compact-list .muted-item { color: #9CA3AF; font-weight: 400; }
+
+  /* Cards */
+  .stage-card { background: #141414; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 2rem; }
+  .stage-card-red { background: linear-gradient(135deg, rgba(255,77,77,0.08), rgba(255,77,77,0.02)); border: 1px solid rgba(255,77,77,0.25); border-radius: 12px; padding: 2rem; }
+
+  /* Comparison table */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: clamp(0.85rem, 1.2vw, 1rem); }
+  .compare-table th { text-align: left; padding: 0.65em 1em; border-bottom: 1px solid rgba(255,255,255,0.12); color: #fff; font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em; }
+  .compare-table td { padding: 0.65em 1em; border-bottom: 1px solid rgba(255,255,255,0.06); color: #E8E8E5; vertical-align: top; }
+  .compare-table td strong { color: #fff; }
+  .compare-table td.label { color: #fff; font-weight: 600; white-space: nowrap; }
+
+  /* Phase status */
+  .phase-row { display: grid; grid-template-columns: 1fr 100px 1.5fr; gap: 1rem; padding: 0.6em 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: baseline; font-size: clamp(0.9rem, 1.3vw, 1.05rem); }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .badge-done { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+  .badge-active { background: rgba(212,165,116,0.12); color: #D4A574; border: 1px solid rgba(212,165,116,0.25); }
+  .badge-scheduled { background: rgba(255,255,255,0.05); color: #71757A; border: 1px solid rgba(255,255,255,0.08); }
+
+  /* Layer rows */
+  .layer-row { display: grid; grid-template-columns: 70px 180px 1fr; gap: 1rem; padding: 0.65em 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: baseline; font-size: clamp(0.9rem, 1.3vw, 1.1rem); }
+  .layer-row:last-child { border-bottom: none; }
+  .layer-tag { font-family: 'JetBrains Mono', monospace; color: #FF4D4D; font-weight: 500; }
+  .layer-name { color: #fff; font-weight: 600; }
+  .layer-desc { color: #9CA3AF; }
+
+  /* Print */
+  @media print {
+    body { overflow: visible; background: white; color: black; }
+    .deck { height: auto; }
+    .slide { position: relative; opacity: 1 !important; pointer-events: auto !important; transform: none !important; page-break-after: always; min-height: 100vh; padding: 5vh 8vw; }
+    .chrome, .click-zone { display: none !important; }
+    .display-1, .display-2, .display-3, .display-4 { color: black; }
+    pre { background: #f5f5f5; border-color: #ddd; color: black; }
+    .slide-divider-red { color: white; }
+  }
+
+  .first-load-hint { animation: fade-out 6s ease forwards; animation-delay: 4s; }
+  @keyframes fade-out { to { opacity: 0; visibility: hidden; } }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .slide { padding: 7vh 6vw 9vh; }
+    .display-1 { font-size: clamp(2.25rem, 9vw, 3.5rem); line-height: 1.05; }
+    .display-2 { font-size: clamp(2rem, 8vw, 3rem); line-height: 1.08; }
+    .display-3 { font-size: clamp(1.6rem, 6.5vw, 2.4rem); line-height: 1.15; }
+    .display-4 { font-size: clamp(1.25rem, 5vw, 1.6rem); line-height: 1.3; }
+    .lead { font-size: clamp(0.95rem, 3.8vw, 1.15rem); }
+    .lead-large { font-size: clamp(1.05rem, 4.2vw, 1.3rem); }
+    .big-list li { font-size: clamp(1.1rem, 4.2vw, 1.4rem); padding: 0.4em 0; }
+    .compact-list li { font-size: clamp(0.9rem, 3.6vw, 1.05rem); padding: 0.3em 0; }
+    pre { padding: 1rem 1.25rem; font-size: 0.8rem; }
+    .stage-card, .stage-card-red { padding: 1.25rem; }
+    .counter { right: 1rem; bottom: 1rem; font-size: 0.7rem; }
+    .nav-hint { display: none; }
+    .click-zone { width: 30vw; }
+    .compare-table { font-size: 0.85rem; }
+    .compare-table th, .compare-table td { padding: 0.5em 0.6em; }
+    .phase-row { grid-template-columns: 1fr; gap: 0.25rem; padding: 0.5em 0; }
+    .layer-row { grid-template-columns: 60px 1fr; gap: 0.5rem; }
+    .layer-row .layer-desc { grid-column: 2; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body class="font-sans">
+
+<!-- ====================== CHROME ====================== -->
+<div class="chrome progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+<div class="chrome counter"><span id="current">01</span> <span class="soft">/</span> <span id="total">30</span></div>
+<div class="chrome nav-hint first-load-hint"><kbd>→</kbd> next · <kbd>←</kbd> prev · <kbd>F</kbd> fullscreen · <kbd>?</kbd> overview</div>
+<div class="click-zone click-zone-prev" id="prev-zone"></div>
+<div class="click-zone click-zone-next" id="next-zone"></div>
+
+<!-- ====================== DECK ====================== -->
+<div class="deck">
+
+<!-- ============== 01 — COVER ============== -->
+<section class="slide slide-cover active">
+  <div class="slide-content">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="h-px w-12 bg-conered"></div>
+      <div class="small-caps accent">Memory Layer · A Practice Area within Cone Red's AI-First Transformation Practice · 2026</div>
+    </div>
+    <h1 class="display-1">Memory,<br><span class="accent">engineered.</span></h1>
+    <p class="lead-large mt-12 max-w-3xl" style="font-family: 'Source Serif 4', serif;">
+      The cognitive substrate for AI agents that remember — across sessions, across languages, across years.
+    </p>
+    <div class="flex items-end justify-between mt-20">
+      <div>
+        <div class="text-white font-semibold text-lg">Cone Red AI</div>
+        <div class="muted text-sm">The AI-first architecture firm</div>
+      </div>
+      <div class="text-right text-xs muted font-mono">
+        <div>30 slides · ≈ 18 min</div>
+        <div class="soft mt-1">For CTOs · 2026-04-27</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 02 — SUBTITLE ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content text-center">
+    <p class="display-3 max-w-4xl mx-auto" style="font-family: 'Source Serif 4', serif;">
+      Not <span class="muted">chat history with retrieval</span>.<br>—<br><span class="accent">Architecture.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ============== 03 — DIVIDER 01 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">01 — Section</div>
+    <h2 class="display-2">The cost of getting<br>memory wrong.</h2>
+  </div>
+</section>
+
+<!-- ============== 04 — Cold open scenarios ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <div class="section-tag mb-6">Three scenes you've already seen</div>
+    <div class="space-y-6">
+      <div class="stage-card">
+        <p class="lead-large" style="font-family: 'Source Serif 4', serif;"><span class="accent font-semibold">A finance director</span> asks an AI assistant about Q2 covenants. The assistant invents a number. The director acts on it. Three weeks later, the audit finds the gap. <span class="text-white font-semibold">Two analyst-weeks to reconstruct.</span></p>
+      </div>
+      <div class="stage-card">
+        <p class="lead-large" style="font-family: 'Source Serif 4', serif;"><span class="accent font-semibold">A CTO</span> asks the same question in Russian, gets a degraded answer, switches back to English, and the team quietly stops trusting the tool. <span class="text-white font-semibold">The cost isn't the wrong answer — it's the lost leverage.</span></p>
+      </div>
+      <div class="stage-card">
+        <p class="lead-large" style="font-family: 'Source Serif 4', serif;"><span class="accent font-semibold">A regulator</span> asks for the trail of how a decision was reached. The chat log exists. <span class="text-white font-semibold">The reasoning doesn't.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 05 — Statement: logging vs architecture ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content max-w-5xl">
+    <p class="display-3 mb-8" style="font-family: 'Source Serif 4', serif;">Every "AI memory" feature on the market treats memory as <span class="muted">a logging concern.</span></p>
+    <p class="display-2 accent">We treat it as architecture.</p>
+  </div>
+</section>
+
+<!-- ============== 06 — DIVIDER 02 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">02 — Section</div>
+    <h2 class="display-2">A Tuesday morning,<br>in the agent's voice.</h2>
+  </div>
+</section>
+
+<!-- ============== 07 — 4:07 AM vignette ============== -->
+<section class="slide">
+  <div class="slide-content max-w-4xl">
+    <div class="section-tag mb-6 accent">4:07 AM</div>
+    <p class="lead-large mb-6" style="font-family: 'Source Serif 4', serif;">
+      Dima opens Telegram and types <em class="gold">"where did we land on the targetheart audit."</em>
+    </p>
+    <p class="lead-large mb-6" style="font-family: 'Source Serif 4', serif;">
+      I don't search. The wake-up loaded the right wing the moment the session started — <span class="accent font-semibold">~170 tokens</span>: identity, this week's engagements, three open approvals.
+    </p>
+    <p class="display-4 mt-12">From his ping to my first useful sentence:<br><span class="accent">under three seconds.</span></p>
+  </div>
+</section>
+
+<!-- ============== 08 — Russian + contradiction ============== -->
+<section class="slide">
+  <div class="slide-content max-w-4xl">
+    <div class="section-tag mb-6 accent">Earlier this week</div>
+    <p class="lead-large mb-8" style="font-family: 'Source Serif 4', serif;">
+      A message in Russian — <em class="gold">"помнишь, Миша говорил про C12?"</em> I pulled the right Mike. Captured 23 days earlier in a voice transcript. <span class="text-white font-semibold">An English-only memory would have lost the thread.</span>
+    </p>
+    <p class="lead-large" style="font-family: 'Source Serif 4', serif;">
+      Yesterday Dima contradicted a position from March. I didn't correct him in chat. I flagged it once: <em class="gold">"you said the opposite on March 14, want to reconcile or supersede?"</em>
+    </p>
+    <p class="display-4 mt-10 accent">No nagging. No second flag.</p>
+  </div>
+</section>
+
+<!-- ============== 09 — DIVIDER 03 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">03 — Section</div>
+    <h2 class="display-2">Thesis.</h2>
+  </div>
+</section>
+
+<!-- ============== 10 — Category error ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content max-w-5xl">
+    <p class="display-3 mb-10">"AI memory" is a <span class="accent">category error.</span></p>
+    <p class="lead-large mb-6" style="font-family: 'Source Serif 4', serif;">What every consumer product ships is <em class="gold">chat history with retrieval</em>. The model logs your conversations, embeds them, pulls back the closest match.</p>
+    <p class="display-4 mt-8">That is not memory.<br><span class="muted">That is grep with a thesaurus.</span></p>
+  </div>
+</section>
+
+<!-- ============== 11 — Pull-quote ============== -->
+<section class="slide slide-divider-red">
+  <div class="slide-content text-center max-w-5xl">
+    <p class="display-2" style="color:#fff; font-family: 'Source Serif 4', serif; font-style: italic;">
+      "Memory is an<br>architectural decision —<br>not a feature toggle."
+    </p>
+  </div>
+</section>
+
+<!-- ============== 12 — DIVIDER 04 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">04 — Section</div>
+    <h2 class="display-2">What we evaluated,<br>and what we rejected.</h2>
+    <p class="lead mt-6">Eight alternatives you've already been pitched.</p>
+  </div>
+</section>
+
+<!-- ============== 13 — Comparison table ============== -->
+<section class="slide">
+  <div class="slide-content max-w-6xl">
+    <h2 class="display-4 mb-6">The case for <span class="accent">not buying any of them.</span></h2>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:22%">Option</th>
+          <th>Why we passed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label">ChatGPT / Claude built-in</td>
+          <td>Locked to vendor. No graph layer. No audit trail. <strong>Cannot run on premise.</strong></td>
+        </tr>
+        <tr>
+          <td class="label">Generic RAG over docs</td>
+          <td>Static. Doesn't form new memories from live conversation. No decay. No contradiction handling.</td>
+        </tr>
+        <tr>
+          <td class="label">Frontier-model long context</td>
+          <td>Per-token cost balloons. Latency degrades past 100K. <strong>No persistence between sessions.</strong></td>
+        </tr>
+        <tr>
+          <td class="label">MemPalace OSS library</td>
+          <td>Strong metaphor. English-leaning embeddings, single-store, no live formation. <strong>We adopted the metaphor and replaced the substrate.</strong></td>
+        </tr>
+        <tr>
+          <td class="label">Mem0 / agent-memory frameworks</td>
+          <td>Per-message LLM extraction by default — economics break above moderate volume. Single retrieval branch. No locked eval methodology.</td>
+        </tr>
+        <tr>
+          <td class="label">Letta (ex-MemGPT)</td>
+          <td>Memory-as-feature inside an agent runtime, not a substrate underneath one. <strong>Couples you to Letta's runtime.</strong></td>
+        </tr>
+        <tr>
+          <td class="label">Zep / managed memory svc</td>
+          <td>Strongest commercial alternative on graph + temporal. Vendor owns the eval methodology — buyer cannot lock their own. <strong>Sovereignty gap is structural.</strong></td>
+        </tr>
+        <tr>
+          <td class="label">"Build it from scratch"</td>
+          <td>The "I don't know what to evaluate" trap. ~33-hour estimate. Never shipped. <strong>We treated it as input, not output.</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="lead muted mt-8">We didn't pick one. <span class="text-white font-semibold">We synthesized.</span> Took the strongest mental model in the space — rebuilt the substrate underneath.</p>
+  </div>
+</section>
+
+<!-- ============== 14 — DIVIDER 05 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">05 — Section</div>
+    <h2 class="display-2">Architecture.</h2>
+    <p class="lead mt-6">Five layers, because one isn't enough.</p>
+  </div>
+</section>
+
+<!-- ============== 15 — Five layers ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <h2 class="display-4 mb-6 text-center">Five layers — recency × reinforcement.</h2>
+    <div class="bg-conegrey border border-coneborder rounded-2xl p-8">
+      <div class="layer-row">
+        <div class="layer-tag">L0</div>
+        <div class="layer-name">Identity</div>
+        <div class="layer-desc">Always loaded · ~50 tokens</div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-tag">L1</div>
+        <div class="layer-name">Critical facts</div>
+        <div class="layer-desc">Always loaded · ~120 tokens · this week's priorities</div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-tag">L1.5</div>
+        <div class="layer-name">Structure</div>
+        <div class="layer-desc">Auto-discovered graph · communities found, not hand-coded</div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-tag">L2</div>
+        <div class="layer-name">Wings &amp; rooms</div>
+        <div class="layer-desc">On demand · seeded by L1.5</div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-tag">L3</div>
+        <div class="layer-name">Hybrid recall</div>
+        <div class="layer-desc">Three branches in parallel — semantic + lexical + graph — fused</div>
+      </div>
+      <div class="layer-row">
+        <div class="layer-tag">L4</div>
+        <div class="layer-name">Archive</div>
+        <div class="layer-desc">Decayed memories · queryable on explicit request</div>
+      </div>
+    </div>
+    <p class="lead muted mt-6 text-center">Session-start budget: <span class="text-white font-semibold">under 200 tokens</span>. RAG eats 4–10K.</p>
+  </div>
+</section>
+
+<!-- ============== 16 — Three-tier formation ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag mb-6 accent">Memory formation</div>
+    <h2 class="display-3 mb-10">Three tiers. <span class="muted">Most products run only one.</span></h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="stage-card">
+        <div class="small-caps accent mb-3">Tier 0 · free</div>
+        <div class="text-white font-semibold mb-2">Every message</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Open-source NER + heuristics. Catches <span class="text-white">⅔ of memorable content</span> at zero LLM cost.</p>
+      </div>
+      <div class="stage-card">
+        <div class="small-caps accent mb-3">Tier 1 · cheap</div>
+        <div class="text-white font-semibold mb-2">Event-driven</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Fires when importance crosses a threshold. Fast model extracts structured facts with provenance.</p>
+      </div>
+      <div class="stage-card">
+        <div class="small-caps accent mb-3">Tier 2 · deep</div>
+        <div class="text-white font-semibold mb-2">Nightly</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Stronger model dedupes, supersedes, detects contradictions, refreshes the graph.</p>
+      </div>
+    </div>
+    <p class="lead muted mt-10">Per-seat economics scale with conversation <span class="text-white font-semibold">signal</span>, not <span class="text-white font-semibold">volume</span>.</p>
+  </div>
+</section>
+
+<!-- ============== 17 — DIVIDER 06 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">06 — Section</div>
+    <h2 class="display-2">Five scars.</h2>
+    <p class="lead mt-6">The hard problems we already paid for.</p>
+  </div>
+</section>
+
+<!-- ============== 18 — Scars ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <ol class="compact-list space-y-1 list-decimal list-inside">
+      <li><span class="text-white"><strong>Semantic similarity collapses on rare terms.</strong></span> <span class="muted-item">Phase 0: 18/20 → Phase 1a multilingual swap: 20/20.</span></li>
+      <li><span class="text-white"><strong>Single-store retrieval is a trap.</strong></span> <span class="muted-item">Vector-only misses exact phrases. Add lexical + graph + RRF fusion.</span></li>
+      <li><span class="text-white"><strong>Per-message LLM extraction is unaffordable.</strong></span> <span class="muted-item">Free heuristic gate first. LLM only on signal-crossings.</span></li>
+      <li><span class="text-white"><strong>Hand-crafted folder trees don't scale.</strong></span> <span class="muted-item">Auto-discover structure from the corpus.</span></li>
+      <li><span class="text-white"><strong>"Forever" memory becomes a junk drawer.</strong></span> <span class="muted-item">Importance × access × recency decay.</span></li>
+    </ol>
+    <p class="lead muted mt-12">Each one is roughly two weeks of work to discover, scope, and fix when you encounter it cold. <span class="text-white font-semibold">We already paid that tab.</span></p>
+  </div>
+</section>
+
+<!-- ============== 19 — DIVIDER 07 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">07 — Section</div>
+    <h2 class="display-2">Three bets won.</h2>
+    <p class="lead mt-6">Reproducible from a locked eval set.</p>
+  </div>
+</section>
+
+<!-- ============== 20 — Three bets ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="stage-card-red">
+        <div class="small-caps accent mb-3">Bet 1</div>
+        <div class="text-white font-semibold text-lg mb-2">Multilingual works in production</div>
+        <p class="text-sm muted leading-relaxed mb-4" style="font-family: 'Source Serif 4', serif;">Mixed traces — EN question, RU follow-up, UK voice — through the full pipeline.</p>
+        <div class="text-2xl font-bold text-white">18/20 → <span class="accent">20/20</span></div>
+        <div class="text-xs soft mt-1">same questions, same week</div>
+      </div>
+      <div class="stage-card-red">
+        <div class="small-caps accent mb-3">Bet 2</div>
+        <div class="text-white font-semibold text-lg mb-2">Hybrid beats single-source</div>
+        <p class="text-sm muted leading-relaxed mb-4" style="font-family: 'Source Serif 4', serif;">Storage substrate joins semantic + lexical + graph branches.</p>
+        <div class="text-2xl font-bold text-white"><span class="accent">20/20</span></div>
+        <div class="text-xs soft mt-1">higher confidence on hits</div>
+      </div>
+      <div class="stage-card-red">
+        <div class="small-caps accent mb-3">Bet 3</div>
+        <div class="text-white font-semibold text-lg mb-2">Live formation works</div>
+        <p class="text-sm muted leading-relaxed mb-4" style="font-family: 'Source Serif 4', serif;">Tier 0 + Tier 1 wired end-to-end. Real operator traffic, not benchmark.</p>
+        <div class="text-2xl font-bold text-white"><span class="accent">5/8</span> <span class="text-base muted font-normal">facts pulled correctly</span></div>
+      </div>
+    </div>
+    <p class="lead muted mt-10 text-center">The <span class="text-white font-semibold">fact</span> of a locked eval set is the credibility signal. Most products in this space cannot show one.</p>
+  </div>
+</section>
+
+<!-- ============== 21 — DIVIDER 08 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">08 — Section</div>
+    <h2 class="display-2">What changes daily.<br>What you own.</h2>
+  </div>
+</section>
+
+<!-- ============== 22 — Six daily UX ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <div class="section-tag mb-6 accent">What the operator notices</div>
+    <ul class="compact-list space-y-1 list-disc list-inside">
+      <li><span class="text-white"><strong>Cold pickup &lt;200 tokens.</strong></span> <span class="muted-item">No re-priming. The 4 AM ping feels like resuming.</span></li>
+      <li><span class="text-white"><strong>Cross-language continuity.</strong></span> <span class="muted-item">RU fact on Monday surfaces in EN query on Thursday.</span></li>
+      <li><span class="text-white"><strong>Quiet contradiction detection.</strong></span> <span class="muted-item">Flag once. Newer wins by default. No nagging.</span></li>
+      <li><span class="text-white"><strong>Decay-aware recall.</strong></span> <span class="muted-item">Stale facts stop competing with this-week priorities.</span></li>
+      <li><span class="text-white"><strong>Graph-aware entity resolution.</strong></span> <span class="muted-item">"Mike said about C12" → the right Mike.</span></li>
+      <li><span class="text-white"><strong>Audit trail.</strong></span> <span class="muted-item">Every fact knows when, where, why, and at what confidence.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== 23 — What you own ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag mb-6 accent">What stays with the client</div>
+    <h2 class="display-3 mb-10"><span class="accent">Sovereignty</span> is the close.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="stage-card-red">
+        <div class="text-white font-semibold text-lg mb-2">Your data</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">All of it. Self-hosted. Your infrastructure, your database, your backups.</p>
+      </div>
+      <div class="stage-card-red">
+        <div class="text-white font-semibold text-lg mb-2">Your audit trail</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Every fact, every timestamp, every confidence score, queryable on your side.</p>
+      </div>
+      <div class="stage-card-red">
+        <div class="text-white font-semibold text-lg mb-2">The kill switch</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">A single env var flips the whole system off. <span class="text-white">Zero downtime.</span> Agent reverts to vendor-default memory.</p>
+      </div>
+      <div class="stage-card-red">
+        <div class="text-white font-semibold text-lg mb-2">The exit</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">DB dump + documented schema. <span class="text-white">We don't hold your memory hostage.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 24 — DIVIDER 09 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">09 — Section</div>
+    <h2 class="display-2">Proof.</h2>
+    <p class="lead mt-6">The eval is locked. Score regressions block phases.</p>
+  </div>
+</section>
+
+<!-- ============== 25 — Phase status ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <h2 class="display-4 mb-6">Phase status.</h2>
+    <div class="bg-conegrey border border-coneborder rounded-2xl p-6 md:p-8">
+      <div class="phase-row" style="border-bottom: 1px solid rgba(255,255,255,0.12);">
+        <div class="text-white font-semibold text-sm" style="text-transform: uppercase; letter-spacing: 0.06em;">Phase</div>
+        <div class="text-white font-semibold text-sm" style="text-transform: uppercase; letter-spacing: 0.06em;">Status</div>
+        <div class="text-white font-semibold text-sm" style="text-transform: uppercase; letter-spacing: 0.06em;">Result</div>
+      </div>
+      <div class="phase-row">
+        <div>0 — Sandbox baseline</div>
+        <div><span class="badge badge-done">Complete</span></div>
+        <div><strong style="color:#fff;">18/20</strong> on locked set</div>
+      </div>
+      <div class="phase-row">
+        <div>0.5 — Structure layer</div>
+        <div><span class="badge badge-done">Complete</span></div>
+        <div>9 communities auto-discovered</div>
+      </div>
+      <div class="phase-row">
+        <div>1a — Multilingual swap</div>
+        <div><span class="badge badge-done">Complete</span></div>
+        <div><strong style="color:#fff;">20/20</strong>; RU failures fixed</div>
+      </div>
+      <div class="phase-row">
+        <div>1b — Storage substrate</div>
+        <div><span class="badge badge-done">Complete</span></div>
+        <div><strong style="color:#fff;">20/20</strong>; higher confidence</div>
+      </div>
+      <div class="phase-row">
+        <div>2 — Formation pipeline</div>
+        <div><span class="badge badge-done">Complete</span></div>
+        <div>Live extraction working</div>
+      </div>
+      <div class="phase-row">
+        <div>2-shadow — Live integration</div>
+        <div><span class="badge badge-active">Active</span></div>
+        <div>Observation phase</div>
+      </div>
+      <div class="phase-row">
+        <div>3 — Hybrid retrieval (RRF)</div>
+        <div><span class="badge badge-scheduled">Scheduled</span></div>
+        <div class="muted">Lexical + graph alongside semantic</div>
+      </div>
+      <div class="phase-row">
+        <div>4 — Decay + contradictions</div>
+        <div><span class="badge badge-scheduled">Scheduled</span></div>
+        <div class="muted">Tier 2 + L4 archive sweep</div>
+      </div>
+      <div class="phase-row" style="border-bottom: none;">
+        <div>5 — Operator cutover</div>
+        <div><span class="badge badge-scheduled">Scheduled</span></div>
+        <div class="muted">Feature-flagged rollout</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 26 — DIVIDER 10 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">10 — Section</div>
+    <h2 class="display-2">What this is NOT.</h2>
+    <p class="lead mt-6">Anti-overclaim. The credibility bank.</p>
+  </div>
+</section>
+
+<!-- ============== 27 — NOT list ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <ul class="compact-list space-y-1 list-disc list-inside">
+      <li><span class="text-white"><strong>Not a replacement for RAG over a doc corpus.</strong></span> <span class="muted-item">If you need to query a 50,000-page contract library, buy a doc-retrieval product.</span></li>
+      <li><span class="text-white"><strong>Not a system of record.</strong></span> <span class="muted-item">Doesn't replace the CRM, warehouse, or ledger.</span></li>
+      <li><span class="text-white"><strong>Not GDPR-certified out of the box.</strong></span> <span class="muted-item">Compliance is deployment-specific work. Anyone claiming "compliant by default" is selling vapor.</span></li>
+      <li><span class="text-white"><strong>Not a drop-in for non-conversational agents.</strong></span> <span class="muted-item">Plug it into a batch ETL pipeline, it works badly.</span></li>
+      <li><span class="text-white"><strong>Not a hosted SaaS.</strong></span> <span class="muted-item">This is integration measured in weeks, not minutes.</span></li>
+      <li><span class="text-white"><strong>Not "your agent is now sentient."</strong></span> <span class="muted-item">It remembers. It does not reason about its own remembering.</span></li>
+    </ul>
+    <p class="lead muted mt-10">If any of those is what you need, we'll tell you on the first call and send you somewhere honest.</p>
+  </div>
+</section>
+
+<!-- ============== 28 — DIVIDER 11 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">11 — Section</div>
+    <h2 class="display-2">Closing.</h2>
+  </div>
+</section>
+
+<!-- ============== 29 — Memory is the moat ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content text-center max-w-5xl">
+    <p class="display-2 muted mb-8" style="font-family: 'Source Serif 4', serif; font-style: italic;">Frontier models are at parity by 2027.</p>
+    <p class="display-1 accent" style="font-size: clamp(3.5rem, 9vw, 7rem);">Memory<br>is the moat.</p>
+    <p class="lead-large mt-12 mx-auto" style="font-family: 'Source Serif 4', serif;">The differentiator is whose agent has a relationship with the operator <span class="text-white font-semibold">that compounds across every conversation, in every language, over years.</span></p>
+  </div>
+</section>
+
+<!-- ============== 30 — Sign-off + CTA ============== -->
+<section class="slide slide-end">
+  <div class="slide-content text-center max-w-5xl">
+    <p class="display-3 mb-10" style="font-family: 'Source Serif 4', serif; font-style: italic;">
+      Bring one example of a memory failure that has cost your team time.
+    </p>
+    <p class="display-3 accent mb-12">We'll work outward from there.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto text-left">
+      <div class="stage-card-red">
+        <div class="small-caps accent mb-3">Path A · high intent</div>
+        <div class="text-white font-semibold text-lg mb-2">45-minute fit call</div>
+        <p class="text-sm muted leading-relaxed mb-3" style="font-family: 'Source Serif 4', serif;">Your corpus, language footprint, agent runtime. We tell you honestly if it's a fit.</p>
+        <p class="text-sm font-mono"><a href="mailto:dima@cone.red?subject=Memory%20Layer%20%E2%80%94%20fit%20call" style="color:#FF4D4D;">dima@cone.red</a><br><span class="soft text-xs">subject · "Memory Layer — fit call"</span></p>
+      </div>
+      <div class="stage-card">
+        <div class="small-caps accent mb-3">Path B · category-shopping</div>
+        <div class="text-white font-semibold text-lg mb-2">Memory Readiness Diagnostic</div>
+        <p class="text-sm muted leading-relaxed mb-3" style="font-family: 'Source Serif 4', serif;">Six questions, five minutes. Tells you which of the five scars your stack is paying for. <em>Coming this week.</em></p>
+        <p class="text-sm font-mono"><a href="mailto:dima@cone.red?subject=Memory%20Readiness%20Diagnostic%20%E2%80%94%20notify" style="color:#FF4D4D;">dima@cone.red</a><br><span class="soft text-xs">subject · "Memory Readiness Diagnostic — notify"</span></p>
+      </div>
+    </div>
+    <div class="muted text-xs mt-12 font-mono">A Practice Area within the Cone Red AI-First Transformation Practice · 2026-04-27</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  document.getElementById('total').textContent = String(total).padStart(2, '0');
+
+  function show(i) {
+    if (i < 0 || i >= total) return;
+    slides[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    document.getElementById('current').textContent = String(current + 1).padStart(2, '0');
+    document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+    history.replaceState(null, '', '#s' + (current + 1));
+  }
+
+  function next() { show(Math.min(current + 1, total - 1)); }
+  function prev() { show(Math.max(current - 1, 0)); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'j') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'k') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { e.preventDefault(); show(0); }
+    else if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+    else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+    else if (e.key === '?') { showOverview(); }
+    else if (e.key === 'Escape') { closeOverview(); }
+  });
+
+  document.getElementById('prev-zone').addEventListener('click', prev);
+  document.getElementById('next-zone').addEventListener('click', next);
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+      document.body.classList.add('fullscreen');
+    } else {
+      document.exitFullscreen?.();
+      document.body.classList.remove('fullscreen');
+    }
+  }
+
+  let cursorTimer;
+  document.addEventListener('mousemove', () => {
+    if (document.body.classList.contains('fullscreen')) {
+      document.body.classList.add('show-cursor');
+      clearTimeout(cursorTimer);
+      cursorTimer = setTimeout(() => document.body.classList.remove('show-cursor'), 2000);
+    }
+  });
+
+  if (location.hash.startsWith('#s')) {
+    const i = parseInt(location.hash.slice(2)) - 1;
+    if (!isNaN(i) && i >= 0 && i < total) show(i);
+  }
+
+  function showOverview() {
+    let overlay = document.getElementById('overview');
+    if (overlay) { overlay.remove(); return; }
+    overlay = document.createElement('div');
+    overlay.id = 'overview';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,10,0.97);z-index:1000;overflow-y:auto;padding:4vh 4vw;';
+    overlay.innerHTML = `<div style="max-width:1400px;margin:0 auto;">
+      <h2 style="font-family:Inter;color:#fff;font-size:2rem;margin-bottom:2rem;font-weight:700;">Slide overview <span style="color:#71757A;font-size:1rem;font-weight:400;">— click to jump · Esc to close</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;"></div>
+    </div>`;
+    const grid = overlay.querySelector('div div');
+    slides.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1.25rem;cursor:pointer;transition:all 0.15s;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;';
+      const titleEl = s.querySelector('h1, h2, p.display-3, p.display-2');
+      const title = titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim().slice(0, 80) : '(slide)';
+      card.innerHTML = `<div style="font-family:JetBrains Mono;font-size:11px;color:#71757A;letter-spacing:0.15em;">${String(i+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}</div>
+                        <div style="font-family:Inter;color:#E8E8E5;font-size:0.95rem;line-height:1.35;margin-top:0.5rem;">${title}</div>`;
+      if (i === current) card.style.borderColor = '#FF4D4D';
+      card.addEventListener('mouseenter', () => card.style.borderColor = '#FF4D4D');
+      card.addEventListener('mouseleave', () => card.style.borderColor = i === current ? '#FF4D4D' : 'rgba(255,255,255,0.08)');
+      card.addEventListener('click', () => { show(i); closeOverview(); });
+      grid.appendChild(card);
+    });
+    document.body.appendChild(overlay);
+  }
+  function closeOverview() {
+    const overlay = document.getElementById('overview');
+    if (overlay) overlay.remove();
+  }
+
+  if (window.mermaid) {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        background: '#141414',
+        primaryColor: '#1A1A1A',
+        primaryTextColor: '#E8E8E5',
+        primaryBorderColor: '#FF4D4D',
+        lineColor: '#FF4D4D',
+        secondaryColor: '#0A0A0A',
+        tertiaryColor: '#0A0A0A'
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
