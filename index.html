@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Building an AI-first Company · Dima Levin</title>
-<meta name="description" content="A field handbook on how to turn a team into a compounding knowledge organism. By Dima Levin, CAIO at Cone Red AI.">
-<meta property="og:title" content="Building an AI-first Company">
-<meta property="og:description" content="Not by adding AI — by re-architecting around it. A field handbook by Dima Levin, CAIO at Cone Red AI.">
+<title>The AI-First Transformation Practice · Cone Red AI</title>
+<meta name="description" content="Cone Red AI's AI-First Transformation Practice — the field handbook on re-architecting companies around AI. Production track record across Financial Services, Healthcare, Industrial, Public Sector, Enterprise.">
+<meta property="og:title" content="The AI-First Transformation Practice · Cone Red AI">
+<meta property="og:description" content="Not by adding AI — by re-architecting around it. The field handbook + readiness diagnostic from Cone Red's AI-First Transformation Practice.">
 <meta property="og:type" content="article">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -33,29 +33,43 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .wrap {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 6vh 6vw 10vh;
-  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 6vh 6vw 10vh; }
 
-  /* Header strip */
-  .top {
-    display: flex; align-items: center; gap: 0.75rem;
-    margin-bottom: 4rem;
+  /* ================ Practice mark / header ================ */
+  .practice-mark {
+    display: flex; align-items: center; gap: 0.85rem;
+    margin-bottom: 3.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--coneborder);
+  }
+  .practice-mark .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--conered); flex-shrink: 0; }
+  .practice-mark .brand { font-weight: 700; color: #fff; letter-spacing: -0.005em; }
+  .practice-mark .practice {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--conered);
+    margin-left: auto;
   }
-  .top .bar { height: 1px; width: 48px; background: var(--conered); }
-  .top .meta { color: var(--conesoft); margin-left: auto; }
 
-  /* Hero */
+  /* ================ Hero ================ */
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--conered);
+    margin-bottom: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hero-tag::before { content: ""; height: 1px; width: 32px; background: var(--conered); }
+
   h1 {
-    font-size: clamp(2.5rem, 7vw, 5.5rem);
-    line-height: 1.05;
+    font-size: clamp(2.5rem, 7vw, 5.25rem);
+    line-height: 1.04;
     font-weight: 800;
     letter-spacing: -0.025em;
     margin: 0 0 1.5rem;
@@ -65,193 +79,316 @@
 
   .subtitle {
     font-family: 'Source Serif 4', Georgia, serif;
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-    line-height: 1.4;
+    font-size: clamp(1.15rem, 1.9vw, 1.65rem);
+    line-height: 1.45;
     color: var(--conetext);
     max-width: 680px;
-    margin: 0 0 3rem;
+    margin: 0 0 2rem;
   }
   .subtitle .muted { color: var(--conemuted); }
 
-  /* Cards */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.25rem;
-    margin: 3rem 0 4rem;
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 2.5rem;
+    margin: 2.5rem 0 0;
+    padding: 1.5rem 0 0;
+    border-top: 1px solid var(--coneborder);
   }
+  .hero-stats .stat .num {
+    font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; color: #fff; letter-spacing: -0.02em;
+  }
+  .hero-stats .stat .num .accent { color: var(--conered); }
+  .hero-stats .stat .lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--conesoft); margin-top: 0.3rem;
+  }
+
+  /* ================ Section base ================ */
+  section { margin: 5rem 0; padding-top: 3rem; border-top: 1px solid var(--coneborder); }
+  section h2 {
+    font-size: clamp(1.65rem, 3.2vw, 2.4rem);
+    font-weight: 700; letter-spacing: -0.018em;
+    color: #fff; margin: 0 0 0.5rem;
+  }
+  section h2 .accent { color: var(--conered); }
+  section .lead-sub {
+    color: var(--conemuted);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    max-width: 60ch;
+    margin: 0 0 2.5rem;
+  }
+
+  /* ================ Cards (handbook/deck) ================ */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; }
   .card {
-    display: block;
-    background: var(--conegrey);
-    border: 1px solid var(--coneborder);
-    border-radius: 14px;
-    padding: 2rem;
-    text-decoration: none;
-    color: inherit;
+    display: block; background: var(--conegrey);
+    border: 1px solid var(--coneborder); border-radius: 14px;
+    padding: 2rem; text-decoration: none; color: inherit;
     transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
   .card::after {
-    content: "→";
-    position: absolute;
-    right: 1.5rem;
-    bottom: 1.5rem;
-    font-size: 1.5rem;
-    color: var(--conesoft);
-    transition: transform 0.2s ease, color 0.2s ease;
+    content: "→"; position: absolute; right: 1.5rem; bottom: 1.5rem;
+    font-size: 1.5rem; color: var(--conesoft); transition: transform 0.2s ease, color 0.2s ease;
   }
   .card:hover {
-    border-color: var(--conered);
-    transform: translateY(-2px);
+    border-color: var(--conered); transform: translateY(-2px);
     background: linear-gradient(135deg, rgba(255,77,77,0.06) 0%, var(--conegrey) 60%);
   }
   .card:hover::after { color: var(--conered); transform: translateX(4px); }
   .card .tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--conered);
-    margin-bottom: 1rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--conered); margin-bottom: 1rem;
   }
-  .card h2 {
-    font-size: 1.65rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem;
-    color: #fff;
-    letter-spacing: -0.01em;
+  .card h3 { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.5rem; color: #fff; letter-spacing: -0.01em; }
+  .card p { color: var(--conemuted); font-size: 0.95rem; margin: 0; line-height: 1.55; max-width: 90%; }
+  .card .meta { margin-top: 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--conesoft); letter-spacing: 0.05em; }
+
+  /* ================ Diagnostic widget ================ */
+  .diag {
+    background: linear-gradient(135deg, rgba(255,77,77,0.04) 0%, var(--conegrey) 100%);
+    border: 1px solid rgba(255,77,77,0.18);
+    border-radius: 18px; padding: clamp(1.5rem, 3vw, 2.75rem);
   }
-  .card p {
-    color: var(--conemuted);
-    font-size: 0.95rem;
-    margin: 0;
-    line-height: 1.55;
-    max-width: 90%;
+  .diag .intro { color: var(--conemuted); font-size: 0.95rem; margin-bottom: 2rem; max-width: 60ch; }
+  .diag .intro strong { color: #fff; }
+  .q-list { list-style: none; padding: 0; margin: 0 0 2rem; counter-reset: q; }
+  .q-item {
+    counter-increment: q;
+    padding: 1.1rem 0; border-top: 1px solid var(--coneborder);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
   }
-  .card .meta {
-    margin-top: 1.25rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--conesoft);
-    letter-spacing: 0.05em;
+  .q-item:first-child { border-top: none; }
+  .q-item .q-text {
+    flex: 1; min-width: 240px;
+    font-size: clamp(0.95rem, 1.4vw, 1.05rem); color: var(--conetext); line-height: 1.45;
+  }
+  .q-item .q-text::before {
+    content: counter(q, decimal-leading-zero) ".";
+    font-family: 'JetBrains Mono', monospace; color: var(--conered);
+    font-weight: 700; margin-right: 0.6rem; font-size: 0.85em;
+  }
+  .q-toggle { display: inline-flex; gap: 4px; flex-shrink: 0; }
+  .q-toggle button {
+    background: var(--conepanel); border: 1px solid var(--coneborder);
+    color: var(--conemuted); padding: 0.5rem 1.1rem; border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer; transition: all 0.15s ease;
+  }
+  .q-toggle button:hover { border-color: var(--conemuted); color: #fff; }
+  .q-toggle button.active[data-val="yes"] {
+    background: var(--conered); border-color: var(--conered); color: #fff;
+  }
+  .q-toggle button.active[data-val="no"] {
+    background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #fff;
   }
 
-  /* Why-section */
-  .why {
-    margin: 5rem 0 4rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--coneborder);
+  .diag-result {
+    margin-top: 1.5rem;
+    padding: 2rem; border-radius: 14px;
+    background: var(--coneblack); border: 1px solid var(--coneborder);
+    opacity: 0.55; transition: opacity 0.4s ease, border-color 0.4s ease;
   }
-  .why h3 {
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    font-weight: 700;
-    margin: 0 0 2rem;
-    color: #fff;
-    letter-spacing: -0.015em;
+  .diag-result.live { opacity: 1; }
+  .diag-result.tier-0 { border-color: var(--conegold); background: linear-gradient(135deg, rgba(212,165,116,0.08), var(--coneblack)); }
+  .diag-result.tier-1 { border-color: rgba(255,255,255,0.15); }
+  .diag-result.tier-2 { border-color: var(--conered); background: linear-gradient(135deg, rgba(255,77,77,0.06), var(--coneblack)); }
+  .diag-result.tier-3 { border-color: var(--conered); background: linear-gradient(135deg, rgba(255,77,77,0.12), var(--coneblack)); }
+
+  .diag-result .score-row { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.75rem; }
+  .diag-result .score-num {
+    font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; color: #fff; line-height: 1;
+    font-family: 'JetBrains Mono', monospace; letter-spacing: -0.02em;
   }
-  .why h3 .accent { color: var(--conered); }
-  .why-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
+  .diag-result .score-num .of { color: var(--conesoft); font-weight: 400; }
+  .diag-result .tier-name { font-weight: 700; color: var(--conered); font-size: clamp(1.1rem, 1.6vw, 1.3rem); letter-spacing: -0.01em; }
+  .diag-result.tier-0 .tier-name { color: var(--conegold); }
+  .diag-result .tier-msg { color: var(--conetext); font-size: clamp(0.95rem, 1.4vw, 1.05rem); line-height: 1.55; margin: 0.75rem 0 1.25rem; }
+  .diag-result .tier-cta {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--conered); color: #fff;
+    padding: 0.85rem 1.4rem; border-radius: 10px;
+    text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    transition: transform 0.15s ease, background 0.15s ease;
   }
+  .diag-result .tier-cta:hover { transform: translateX(2px); background: #ff6363; }
+  .diag-result.tier-0 .tier-cta { background: transparent; color: var(--conegold); border: 1px solid var(--conegold); }
+  .diag-result.tier-0 .tier-cta:hover { background: rgba(212,165,116,0.1); }
+
+  /* ================ Why grid ================ */
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
   .why-item {
-    padding: 1.25rem;
-    border-left: 2px solid var(--conered);
-    background: rgba(255,255,255,0.015);
+    padding: 1.25rem; border-left: 2px solid var(--conered); background: rgba(255,255,255,0.015);
   }
   .why-item strong { color: #fff; display: block; margin-bottom: 0.35rem; font-size: 0.95rem; }
   .why-item span { color: var(--conemuted); font-size: 0.88rem; line-height: 1.5; }
 
-  /* Author */
-  .author {
-    margin-top: 5rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--coneborder);
-    display: flex;
-    align-items: flex-start;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+  /* ================ Outcomes (case grid) ================ */
+  .outcomes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .outcome-card {
+    background: var(--conegrey); border: 1px solid var(--coneborder); border-radius: 12px;
+    padding: 1.5rem; transition: border-color 0.15s ease;
   }
-  .author .strip { width: 3px; align-self: stretch; background: var(--conered); border-radius: 2px; }
-  .author .body { flex: 1; min-width: 280px; }
-  .author .name { font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0 0 0.25rem; }
-  .author .role {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--conered);
-    margin-bottom: 1rem;
+  .outcome-card:hover { border-color: rgba(255,77,77,0.4); }
+  .outcome-card .sector {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--conered); margin-bottom: 0.75rem;
   }
-  .author p { color: var(--conemuted); font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.75rem; max-width: 60ch; }
-  .author a { color: var(--conegold); text-decoration: none; border-bottom: 1px solid rgba(212,165,116,0.3); }
-  .author a:hover { border-bottom-color: var(--conegold); }
+  .outcome-card .scope { color: var(--conetext); font-size: 0.95rem; font-weight: 600; line-height: 1.35; margin-bottom: 1rem; }
+  .outcome-card ul { list-style: none; margin: 0; padding: 0; }
+  .outcome-card li { color: var(--conemuted); font-size: 0.85rem; line-height: 1.5; padding: 0.25rem 0; }
+  .outcome-card li strong { color: #fff; font-weight: 700; }
 
-  /* Footer */
+  /* ================ Practice Areas ================ */
+  .practice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+  .practice-item {
+    padding: 0.85rem 1rem; background: var(--conegrey); border: 1px solid var(--coneborder);
+    border-radius: 8px; font-size: 0.9rem; color: var(--conetext);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .practice-item .depth {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--conesoft);
+  }
+  .practice-item .depth.deep { color: var(--conered); }
+  .practice-also { color: var(--conesoft); font-size: 0.85rem; line-height: 1.6; }
+
+  /* ================ Practice Lead (Author) ================ */
+  .practice-lead {
+    display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap;
+  }
+  .practice-lead .strip { width: 3px; align-self: stretch; background: var(--conered); border-radius: 2px; }
+  .practice-lead .body { flex: 1; min-width: 280px; }
+  .practice-lead .name { font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0 0 0.25rem; }
+  .practice-lead .role {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--conered); margin-bottom: 1rem;
+  }
+  .practice-lead p { color: var(--conemuted); font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.75rem; max-width: 60ch; }
+  .practice-lead a { color: var(--conegold); text-decoration: none; border-bottom: 1px solid rgba(212,165,116,0.3); }
+  .practice-lead a:hover { border-bottom-color: var(--conegold); }
+
+  /* ================ Footer ================ */
   footer {
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--coneborder);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--conesoft);
-    letter-spacing: 0.05em;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
+    margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--coneborder);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+    color: var(--conesoft); letter-spacing: 0.05em;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
   }
   footer a { color: var(--conemuted); text-decoration: none; }
   footer a:hover { color: var(--conered); }
 
   @media (max-width: 600px) {
     .wrap { padding: 5vh 6vw 8vh; }
-    .top { margin-bottom: 2.5rem; }
-    .top .meta { display: none; }
+    .practice-mark .practice { display: none; }
     .card { padding: 1.5rem; }
     .card::after { right: 1.25rem; bottom: 1.25rem; }
+    .diag { padding: 1.5rem; }
+    .q-item { padding: 1rem 0; }
+    .hero-stats { gap: 1.5rem; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="top">
-    <span class="bar"></span>
-    <span>A Field Handbook · v1 · 2026</span>
-    <span class="meta">Cone Red AI</span>
+  <!-- ========= PRACTICE MARK / HEADER ========= -->
+  <div class="practice-mark">
+    <span class="dot"></span>
+    <span class="brand">Cone Red AI</span>
+    <span class="practice">AI-First Transformation Practice</span>
   </div>
 
+  <!-- ========= HERO ========= -->
+  <span class="hero-tag">A Field Handbook · v1 · 2026</span>
   <h1>Building an<br><span class="accent">AI-first</span> company.</h1>
-
   <p class="subtitle">
     Not by <span class="muted">adding</span> AI — by <span style="color:var(--conered)">re-architecting</span> around it.
-    A practical handbook on turning a team into a compounding knowledge organism.
+    The field handbook from Cone Red's AI-First Transformation Practice — the system, the diagnostic, the proof.
   </p>
 
-  <div class="cards">
-    <a class="card" href="handbook.html">
-      <div class="tag">The long-read</div>
-      <h2>The Handbook</h2>
-      <p>End-to-end essay. The thesis, the four shifts, the architecture, the AI-PM pipeline, the first 90 days, failure modes.</p>
-      <div class="meta">~30 min read · single page · printable</div>
-    </a>
-    <a class="card" href="deck.html">
-      <div class="tag">The deck</div>
-      <h2>The Slide Deck</h2>
-      <p>37 slides for live talks, founder offsites, board calls, all-hands. Same content, presentation-ready. Press <code>F</code> for fullscreen.</p>
-      <div class="meta">~25 min talk · keyboard nav · mobile-friendly</div>
-    </a>
+  <div class="hero-stats">
+    <div class="stat"><div class="num"><span class="accent">50+</span> systems</div><div class="lbl">In production</div></div>
+    <div class="stat"><div class="num"><span class="accent">$100M+</span></div><div class="lbl">Documented savings</div></div>
+    <div class="stat"><div class="num"><span class="accent">21</span> banks</div><div class="lbl">Single deployment</div></div>
+    <div class="stat"><div class="num">3,500<span class="accent">+</span> users</div><div class="lbl">Multilingual RAG</div></div>
   </div>
 
-  <section class="why">
-    <h3>Why every company <span class="accent">should adopt this</span>.</h3>
+  <!-- ========= READ / WATCH ========= -->
+  <section style="border-top:none;padding-top:0;">
+    <h2>Read it. Share it.</h2>
+    <p class="lead-sub">Two formats, same arc. Send the long-read to a CEO; bring the deck to an offsite.</p>
+    <div class="cards">
+      <a class="card" href="handbook.html">
+        <div class="tag">The long-read</div>
+        <h3>The Handbook</h3>
+        <p>End-to-end essay. The thesis, the four shifts, the architecture, the AI-PM pipeline, the first 90 days, failure modes.</p>
+        <div class="meta">~30 min · single page · printable</div>
+      </a>
+      <a class="card" href="deck.html">
+        <div class="tag">The deck</div>
+        <h3>The Slide Deck</h3>
+        <p>37 slides for live talks, founder offsites, board calls, all-hands. Press <code>F</code> for fullscreen.</p>
+        <div class="meta">~25 min · keyboard nav · mobile-friendly</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ========= DIAGNOSTIC ========= -->
+  <section id="diagnostic">
+    <h2>The AI-First <span class="accent">Readiness Score</span>.</h2>
+    <p class="lead-sub">Six questions. Two minutes. One number that tells you exactly where your company sits on the AI-first curve — and what it costs to stay there.</p>
+
+    <div class="diag">
+      <p class="intro">
+        <strong>Answer honestly.</strong> Each "yes" is one of the six anti-patterns we see kill AI rollouts. The lower the score, the closer you are to AI-first. Your score updates live as you answer.
+      </p>
+
+      <ol class="q-list" id="qlist">
+        <li class="q-item">
+          <div class="q-text">Your teams use AI mostly as a search engine — typing queries, reading answers — rather than working with it like a colleague.</div>
+          <div class="q-toggle" data-q="0"><button data-val="yes">Yes</button><button data-val="no">No</button></div>
+        </li>
+        <li class="q-item">
+          <div class="q-text">AI in your company writes outputs — emails, summaries, code — but rarely reasons through decisions before you do.</div>
+          <div class="q-toggle" data-q="1"><button data-val="yes">Yes</button><button data-val="no">No</button></div>
+        </li>
+        <li class="q-item">
+          <div class="q-text">There's no schema or pre-commit validation on AI output. Quality depends on whoever is paying attention that day.</div>
+          <div class="q-toggle" data-q="2"><button data-val="yes">Yes</button><button data-val="no">No</button></div>
+        </li>
+        <li class="q-item">
+          <div class="q-text">One person — or a tiny team — is the only one who really understands how the AI stack works. Bus factor of one.</div>
+          <div class="q-toggle" data-q="3"><button data-val="yes">Yes</button><button data-val="no">No</button></div>
+        </li>
+        <li class="q-item">
+          <div class="q-text">You're investing in elaborate AI infrastructure before the team uses the basics every day.</div>
+          <div class="q-toggle" data-q="4"><button data-val="yes">Yes</button><button data-val="no">No</button></div>
+        </li>
+        <li class="q-item">
+          <div class="q-text">Critical decisions, lessons, and tribal knowledge live in Slack/Telegram — not in a journal anyone can search six months from now.</div>
+          <div class="q-toggle" data-q="5"><button data-val="yes">Yes</button><button data-val="no">No</button></div>
+        </li>
+      </ol>
+
+      <div class="diag-result tier-1" id="result">
+        <div class="score-row">
+          <span class="score-num"><span id="scoreNum">—</span><span class="of"> / 6</span></span>
+          <span class="tier-name" id="tierName">Answer all six to see your tier</span>
+        </div>
+        <p class="tier-msg" id="tierMsg">Each question maps to one of the six anti-patterns we've seen kill AI rollouts across 50+ Fortune 500 engagements. Score yourself — then decide if it's worth a 30-minute conversation.</p>
+        <a class="tier-cta" id="tierCta" href="mailto:dima@cone.red?subject=AI-First%20Readiness%20Score" style="display:none;">Book the 30-min diagnostic call →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= WHY ========= -->
+  <section>
+    <h2>Why every company <span class="accent">should adopt this</span>.</h2>
+    <p class="lead-sub">The compounding gap between "added AI" and "AI-first" is now measured in quarters — and widening monthly.</p>
     <div class="why-grid">
       <div class="why-item">
         <strong>Speed compounds, not stalls.</strong>
-        <span>A 90-min meeting becomes 5–10 tickets in 20 minutes, not 3 hours. The bottleneck moves from typing to thinking.</span>
+        <span>A 90-min meeting becomes 5–10 cited tickets in 20 minutes, not 3 hours. Bottleneck moves from typing to thinking.</span>
       </div>
       <div class="why-item">
         <strong>Knowledge stays when people leave.</strong>
@@ -259,7 +396,7 @@
       </div>
       <div class="why-item">
         <strong>You stop paying the SaaS tax.</strong>
-        <span>One git repo. No vendor lock-in. SaaS apps become render layers, not sources of truth.</span>
+        <span>One git repo. No vendor lock-in. SaaS apps become render layers — not sources of truth.</span>
       </div>
       <div class="why-item">
         <strong>Every project gets smarter.</strong>
@@ -276,21 +413,182 @@
     </div>
   </section>
 
-  <section class="author">
-    <div class="strip"></div>
-    <div class="body">
-      <p class="name">Dima Levin</p>
-      <p class="role">CAIO · Cone Red AI</p>
-      <p>Co-founder and Chief AI Officer at <a href="https://cone.red" target="_blank" rel="noopener">Cone Red AI</a>. Has architected 50+ production AI systems for Fortune 500 companies, delivering $100M+ in measurable savings. This handbook distills what works — and what kills AI rollouts — across hundreds of engagements.</p>
-      <p>If your team is "adding AI" but not seeing compounding returns, this is the playbook to fix that. Reach out: <a href="mailto:dima@cone.red">dima@cone.red</a>.</p>
+  <!-- ========= SELECTED OUTCOMES ========= -->
+  <section id="outcomes">
+    <h2>Selected <span class="accent">outcomes</span>.</h2>
+    <p class="lead-sub">A sample from production deployments across the practice. Sanitized for NDA compliance — sector, scope, measurable result.</p>
+
+    <div class="outcomes">
+
+      <div class="outcome-card">
+        <div class="sector">Financial Services · Banking</div>
+        <div class="scope">Multi-agent document processing across 21 banks</div>
+        <ul>
+          <li><strong>$250M+</strong> in documents processed</li>
+          <li><strong>99.6%</strong> accuracy on compliance verification</li>
+          <li><strong>90%</strong> reduction in document handling time</li>
+          <li>Live in <strong>21</strong> institutions</li>
+        </ul>
+      </div>
+
+      <div class="outcome-card">
+        <div class="sector">Healthcare · Pharma Retail</div>
+        <div class="scope">Graph-based recommendation engine, 120+ pharmacy locations</div>
+        <ul>
+          <li><strong>280% ROI</strong> in 4.2 months</li>
+          <li><strong>+19%</strong> revenue from AI-driven recommendations</li>
+          <li><strong>2.3M</strong> safe recommendations · zero critical incidents</li>
+          <li>Scaled to <strong>120+</strong> locations</li>
+        </ul>
+      </div>
+
+      <div class="outcome-card">
+        <div class="sector">Industrial · Mining</div>
+        <div class="scope">Voice-driven AI documentation for €133M field operation</div>
+        <ul>
+          <li><strong>90%</strong> reduction in documentation time</li>
+          <li><strong>9,700%</strong> projected ROI on operational efficiency</li>
+          <li>Hands-free dictation in hazardous environments</li>
+          <li>Integrated with existing ERP</li>
+        </ul>
+      </div>
+
+      <div class="outcome-card">
+        <div class="sector">FinTech · Logistics Compliance</div>
+        <div class="scope">RAG-based conflict detection & document generation</div>
+        <ul>
+          <li>Cost per transaction: <strong>$120 → $3</strong> (97% cut)</li>
+          <li>Processing time: <strong>2–3 hrs → &lt;4 min</strong></li>
+          <li>Scales to <strong>2,000+ docs/month</strong></li>
+          <li>Compliance error rate near-zero</li>
+        </ul>
+      </div>
+
+      <div class="outcome-card">
+        <div class="sector">Manufacturing · QC</div>
+        <div class="scope">Computer-vision defect detection across 50+ production lines</div>
+        <ul>
+          <li><strong>92%</strong> defect detection accuracy</li>
+          <li><strong>$800K</strong> documented annual savings</li>
+          <li><strong>10,000+</strong> units inspected daily</li>
+          <li>Manual workload <strong>−60%</strong></li>
+        </ul>
+      </div>
+
+      <div class="outcome-card">
+        <div class="sector">Enterprise · Multilingual RAG</div>
+        <div class="scope">Internal knowledge Q&A for 3,500+ employees</div>
+        <ul>
+          <li>Live for <strong>3,500+</strong> users in <strong>5+ languages</strong></li>
+          <li>Internal support requests <strong>−60%</strong></li>
+          <li>Sub-second query latency</li>
+          <li>Replaced manual document search</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========= PRACTICE AREAS ========= -->
+  <section id="practice-areas">
+    <h2>Practice <span class="accent">areas</span>.</h2>
+    <p class="lead-sub">14 verticals, 260+ documented use cases, deep domain knowledge per sector. Engagements spanning Fortune 500 banks to municipal governments.</p>
+
+    <div class="practice-grid">
+      <div class="practice-item"><span>Financial Services</span><span class="depth deep">Deep · 19 cases</span></div>
+      <div class="practice-item"><span>Public Sector / B2G</span><span class="depth deep">Deep · 21 cases</span></div>
+      <div class="practice-item"><span>Enterprise</span><span class="depth deep">Deep · 20 cases</span></div>
+      <div class="practice-item"><span>E-commerce</span><span class="depth">Strong · 14 cases</span></div>
+      <div class="practice-item"><span>Web3 / Crypto</span><span class="depth">Strong · 14 cases</span></div>
+      <div class="practice-item"><span>Industrial / Manufacturing</span><span class="depth">Strong · 11 cases</span></div>
+      <div class="practice-item"><span>Marketing / Adtech</span><span class="depth">Active · 8 cases</span></div>
+      <div class="practice-item"><span>Healthcare / MedTech</span><span class="depth">Active · 7+ cases</span></div>
+    </div>
+    <p class="practice-also">Also serving: <em>EdTech · Real Estate · Defense · Gambling · B2B Data · Software</em>.</p>
+  </section>
+
+  <!-- ========= PRACTICE LEAD ========= -->
+  <section id="practice-lead">
+    <h2>Practice <span class="accent">lead</span>.</h2>
+    <p class="lead-sub">The handbook is authored by the practice lead based on hundreds of real engagements.</p>
+    <div class="practice-lead">
+      <div class="strip"></div>
+      <div class="body">
+        <p class="name">Dima Levin</p>
+        <p class="role">Practice Lead · Co-founder & Chief AI Officer</p>
+        <p>Architect of <strong>50+ production AI systems for Fortune 500 companies</strong>, delivering <strong>$100M+ in measurable savings</strong>. Leads Cone Red's AI-First Transformation Practice across Financial Services, Healthcare, Industrial, and Enterprise sectors.</p>
+        <p>This handbook distills what consistently works — and what consistently kills AI rollouts — across hundreds of engagements. <a href="https://cone.red" target="_blank" rel="noopener">Cone Red AI →</a></p>
+        <p style="margin-top:1.25rem;"><strong style="color:#fff;">Talk to the practice:</strong> <a href="mailto:dima@cone.red?subject=AI-First%20Practice%20Inquiry">dima@cone.red</a></p>
+      </div>
     </div>
   </section>
 
   <footer>
-    <span>© 2026 Dima Levin · Cone Red AI</span>
+    <span>© 2026 Cone Red AI · AI-First Transformation Practice</span>
     <span><a href="https://github.com/DVLevin/ai-first-handbook">GitHub →</a></span>
   </footer>
 
 </div>
+
+<script>
+  // ============== Diagnostic widget ==============
+  const answers = [null, null, null, null, null, null];
+  const tierData = [
+    { name: "AI-First Operator", className: "tier-0", msg: "You're already doing what most companies haven't started. The handbook will read as confirmation, not instruction. The interesting question now: how do you compound this advantage faster than the market closes the gap?", cta: "Talk strategy with the practice", subject: "AI-First Operator · Strategy conversation" },
+    { name: "On the curve", className: "tier-1", msg: "You're close. One quarter of focused work away from AI-first. The handbook + a single co-work session typically closes the remaining gap. The risk now is plateauing here — most companies do.", cta: "Book a 30-min readiness review", subject: "AI-First Readiness Score · 1–2 anti-patterns" },
+    { name: "Stuck where 80% are stuck", className: "tier-2", msg: "This is where most companies stall, sometimes for 18+ months. The patterns are fixable, but each month you stay here, the gap to AI-first competitors widens. Recovery is straightforward; delay is not.", cta: "Book a 30-min diagnostic", subject: "AI-First Readiness Score · 3–4 anti-patterns" },
+    { name: "Losing ground every month", className: "tier-3", msg: "You're paying the AI tax without the AI dividend. Companies in this tier rarely recover without intervention — the cultural and architectural gravity is too strong. Worth a structured conversation this week, not next quarter.", cta: "Book a diagnostic this week", subject: "AI-First Readiness Score · 5–6 anti-patterns" },
+  ];
+
+  function tierFor(score) {
+    if (score === 0) return tierData[0];
+    if (score <= 2) return tierData[1];
+    if (score <= 4) return tierData[2];
+    return tierData[3];
+  }
+
+  function update() {
+    const answered = answers.filter(a => a !== null).length;
+    const score = answers.filter(a => a === "yes").length;
+    const result = document.getElementById("result");
+    const num = document.getElementById("scoreNum");
+    const tierName = document.getElementById("tierName");
+    const msg = document.getElementById("tierMsg");
+    const cta = document.getElementById("tierCta");
+
+    result.classList.remove("tier-0","tier-1","tier-2","tier-3");
+
+    if (answered < 6) {
+      num.textContent = score;
+      result.classList.remove("live");
+      result.classList.add("tier-1");
+      tierName.textContent = `${answered}/6 answered`;
+      msg.textContent = "Each question maps to one of the six anti-patterns we've seen kill AI rollouts across 50+ Fortune 500 engagements. Score yourself — then decide if it's worth a 30-minute conversation.";
+      cta.style.display = "none";
+      return;
+    }
+
+    const t = tierFor(score);
+    result.classList.add("live", t.className);
+    num.textContent = score;
+    tierName.textContent = t.name;
+    msg.textContent = t.msg;
+    cta.textContent = t.cta + " →";
+    cta.href = `mailto:dima@cone.red?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent("Hi Dima,\n\nI scored " + score + "/6 on the AI-First Readiness Score (" + t.name + " tier). I'd like to book a 30-minute conversation.\n\n— ")}`;
+    cta.style.display = "inline-flex";
+  }
+
+  document.querySelectorAll(".q-toggle").forEach(group => {
+    const qIdx = parseInt(group.dataset.q, 10);
+    group.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        answers[qIdx] = btn.dataset.val;
+        update();
+      });
+    });
+  });
+</script>
 </body>
 </html>
