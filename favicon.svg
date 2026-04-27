@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="6" fill="#0A0A0A"/>
-  <circle cx="16" cy="16" r="14" fill="none" stroke="#FF4D4D" stroke-width="1" opacity="0.35"/>
-  <circle cx="16" cy="16" r="7" fill="#FF4D4D"/>
+  <!-- Cone (Cone Red brand mark) -->
+  <polygon points="16,8 26,25 6,25" fill="#FF4D4D"/>
+  <!-- Lightbulb / spark of insight at the apex -->
+  <circle cx="16" cy="9" r="4.5" fill="#D4A574" opacity="0.18"/>
+  <circle cx="16" cy="9" r="2.4" fill="#D4A574"/>
 </svg>
