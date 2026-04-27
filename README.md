@@ -4,7 +4,7 @@
 
 > *Not by adding AI — by re-architecting around it.*
 
-The public face of Cone Red's AI-First Transformation Practice — a field handbook, a readiness diagnostic, and the proof apparatus from 50+ production AI systems delivered to Fortune 500 companies.
+The public face of Cone Red's AI-First Transformation Practice — a field handbook, a readiness diagnostic, and the proof apparatus from **150+ enterprise AI projects** delivered across Fortune 500 banks, smart cities, industrial majors, and pharma retailers.
 
 **🌐 Live:** **https://dvlevin.github.io/ai-first-handbook/**
 
@@ -23,10 +23,14 @@ This is the field guide for getting on the right side of that gap.
 | | |
 |---|---|
 | **Practice** | AI-First Transformation |
-| **Practice Lead** | Dima Levin · Co-founder & Chief AI Officer, Cone Red AI |
-| **Production track record** | 50+ AI systems, $100M+ documented savings |
+| **Based** | Barcelona — Cone Red AI, B2B AI automation lab (11 data scientists) |
+| **Practice Lead** | Dima Levin · Co-founder & Chief AI Officer, Cone Red |
+| **Production track record** | **150+ enterprise AI projects · €50M+ documented savings · 1 successful exit** (Intech Group, 2020) |
+| **Current named clients** | City of Tampere · n5bank · VESCO · anri-pharm |
+| **Practice Lead's prior portfolio** | HSBC · Bank of America · Hyundai · Raiffeisen Bank International · ArcelorMittal · Metinvest |
 | **Practice areas** | Financial Services · Public Sector · Enterprise · E-commerce · Industrial · Healthcare · Web3 · Marketing · EdTech · MedTech · Real Estate · Defense · Gambling · B2B Data |
 | **Engagement model** | Diagnostic → Architecture → Build → Operate |
+| **Booking** | [cal.com/dima-levin-qivxgq/15min](https://cal.com/dima-levin-qivxgq/15min) |
 
 ## Selected outcomes
 
@@ -77,11 +81,11 @@ The handbook is the ungated lead magnet. The readiness diagnostic is the qualifi
 
 | Stage | Output | Time |
 |---|---|---|
-| **Diagnostic call** | Tier validation, top 3 risks, 90-day plan sketch | 30 min |
+| **Intro call** | Fit-check, tier validation, top 3 risks | 15 min · [book on Cal.com →](https://cal.com/dima-levin-qivxgq/15min) |
 | **Architecture review** | Written assessment, target architecture, build vs. partner decision | 1–2 weeks |
 | **Practice engagement** | Full transformation: install, build, train, operate | 8–24 weeks |
 
-Talk to the practice: **[dima@cone.red](mailto:dima@cone.red?subject=AI-First%20Practice%20Inquiry)**
+Talk to the practice: **[dima@cone.red](mailto:dima@cone.red?subject=AI-First%20Practice%20Inquiry)** · **[Book a 15-min intro →](https://cal.com/dima-levin-qivxgq/15min)**
 
 ## Share it
 

@@ -253,6 +253,43 @@
   .practice-item .depth.deep { color: var(--conered); }
   .practice-also { color: var(--conesoft); font-size: 0.85rem; line-height: 1.6; }
 
+  /* ================ Selected Clients ================ */
+  .clients-block { margin-top: 1.5rem; }
+  .clients-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--conered); margin: 1.5rem 0 0.85rem;
+  }
+  .clients-current {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.75rem; margin-bottom: 1.5rem;
+  }
+  .client-card {
+    background: var(--conegrey); border: 1px solid var(--coneborder);
+    border-radius: 10px; padding: 1.1rem 1.25rem;
+    transition: border-color 0.15s ease;
+  }
+  .client-card:hover { border-color: rgba(255,77,77,0.4); }
+  .client-card .cl-name { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; letter-spacing: -0.005em; }
+  .client-card .cl-sector {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--conered); margin-bottom: 0.5rem;
+  }
+  .client-card .cl-context { color: var(--conemuted); font-size: 0.85rem; line-height: 1.45; }
+  .clients-prior {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--coneborder);
+    border-radius: 10px; padding: 1.25rem 1.5rem;
+  }
+  .clients-prior .names {
+    color: var(--conetext); font-weight: 600; font-size: 0.95rem;
+    line-height: 1.7; letter-spacing: 0.005em;
+  }
+  .clients-prior .names span { color: var(--conesoft); margin: 0 0.3rem; }
+  .clients-prior .footnote {
+    color: var(--conemuted); font-size: 0.85rem; line-height: 1.55; margin-top: 0.85rem;
+    max-width: 60ch;
+  }
+  .clients-nda { color: var(--conesoft); font-size: 0.78rem; margin-top: 1rem; font-style: italic; }
+
   /* ================ Practice Leadership (cards) ================ */
   .leadership-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
   .leader-card {
@@ -349,10 +386,10 @@
   </p>
 
   <div class="hero-stats">
-    <div class="stat"><div class="num"><span class="accent">50+</span> systems</div><div class="lbl">In production</div></div>
-    <div class="stat"><div class="num"><span class="accent">$100M+</span></div><div class="lbl">Documented savings</div></div>
-    <div class="stat"><div class="num"><span class="accent">21</span> banks</div><div class="lbl">Single deployment</div></div>
-    <div class="stat"><div class="num">3,500<span class="accent">+</span> users</div><div class="lbl">Multilingual RAG</div></div>
+    <div class="stat"><div class="num"><span class="accent">150+</span> projects</div><div class="lbl">Enterprise AI delivered</div></div>
+    <div class="stat"><div class="num"><span class="accent">€50M+</span></div><div class="lbl">Documented savings</div></div>
+    <div class="stat"><div class="num"><span class="accent">21</span> banks</div><div class="lbl">Single deployment · 99.6% acc</div></div>
+    <div class="stat"><div class="num"><span class="accent">5</span> countries</div><div class="lbl">Active practice footprint</div></div>
   </div>
 
   <!-- ========= READ / WATCH ========= -->
@@ -531,6 +568,48 @@
     </div>
   </section>
 
+  <!-- ========= SELECTED CLIENTS ========= -->
+  <section id="clients">
+    <h2>Selected <span class="accent">clients</span>.</h2>
+    <p class="lead-sub">Named engagements (current and prior portfolio) — the experience underwriting every conversation. References available under MNDA.</p>
+
+    <div class="clients-block">
+      <div class="clients-label">Current practice engagements</div>
+      <div class="clients-current">
+        <div class="client-card">
+          <div class="cl-name">City of Tampere</div>
+          <div class="cl-sector">Public Sector · B2G</div>
+          <div class="cl-context">Finland's third-largest city. Smart-city AI engagement.</div>
+        </div>
+        <div class="client-card">
+          <div class="cl-name">n5bank</div>
+          <div class="cl-sector">FinTech · Banking Infrastructure</div>
+          <div class="cl-context">Fintech licensing &amp; M&amp;A platform.</div>
+        </div>
+        <div class="client-card">
+          <div class="cl-name">VESCO</div>
+          <div class="cl-sector">Industrial · Mining</div>
+          <div class="cl-context">€133M industrial mining operation. Voice-driven AI documentation.</div>
+        </div>
+        <div class="client-card">
+          <div class="cl-name">anri-pharm</div>
+          <div class="cl-sector">Healthcare · Pharmacy Retail</div>
+          <div class="cl-context">Ukrainian pharmacy chain · 100+ locations.</div>
+        </div>
+      </div>
+
+      <div class="clients-label">Practice Lead's prior enterprise portfolio</div>
+      <div class="clients-prior">
+        <div class="names">
+          HSBC <span>·</span> Bank of America <span>·</span> Hyundai <span>·</span> Raiffeisen Bank International <span>·</span> ArcelorMittal <span>·</span> Metinvest
+        </div>
+        <p class="footnote">12+ years personally leading AI systems for Fortune 500 banks, automotive, and steel/mining majors — through prior roles at Silent Eight (AML), Raiffeisen Bank International (Vienna AI Operations), and Intech Group (acquired Dima's AI/IoT consultancy in 2020). The track record underwriting every engagement.</p>
+      </div>
+
+      <p class="clients-nda">Engagement details, named references, and outcome calls available under MNDA.</p>
+    </div>
+  </section>
+
   <!-- ========= PRACTICE AREAS ========= -->
   <section id="practice-areas">
     <h2>Practice <span class="accent">areas</span>.</h2>
@@ -579,7 +658,8 @@
         <div class="body">
           <p class="name">Dima Levin</p>
           <p class="role">Practice Lead · Co-founder · CAIO</p>
-          <p>Architect of <strong>50+ production AI systems for Fortune 500 companies</strong>, delivering <strong>$100M+ in documented savings</strong>. Leads the AI-First Transformation Practice across Financial Services, Healthcare, Industrial, and Enterprise sectors.</p>
+          <p>Co-founder &amp; Chief AI Officer at Cone Red, the Barcelona-based B2B AI automation lab shipping enterprise AI to <strong>City of Tampere</strong>, <strong>n5bank</strong>, <strong>VESCO</strong>, and <strong>anri-pharm</strong>. Across 12+ years has personally led AI systems for <strong>HSBC</strong>, <strong>Bank of America</strong>, <strong>Hyundai</strong>, <strong>Raiffeisen Bank International</strong>, <strong>ArcelorMittal</strong>, and <strong>Metinvest</strong>.</p>
+          <p style="margin-top:0.6rem;"><strong>150+ enterprise AI projects</strong> · <strong>€50M+ documented savings</strong> · 1 successful exit (Intech Group, 2020). Also co-founder of <strong>GetDeal.AI</strong> ($60M+ M&amp;A pipeline) and <strong>BankStore.ai</strong> ($1.5M raised, 70+ banks). PhD candidate, Smart Cities &amp; AI.</p>
         </div>
       </div>
 
@@ -643,16 +723,15 @@
 
 <script>
   // ============== Diagnostic widget ==============
-  // TODO: Replace CALENDLY_URL with the practice's actual booking handle
-  // (e.g., "https://calendly.com/dimalevin/30min" or "https://cal.com/dimalevin")
-  const CALENDLY_URL = "https://calendly.com/dimalevin/30min-ai-first-diagnostic";
+  // Practice booking handle — Cal.com 15-min intro slot
+  const CALENDLY_URL = "https://cal.com/dima-levin-qivxgq/15min";
 
   const answers = [null, null, null, null, null, null];
   const tierData = [
     { name: "AI-First Operator", className: "tier-0", msg: "You're already doing what most companies haven't started. The handbook will read as confirmation, not instruction. The interesting question now: how do you compound this advantage faster than the market closes the gap?", cta: "Talk strategy with the practice", subject: "AI-First Operator · Strategy conversation", useCalendly: false },
-    { name: "On the curve", className: "tier-1", msg: "You're close. One quarter of focused work away from AI-first. The handbook + a single co-work session typically closes the remaining gap. The risk now is plateauing here — most companies do.", cta: "Book a 30-min readiness review", subject: "AI-First Readiness Score · 1–2 anti-patterns", useCalendly: false },
-    { name: "Stuck where 80% are stuck", className: "tier-2", msg: "This is where most companies stall, sometimes for 18+ months. The patterns are fixable, but each month you stay here, the gap to AI-first competitors widens. Recovery is straightforward; delay is not.", cta: "Book the 30-min diagnostic", subject: "AI-First Readiness Score · 3–4 anti-patterns", useCalendly: true },
-    { name: "Losing ground every month", className: "tier-3", msg: "You're paying the AI tax without the AI dividend. Companies in this tier rarely recover without intervention — the cultural and architectural gravity is too strong. Worth a structured conversation this week, not next quarter.", cta: "Book a diagnostic this week", subject: "AI-First Readiness Score · 5–6 anti-patterns", useCalendly: true },
+    { name: "On the curve", className: "tier-1", msg: "You're close. One quarter of focused work away from AI-first. The handbook + a single co-work session typically closes the remaining gap. The risk now is plateauing here — most companies do.", cta: "Book a 15-min readiness intro", subject: "AI-First Readiness Score · 1–2 anti-patterns", useCalendly: false },
+    { name: "Stuck where 80% are stuck", className: "tier-2", msg: "This is where most companies stall, sometimes for 18+ months. The patterns are fixable, but each month you stay here, the gap to AI-first competitors widens. Recovery is straightforward; delay is not.", cta: "Book a 15-min diagnostic intro", subject: "AI-First Readiness Score · 3–4 anti-patterns", useCalendly: true },
+    { name: "Losing ground every month", className: "tier-3", msg: "You're paying the AI tax without the AI dividend. Companies in this tier rarely recover without intervention — the cultural and architectural gravity is too strong. Worth a structured conversation this week, not next quarter.", cta: "Book this week — 15 min with the Practice Lead", subject: "AI-First Readiness Score · 5–6 anti-patterns", useCalendly: true },
   ];
 
   function tierFor(score) {
