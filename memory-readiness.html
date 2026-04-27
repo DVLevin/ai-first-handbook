@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Readiness Diagnostic · Cone Red AI · Memory Layer Practice</title>
+<meta name="description" content="Six questions, five minutes. Tells you which of the five scars your AI memory stack is currently paying for. From Cone Red AI's Memory Layer Practice.">
+<meta property="og:title" content="Memory Readiness Diagnostic · Cone Red AI">
+<meta property="og:description" content="Six questions, five minutes. Tells you which of the five scars your AI memory stack is currently paying for.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --conered: #FF4D4D;
+    --coneblack: #0A0A0A;
+    --conegrey: #141414;
+    --conepanel: #1A1A1A;
+    --conetext: #E8E8E5;
+    --conemuted: #9CA3AF;
+    --conesoft: #71757A;
+    --coneborder: rgba(255,255,255,0.08);
+    --conegold: #D4A574;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(ellipse at top right, rgba(255,77,77,0.08), transparent 60%), var(--coneblack);
+    color: var(--conetext);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 6vh 6vw 10vh; }
+
+  /* Practice mark */
+  .practice-mark {
+    display: flex; align-items: center; gap: 0.85rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--coneborder);
+    flex-wrap: wrap;
+  }
+  .practice-mark .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--conered); flex-shrink: 0; }
+  .practice-mark .brand { font-weight: 700; color: #fff; letter-spacing: -0.005em; }
+  .practice-mark .brand a { color: #fff; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+  .practice-mark .brand a:hover { border-bottom-color: var(--conered); }
+  .practice-mark .practice {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--conered);
+    margin-left: auto;
+  }
+
+  /* Hero */
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--conered);
+    margin-bottom: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hero-tag::before { content: ""; height: 1px; width: 32px; background: var(--conered); }
+
+  h1 {
+    font-size: clamp(2rem, 5.5vw, 3.75rem);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    margin: 0 0 1.25rem;
+    color: #fff;
+  }
+  h1 .accent { color: var(--conered); }
+
+  .subtitle {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    line-height: 1.5;
+    color: var(--conetext);
+    max-width: 620px;
+    margin: 0 0 2rem;
+  }
+  .subtitle .muted { color: var(--conemuted); }
+
+  .prelude {
+    color: var(--conemuted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    max-width: 60ch;
+    margin: 0 0 3rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255,255,255,0.02);
+    border-left: 2px solid var(--conered);
+    border-radius: 0 8px 8px 0;
+  }
+  .prelude strong { color: #fff; }
+
+  /* Diagnostic */
+  .diag {
+    background: linear-gradient(135deg, rgba(255,77,77,0.04) 0%, var(--conegrey) 100%);
+    border: 1px solid rgba(255,77,77,0.18);
+    border-radius: 18px; padding: clamp(1.5rem, 3vw, 2.75rem);
+  }
+  .q-list { list-style: none; padding: 0; margin: 0 0 2rem; counter-reset: q; }
+  .q-item {
+    counter-increment: q;
+    padding: 1.1rem 0; border-top: 1px solid var(--coneborder);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .q-item:first-child { border-top: none; }
+  .q-item .q-text {
+    flex: 1; min-width: 240px;
+    font-size: clamp(0.95rem, 1.4vw, 1.05rem); color: var(--conetext); line-height: 1.45;
+  }
+  .q-item .q-text::before {
+    content: counter(q, decimal-leading-zero) ".";
+    font-family: 'JetBrains Mono', monospace; color: var(--conered);
+    font-weight: 700; margin-right: 0.6rem; font-size: 0.85em;
+  }
+  .q-item .q-scar {
+    display: block;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.66rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--conesoft);
+    margin-top: 0.4rem;
+  }
+  .q-toggle { display: inline-flex; gap: 4px; flex-shrink: 0; }
+  .q-toggle button {
+    background: var(--conepanel); border: 1px solid var(--coneborder);
+    color: var(--conemuted); padding: 0.5rem 1.1rem; border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer; transition: all 0.15s ease;
+  }
+  .q-toggle button:hover { border-color: var(--conemuted); color: #fff; }
+  .q-toggle button.active[data-val="yes"] {
+    background: var(--conered); border-color: var(--conered); color: #fff;
+  }
+  .q-toggle button.active[data-val="no"] {
+    background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: #fff;
+  }
+
+  .diag-result {
+    margin-top: 1.5rem;
+    padding: 2rem; border-radius: 14px;
+    background: var(--coneblack); border: 1px solid var(--coneborder);
+    opacity: 0.55; transition: opacity 0.4s ease, border-color 0.4s ease;
+  }
+  .diag-result.live { opacity: 1; }
+  .diag-result.tier-0 { border-color: var(--conegold); background: linear-gradient(135deg, rgba(212,165,116,0.08), var(--coneblack)); }
+  .diag-result.tier-1 { border-color: rgba(255,255,255,0.15); }
+  .diag-result.tier-2 { border-color: var(--conered); background: linear-gradient(135deg, rgba(255,77,77,0.06), var(--coneblack)); }
+  .diag-result.tier-3 { border-color: var(--conered); background: linear-gradient(135deg, rgba(255,77,77,0.12), var(--coneblack)); }
+
+  .diag-result .score-row { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .diag-result .score-num {
+    font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; color: #fff; line-height: 1;
+    font-family: 'JetBrains Mono', monospace; letter-spacing: -0.02em;
+  }
+  .diag-result .score-num .of { color: var(--conesoft); font-weight: 400; }
+  .diag-result .tier-name { font-weight: 700; color: var(--conered); font-size: clamp(1.1rem, 1.6vw, 1.3rem); letter-spacing: -0.01em; }
+  .diag-result.tier-0 .tier-name { color: var(--conegold); }
+  .diag-result .tier-msg { color: var(--conetext); font-size: clamp(0.95rem, 1.4vw, 1.05rem); line-height: 1.55; margin: 0.75rem 0 1.25rem; }
+  .diag-result .tier-cta {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--conered); color: #fff;
+    padding: 0.85rem 1.4rem; border-radius: 10px;
+    text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .diag-result .tier-cta:hover { transform: translateX(2px); background: #ff6363; }
+  .diag-result.tier-0 .tier-cta { background: transparent; color: var(--conegold); border: 1px solid var(--conegold); }
+  .diag-result.tier-0 .tier-cta:hover { background: rgba(212,165,116,0.1); }
+
+  /* Why-this-works strip */
+  .why-strip {
+    margin: 4rem 0 2rem;
+    padding: 1.5rem 1.75rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--coneborder);
+    border-radius: 12px;
+  }
+  .why-strip strong { color: #fff; display: block; margin-bottom: 0.5rem; font-size: 0.95rem; }
+  .why-strip p { color: var(--conemuted); font-size: 0.88rem; line-height: 1.6; margin: 0; }
+  .why-strip a { color: var(--conegold); text-decoration: none; border-bottom: 1px solid rgba(212,165,116,0.3); }
+
+  footer {
+    margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--coneborder);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+    color: var(--conesoft); letter-spacing: 0.05em;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+  footer a { color: var(--conemuted); text-decoration: none; }
+  footer a:hover { color: var(--conered); }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 4vh 5vw 8vh; }
+    .q-item { gap: 0.5rem; }
+    .q-toggle { width: 100%; justify-content: stretch; }
+    .q-toggle button { flex: 1; padding: 0.6rem 0.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Practice mark -->
+  <div class="practice-mark">
+    <span class="dot"></span>
+    <span class="brand"><a href="index.html">Cone Red AI</a></span>
+    <span class="practice">Memory Layer Practice · Diagnostic</span>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero-tag">6 questions · 5 minutes</div>
+  <h1>Memory Readiness <span class="accent">Diagnostic</span>.</h1>
+  <p class="subtitle">
+    Tells you which of the five scars your AI memory stack is currently paying for —
+    <span class="muted">and how much architectural debt is compounding while you wait.</span>
+  </p>
+
+  <p class="prelude">
+    <strong>How this works.</strong> Six yes/no questions. Each one corresponds to a memory failure mode we have seen kill AI deployments across 50+ Fortune-500 engagements. Each "yes" = one architectural debt your stack is paying interest on. Score 0/6 means you're a memory architect already; score 5–6 means memory failures are now business risk. Output is yours; nothing leaves your browser.
+  </p>
+
+  <!-- Diagnostic -->
+  <div class="diag">
+    <ul class="q-list" id="qList">
+      <li class="q-item">
+        <div class="q-text">
+          Have you ever asked your AI assistant a question in a non-English language and gotten a noticeably worse answer than the English equivalent?
+          <span class="q-scar">Scar 01 · Multilingual gap</span>
+        </div>
+        <div class="q-toggle" data-q="0">
+          <button data-val="no">No</button>
+          <button data-val="yes">Yes</button>
+        </div>
+      </li>
+      <li class="q-item">
+        <div class="q-text">
+          Has your AI assistant ever failed to recall an exact term, ID, or proper noun you know is in prior conversation?
+          <span class="q-scar">Scar 02 · Single-store retrieval trap</span>
+        </div>
+        <div class="q-toggle" data-q="1">
+          <button data-val="no">No</button>
+          <button data-val="yes">Yes</button>
+        </div>
+      </li>
+      <li class="q-item">
+        <div class="q-text">
+          Are you running an LLM call on every inbound user message — or planning to, as your assistant scales?
+          <span class="q-scar">Scar 03 · Per-message extraction cost</span>
+        </div>
+        <div class="q-toggle" data-q="2">
+          <button data-val="no">No</button>
+          <button data-val="yes">Yes</button>
+        </div>
+      </li>
+      <li class="q-item">
+        <div class="q-text">
+          Did someone on your team hand-design the folder/category/tag structure the AI uses to organize its memories?
+          <span class="q-scar">Scar 04 · Hand-crafted hierarchy</span>
+        </div>
+        <div class="q-toggle" data-q="3">
+          <button data-val="no">No</button>
+          <button data-val="yes">Yes</button>
+        </div>
+      </li>
+      <li class="q-item">
+        <div class="q-text">
+          When you ask your AI assistant about something from 6+ months ago, do stale or superseded answers compete with the current ones?
+          <span class="q-scar">Scar 05 · No decay layer</span>
+        </div>
+        <div class="q-toggle" data-q="4">
+          <button data-val="no">No</button>
+          <button data-val="yes">Yes</button>
+        </div>
+      </li>
+      <li class="q-item">
+        <div class="q-text">
+          If your model vendor changed pricing or memory features tomorrow, would your team's accumulated memory be at risk?
+          <span class="q-scar">Architecture · Sovereignty gap</span>
+        </div>
+        <div class="q-toggle" data-q="5">
+          <button data-val="no">No</button>
+          <button data-val="yes">Yes</button>
+        </div>
+      </li>
+    </ul>
+
+    <div id="result" class="diag-result tier-1">
+      <div class="score-row">
+        <div class="score-num"><span id="scoreNum">0</span><span class="of"> / 6</span></div>
+        <div class="tier-name" id="tierName">0/6 answered</div>
+      </div>
+      <p class="tier-msg" id="tierMsg">Each question maps to one of the five memory-failure scars (plus one architectural choice) we have paid the tab on across our own builds and the engagements we ship. Score yourself — then decide if it's worth a 30-minute conversation.</p>
+      <a id="tierCta" class="tier-cta" href="#" style="display:none;">CTA</a>
+    </div>
+  </div>
+
+  <!-- Why this works strip -->
+  <div class="why-strip">
+    <strong>Why we trust this score</strong>
+    <p>The six questions map 1:1 to the five scars and one architectural commitment documented in our <a href="memory.html">Memory Layer long-read</a> — each one paid for during the build of our own production memory layer (the substrate behind our agents), and each one validated against a locked eval set with reproducible scoring. Read the long-read for the architecture; take the diagnostic for your stack's status.</p>
+  </div>
+
+  <footer>
+    <span>© 2026 Cone Red AI · A Practice Area within the AI-First Transformation Practice</span>
+    <span><a href="memory.html">Memory long-read →</a> · <a href="memory-deck.html">Deck →</a> · <a href="index.html">Back to practice ↑</a></span>
+  </footer>
+
+</div>
+
+<script>
+  // ============== Memory Readiness Diagnostic ==============
+  // Reuses the AI-First Practice Calendly handle so high-intent traffic
+  // funnels into one calendar. Swap to a memory-specific handle if/when split.
+  const CALENDLY_URL = "https://calendly.com/dimalevin/30min-ai-first-diagnostic";
+
+  const answers = [null, null, null, null, null, null];
+  const tierData = [
+    { name: "Memory architect", className: "tier-0", msg: "You've already paid the tab. The long-read will read as confirmation, not instruction. The interesting question now: how do you compound this advantage faster than the market closes the gap? We host a small handful of architects-only conversations a quarter — worth a strategic exchange.", cta: "Talk strategy with the practice", subject: "Memory Architect · Strategy conversation", useCalendly: false },
+    { name: "Workable today, stalling tomorrow", className: "tier-1", msg: "You're close. One or two scars are live in your stack — fixable in a quarter of focused work. The risk now is plateauing here; most teams do, because the failures are quiet until they aren't.", cta: "Book a 30-min readiness review", subject: "Memory Readiness · 1–2 scars active", useCalendly: false },
+    { name: "Memory tax compounding", className: "tier-2", msg: "Three or four of the five scars are active. This is where most AI deployments stall, often for 18+ months. Each month you stay here, the gap to memory-architected competitors widens. Recovery is straightforward; delay is not.", cta: "Book the 30-min architecture session", subject: "Memory Readiness · 3–4 scars active", useCalendly: true },
+    { name: "Memory failures are business risk", className: "tier-3", msg: "Five or six scars live. At this depth, memory failures are no longer a quality issue — they are a business-risk issue (wrong answers acted on, audit trails that don't hold, multilingual leverage lost). Worth a structured conversation this week, not next quarter.", cta: "Book a diagnostic this week", subject: "Memory Readiness · 5–6 scars active", useCalendly: true },
+  ];
+
+  function tierFor(score) {
+    if (score === 0) return tierData[0];
+    if (score <= 2) return tierData[1];
+    if (score <= 4) return tierData[2];
+    return tierData[3];
+  }
+
+  function update() {
+    const answered = answers.filter(a => a !== null).length;
+    const score = answers.filter(a => a === "yes").length;
+    const result = document.getElementById("result");
+    const num = document.getElementById("scoreNum");
+    const tierName = document.getElementById("tierName");
+    const msg = document.getElementById("tierMsg");
+    const cta = document.getElementById("tierCta");
+
+    result.classList.remove("tier-0","tier-1","tier-2","tier-3");
+
+    if (answered < 6) {
+      num.textContent = score;
+      result.classList.remove("live");
+      result.classList.add("tier-1");
+      tierName.textContent = `${answered}/6 answered`;
+      msg.textContent = "Each question maps to one of the five memory-failure scars (plus one architectural choice) we have paid the tab on across our own builds and the engagements we ship. Score yourself — then decide if it's worth a 30-minute conversation.";
+      cta.style.display = "none";
+      return;
+    }
+
+    const t = tierFor(score);
+    result.classList.add("live", t.className);
+    num.textContent = score;
+    tierName.textContent = t.name;
+    msg.textContent = t.msg;
+    cta.textContent = t.cta + " →";
+    if (t.useCalendly) {
+      cta.href = `${CALENDLY_URL}?utm_source=memory-readiness&utm_medium=diagnostic&utm_campaign=tier-${score}&a1=${encodeURIComponent("Memory score: " + score + "/6 · " + t.name)}`;
+      cta.target = "_blank";
+      cta.rel = "noopener";
+    } else {
+      cta.href = `mailto:dima@cone.red?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent("Hi Dima,\n\nI just took the Memory Readiness Diagnostic and scored " + score + "/6 — \"" + t.name + "\".\n\nThe scars I flagged were:\n[list which Qs were Yes]\n\nWould love a conversation about what to do next.\n\n—")}`;
+      cta.target = "";
+      cta.rel = "";
+    }
+    cta.style.display = "inline-flex";
+  }
+
+  document.querySelectorAll(".q-toggle").forEach(group => {
+    const qIdx = parseInt(group.dataset.q, 10);
+    group.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const val = btn.dataset.val;
+        answers[qIdx] = val;
+        group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        update();
+      });
+    });
+  });
+
+  update();
+</script>
+
+</body>
+</html>
