@@ -147,6 +147,37 @@
   </div>
 </section>
 
+<!-- ====================== BY THE NUMBERS, 2026 ====================== -->
+<section class="max-w-4xl mx-auto px-6 py-12 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <h2 style="margin-top: 0;">By the numbers, 2026</h2>
+    <p>Before the architecture, the painkiller. <strong>This handbook isn't a thought-experiment.</strong> The reason every section below is written sharp is that the cost of ignoring it has been measured, dated, and disclosed in public — by analysts, by audited filings, by CEOs writing their own walk-back memos.</p>
+
+    <div class="grid-cards" style="margin: 2rem 0;">
+      <div class="panel">
+        <div class="small-caps" style="color:#FF4D4D; margin-bottom: 0.85rem;">The deterioration</div>
+        <p style="margin: 0; font-size: 0.95rem; color: #E8E8E5; line-height: 1.55;"><strong style="color:#fff; font-size: 1.5rem; line-height: 1;">42%</strong> of organizations scrapped most of their AI initiatives in 2025 — up from 17% in 2024. The fastest-deteriorating spend category in the enterprise.<br><span style="color: #71757A; font-size: 0.78rem;">— S&amp;P Global Voice of the Enterprise, n=1,006 (Oct 2025)</span></p>
+      </div>
+      <div class="panel">
+        <div class="small-caps" style="color:#FF4D4D; margin-bottom: 0.85rem;">The signal</div>
+        <p style="margin: 0; font-size: 0.95rem; color: #E8E8E5; line-height: 1.55;">Even MIT's most-cited number, its critics admit, captures what every CFO is feeling: <strong style="color:#fff;">95% of GenAI pilots produce no measurable P&amp;L impact.</strong><br><span style="color: #71757A; font-size: 0.78rem;">— MIT Project NANDA, "The GenAI Divide," Jul 2025</span></p>
+      </div>
+      <div class="panel">
+        <div class="small-caps" style="color:#FF4D4D; margin-bottom: 0.85rem;">The compounding side</div>
+        <p style="margin: 0; font-size: 0.95rem; color: #E8E8E5; line-height: 1.55;">Klarna FY2025 disclosure: revenue per employee <strong style="color:#fff;">$1.24M, +3.6× since 2022</strong>; headcount down 49%. Cone Red's own AI-PM pipeline: replaced a $5K/mo PM, runs three projects in parallel, instant onboarding to any new domain.<br><span style="color: #71757A; font-size: 0.78rem;">— Klarna Form 6-K, Feb 19, 2026 · Cone Red internal</span></p>
+      </div>
+      <div class="panel">
+        <div class="small-caps" style="color:#FF4D4D; margin-bottom: 0.85rem;">The wedge nobody else names</div>
+        <p style="margin: 0; font-size: 0.95rem; color: #E8E8E5; line-height: 1.55;"><strong style="color:#fff;">29% of knowledge workers admit to sabotaging</strong> their company's AI strategy — <strong style="color:#fff;">44% among Gen Z</strong>. Tactics measured: metric tampering, performative compliance, refusing mandated tools.<br><span style="color: #71757A; font-size: 0.78rem;">— Writer × Workplace Intelligence, Apr 2026, n=2,400</span></p>
+      </div>
+    </div>
+
+    <p>Three takeaways before you read further. <strong>First</strong>: the failure rate is real and disclosed. <strong>Second</strong>: the gap to AI-first operators is also real, audited, and widening. <strong>Third</strong>: most consultants will tell you the failure is architectural. Some of it is. The harder part is that <em>your people are not neutral evaluators of AI</em> — when their next performance review depends on AI not working, they make sure it doesn't. McKinsey will fix your architecture. We will name what they will not.</p>
+
+    <p style="font-size: 0.92rem; color: #9CA3AF; font-family: 'Inter', sans-serif;">If those four panels describe what you've been seeing without being able to name it, the rest of this handbook is the manual for the other side of the gap.</p>
+  </div>
+</section>
+
 <!-- ====================== 01 THESIS ====================== -->
 <section id="thesis" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
   <div class="prose mx-auto">
@@ -170,6 +201,8 @@
     </div>
 
     <p>Those three primitives are the spine of this handbook. The rest is how to install them.</p>
+
+    <p><strong>Bret Taylor — CEO of Sierra, Chair of OpenAI — put the failure mode in nine words on a podcast last year:</strong> <em>"Big companies struggle to adopt AI because they are shipping their org charts."</em> That's the diagnosis. AI gets bolted onto the team-by-team org chart without changing how work flows across it. The chart wins; AI looks broken. The fix isn't a smarter model. It's a different operating model — and a vault, agents, and a graph are how you install one.</p>
   </div>
 </section>
 
@@ -534,6 +567,7 @@ docs(customers): Doug profile update from Apr 03 call</code></pre>
 
     <h3>1 · Treating Claude Code as a search engine</h3>
     <p><em>Symptom:</em> people type one-line prompts, get a one-line answer, copy it out, never come back. <em>Fix:</em> teach the team to converse. Multi-turn dialogues. Ask for thinking, not just answers. <em>"Walk me through how you'd approach X"</em> beats <em>"give me the answer to X."</em></p>
+    <p><em>Why this is failure mode #1:</em> Mike Leone, Principal Analyst at Omdia, named the second half of this pattern in 2025: <em>"You test on a curated dataset, maybe a few thousand clean documents, the AI looks amazing. Then you point it at production. Fifteen years of SharePoint folders. Teams threads nobody's cleaned up since 2021. Governance overhead alone can get close to what they're spending on the technology itself."</em> The skill gap and the data debt are the same gap. Skip either, the rollout dies in pilot.</p>
 
     <h3>2 · Letting AI write but not letting AI reason</h3>
     <p><em>Symptom:</em> the team uses Claude Code to draft emails and summarize meetings but never to red-team strategy or pressure-test product specs. <em>Fix:</em> use the agents (strategy, negotiation, PM) for the high-leverage thinking work, not just the typing. The thinking work is where the leverage is.</p>
@@ -550,7 +584,13 @@ docs(customers): Doug profile update from Apr 03 call</code></pre>
     <h3>6 · Letting Slack/Telegram eat the journal</h3>
     <p><em>Symptom:</em> all the real conversations happen in chat; nothing lands in the journal; six months later nobody remembers why anything was decided. <em>Fix:</em> at the end of every meaningful chat thread, someone writes the takeaway into the journal. Five seconds. <strong>The principle: nothing important survives in chat. Move it or lose it.</strong></p>
 
-    <p>If you avoid these six, you'll succeed. If you don't, you won't, and the failure will look like "AI just doesn't work for our company." The failure is operational. Own it.</p>
+    <h3>7 · Treating workforce resistance as a soft problem</h3>
+    <p><em>Symptom:</em> the rollout is mandated top-down. AI tools are deployed. Adoption is "compliance" — counted in seat licenses, not outcomes. Meanwhile, employees are running their own quiet referendum on whether AI keeps them employed.</p>
+    <p>The number, plainly: <strong>29% of knowledge workers admit to sabotaging their company's AI strategy. 44% among Gen Z.</strong> Tactics measured: tampering with performance metrics, generating intentionally low-quality outputs, refusing mandated tools, performative compliance (Writer × Workplace Intelligence, Apr 2026, n=2,400). The same survey: 60% of executives are considering layoffs of employees who refuse to adopt AI. <strong>The threat is not paranoia. The resistance is rational.</strong></p>
+    <p>Carl Eschenbach, CEO of Workday, named the only frame that breaks the deadlock: <em>"Employees today believe they're competing against AI. They're not. They're competing against their peers who are using AI."</em> If you don't make that frame explicit — repeatedly, with named examples — the rollout dies in passive resistance. Mandate without enablement is the corporate equivalent of an unloaded gun. Looks scary. Doesn't shoot.</p>
+    <p><em>Fix:</em> name the threat at kickoff. Show what AI-first looks like for each role <em>before</em> measuring adoption. Tie performance reviews to outcomes (decisions logged, cycle-time, customer-facing wins) — never to prompt count, token spend, or seat-license utilization. <strong>Vanity metrics are the bug.</strong> If your KPI is the number of prompts your team runs, employees will write meaningless prompts to clear the bar. Meta tried it publicly in April 2026 with the "Claudeonomics" leaderboard ranking 85,000 employees by token spend; pulled it after two days. Don't be Meta.</p>
+
+    <p>If you avoid these seven, you'll succeed. If you don't, you won't, and the failure will look like "AI just doesn't work for our company." The failure is operational. Own it.</p>
   </div>
 </section>
 
@@ -567,6 +607,8 @@ docs(customers): Doug profile update from Apr 03 call</code></pre>
     <p>The companies that get this right in 2026 will compound differently. Their week-100 hire will start fully briefed. Their week-100 customer call will pull from week-1 customer learnings. Their week-100 strategy review will have a virtual partner who's read everything. Their week-100 product spec will be drafted from the customer call that ended six minutes ago.</p>
 
     <p>The companies that don't will keep buying AI seats and wondering why nothing compounds.</p>
+
+    <p><strong>The proof is already public.</strong> Klarna's FY2025 disclosure (Form 6-K, February 19, 2026): revenue per employee <strong>$1.24M, +3.6× since 2022</strong>, headcount down 49%, AI assistant doing the work of 853 full-time agents. That's not a press release — that's audited disclosure. Tobi Lütke, Shopify CEO, made it operational in a public memo on April 7, 2025: <em>"Reflexive AI usage is now a baseline expectation. Before asking for more headcount and resources, teams must demonstrate why they cannot get what they want done using AI."</em> One sentence. Whole operating model. Most companies don't have an equivalent. <strong>Write yours this quarter.</strong></p>
 
     <div class="pull-quote">
       "Compounding is the job. Every commit is a deposit."
