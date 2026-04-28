@@ -119,6 +119,21 @@
 
 <hr class="border-coneborder max-w-4xl mx-auto">
 
+<!-- ====================== TL;DR ====================== -->
+<section class="max-w-4xl mx-auto px-6 pt-8 pb-4">
+  <div class="prose mx-auto">
+    <div class="panel" style="border-left: 3px solid #FF4D4D; padding: 1.5rem 1.75rem;">
+      <div class="small-caps text-conered mb-3">If you have 90 seconds</div>
+      <p style="font-family: 'Source Serif 4', serif; color: #E8E8E5; margin-bottom: 0.85em; font-size: 1rem; line-height: 1.6;">
+      A field guide to re-architecting a company so AI is the substrate, not an add-on. Three primitives: <strong style="color: #fff;">vault</strong> (one git repo of truth) · <strong style="color: #fff;">agents</strong> (role personas with codified frameworks) · <strong style="color: #fff;">graph</strong> (your knowledge, navigable). Five bootstrap commands install the OS in ~90 minutes. Tickets stop being typed; they get drafted from transcripts and reviewed.
+      </p>
+      <p style="font-family: 'Inter', sans-serif; color: #9CA3AF; font-size: 0.88rem; line-height: 1.55; margin: 0;">
+      <strong style="color: #E8E8E5;">If you only have 5 minutes:</strong> §02 (the four shifts) → §06 (this week, day-by-day) → §10 (closing). &nbsp;<strong style="color: #E8E8E5;">If a CFO asks "why now?":</strong> §01 (thesis) + §08 (the 90-day milestones). &nbsp;<strong style="color: #E8E8E5;">If you want to act today:</strong> jump to §10.
+      </p>
+    </div>
+  </div>
+</section>
+
 <!-- ====================== PROLOGUE ====================== -->
 <section class="max-w-4xl mx-auto px-6 py-16">
   <div class="prose mx-auto">
@@ -172,7 +187,7 @@
 
     <h3>Shift 2 · From hand-authored work to AI-drafted, human-reviewed</h3>
     <p>Today: every ticket, every spec, every status update is typed by a human who heard a thing and tried to remember the thing. The bottleneck isn't thinking — it's transcription.</p>
-    <p>Tomorrow: a transcript drops, three agents take it in turn (Conversa extracts, Prody synthesizes, PM-Vault generates), and a draft of the next sprint shows up in your editor for review. You spend your time editing what's wrong and approving what's right — never starting from a blank page. The throughput math changes by an order of magnitude.</p>
+    <p>Tomorrow: a transcript drops, three agents take it in turn — the transcript-extraction agent pulls pains and decisions, the PM agent synthesizes them into proposed tickets, the ticket-file generator writes the markdown — and a draft of the next sprint shows up in your editor for review. You spend your time editing what's wrong and approving what's right — never starting from a blank page. The throughput math changes by an order of magnitude.</p>
 
     <h3>Shift 3 · From documents-as-files to documents-as-graph</h3>
     <p>Today: you have folders. The folders contain files. You search by filename. If you're lucky, someone tagged a thing.</p>
@@ -207,11 +222,11 @@ flowchart TB
         S["📐 Frontmatter conventions<br/>RACI · deps · state · context · client_visible"]
     end
     subgraph L3 ["LAYER 3 — Agents"]
-        A1["🧭 Conny<br/>strategy"]
-        A2["📝 Prody<br/>product"]
-        A3["🎨 Riot<br/>design"]
-        A4["🎤 Conversa<br/>transcripts"]
-        A5["⚖️ Council<br/>negotiation"]
+        A1["🧭 Strategy agent<br/>(Conny)"]
+        A2["📝 PM agent<br/>(Prody)"]
+        A3["🎨 Design-critique agent<br/>(Riot)"]
+        A4["🎤 Transcript agent<br/>(Conversa)"]
+        A5["⚖️ Negotiation agent<br/>(Council)"]
     end
     subgraph L4 ["LAYER 4 — Graph & memory"]
         G["🕸 graphify-out/<br/>communities · edges · clusters"]
@@ -238,8 +253,8 @@ flowchart TB
     <p>Markdown without conventions is a swamp. Markdown with thin, consistent YAML frontmatter is a database. The schema is the agreement: every ticket has a <code>state</code> field, every decision has an <code>owner</code> field, every customer-facing document has a <code>client_visible</code> flag. A pre-commit hook validates the schema on every change — invalid frontmatter blocks the commit. The schema is what lets you query your repo like a database without ever standing up a database.</p>
 
     <h3>Layer 3 · The agents</h3>
-    <p>Each role on your team gets an agent counterpart. Strategy = Conny, product = Prody, design = Riot, transcript analysis = Conversa, negotiation = Council, presales = Preston. These are not chatbots. They're personas with codified principles, frameworks, and outputs. When you call <code>@agents/conny_5/</code> in Claude Code, you're loading a McKinsey-grade strategy consultant who reads your vault and applies frameworks to it.</p>
-    <p>The team uses agents constantly. Engineers route hard architectural reviews through Conny's <code>/redteam</code>. Salespeople run pre-call prep through Preston-X. Designers get critique from Riot before showing work to clients. The cost of a "second opinion" drops to zero.</p>
+    <p>Each role on your team gets an agent counterpart — a persona with codified principles, frameworks, and outputs. Strategy review, product management, design critique, transcript analysis, negotiation prep, presales drafting. These aren't chatbots. When you load the strategy agent in Claude Code, you're loading a McKinsey-grade consultant who reads your vault and applies frameworks to it. (Each agent has an internal codename — Conny, Prody, Riot, Conversa, Council, Preston-X — used inside the team for shorthand. The roles are what matter.)</p>
+    <p>The team uses these agents constantly. Engineers route hard architectural reviews through the strategy agent's <code>/redteam</code>. Salespeople run pre-call prep through the presales agent. Designers get adversarial critique before showing work to clients. <strong>The cost of a "second opinion" drops to zero.</strong></p>
 
     <h3>Layer 4 · The graph and the memory</h3>
     <p>The vault grows. After six months, you can't read all of it. Two systems make sure that's fine.</p>
@@ -278,12 +293,12 @@ flowchart TB
     <p>This is what lets you ask Claude Code questions like <em>"have we solved a problem like this before, anywhere across our portfolio?"</em> and get an actual cross-project answer. Without it, every project is an island.</p>
 
     <h3><code>/init-memory</code> — bootstrap the durable memory system</h3>
-    <p>Sets up a persistent memory layer (the technical name is MemPalace, built on top of an embedding model and a small knowledge graph). It records facts about you, the project, your preferences, and recent decisions in a way that survives across Claude Code sessions.</p>
+    <p>Sets up a persistent memory layer that survives across Claude Code sessions. Built on an embedding model plus a small knowledge graph: it records facts about you, the project, your preferences, and recent decisions, then surfaces them at session start without re-prompting.</p>
     <p>The result: when you open Claude Code tomorrow morning, it already remembers that you're working on the Q3 retention project, that Sarah is the lead, that the Tuesday meeting decided to use the long-form approach, and that you don't want to revisit the SQL question again. No re-explaining yourself.</p>
 
     <h3><code>/init-agents</code> — install the persona library</h3>
-    <p>Audits your project's agent folder against the central persona library and installs or updates the agents that fit. By default a project gets the strategic core (Conny, Prody) and any role-specific agents you point it at (Riot for design-heavy work, Preston for sales-led work, Conversa whenever transcripts will land).</p>
-    <p>Running <code>/init-agents</code> after a few weeks of work is also how you keep the personas current — new versions of Conny or Council ship to the central library, and this command rolls them forward in the project.</p>
+    <p>Audits your project's agent folder against the central persona library and installs or updates the agents that fit. By default a project gets the strategic core (strategy agent + PM agent) and any role-specific agents you point it at (design-critique for design-heavy work, presales for sales-led work, transcript-extraction whenever transcripts will land).</p>
+    <p>Running <code>/init-agents</code> after a few weeks of work is also how you keep the personas current — new versions of any agent ship to the central library, and this command rolls them forward in the project.</p>
 
     <h3><code>/graphify</code> — turn the vault into a knowledge graph</h3>
     <p>The capstone. Walks through your repo (or any subset — case studies, customer folders, transcripts) and produces a navigable knowledge graph: nodes, edges, communities, an HTML viewer, a JSON export. Reveals clusters you didn't know you had. Surfaces orphans (documents nothing references — usually stale or wrong).</p>
@@ -307,17 +322,17 @@ flowchart TB
 
     <p>The pipeline has three stages and a safety net.</p>
 
-    <h3>Stage 1 — Conversa extracts</h3>
-    <p>You finish a meeting. The transcript drops into <code>transcripts/</code>. Conversa (the transcript-analyst persona) parses it line by line and produces structured output: pains, decisions, action items, BANT signals, stakeholder positions, open questions. Each item is timestamped to the line range in the transcript that produced it.</p>
-    <p>This is what humans do anyway, just slower and less consistently. Conversa does it in two minutes and forgets nothing.</p>
+    <h3>Stage 1 — The transcript-extraction agent</h3>
+    <p>You finish a meeting. The transcript drops into <code>transcripts/</code>. The transcript agent (internal codename: Conversa) parses it line by line and produces structured output: pains, decisions, action items, BANT signals, stakeholder positions, open questions. Each item is timestamped to the line range in the transcript that produced it.</p>
+    <p>This is what humans do anyway, just slower and less consistently. The agent does it in two minutes and forgets nothing.</p>
 
-    <h3>Stage 2 — Prody synthesizes</h3>
-    <p>Conversa hands the structured extraction to Prody (the product-manager persona). Prody reads it alongside the project's existing tickets and decides: which action items become tickets? What's the right epic / story placement? What's the estimate? Who's the responsible? What's blocked by what?</p>
-    <p>Prody outputs a <code>proposal.yaml</code> — a list of new tickets it wants to create, plus an "ambiguities" section listing the things it isn't sure about (e.g., "this action item could be owned by Dima or MG; defaulting to MG; please confirm").</p>
+    <h3>Stage 2 — The product-manager agent</h3>
+    <p>The structured extraction hands off to the PM agent (internal codename: Prody). It reads the extraction alongside the project's existing tickets and decides: which action items become tickets? What's the right epic / story placement? What's the estimate? Who's responsible? What's blocked by what?</p>
+    <p>The PM agent outputs a <code>proposal.yaml</code> — a list of new tickets it wants to create, plus an "ambiguities" section listing the things it isn't sure about (e.g., "this action item could be owned by Dima or MG; defaulting to MG; please confirm").</p>
 
-    <h3>Stage 3 — PM-Vault generates</h3>
-    <p>After you review the proposal and approve (or edit), PM-Vault writes the actual ticket files into the vault. Each ticket is a markdown file with frontmatter (RACI, dependencies, state, story points, risk, sources, AI-context refs) and a body (Context, Acceptance Criteria, Definition of Done, Out of Scope, Activity Log). The first activity-log entry says: <em>"Generated by AI-PM from transcripts/&lt;file&gt;.md#L40-L80."</em></p>
-    <p>PM-Vault writes but does not commit. The ticket files sit in your working directory waiting for you to inspect.</p>
+    <h3>Stage 3 — The ticket-file generator</h3>
+    <p>After you review the proposal and approve (or edit), the ticket generator (internal name: PM-Vault) writes the actual ticket files into the vault. Each ticket is a markdown file with frontmatter (RACI, dependencies, state, story points, risk, sources, AI-context refs) and a body (Context, Acceptance Criteria, Definition of Done, Out of Scope, Activity Log). The first activity-log entry says: <em>"Generated by AI-PM from transcripts/&lt;file&gt;.md#L40-L80."</em></p>
+    <p>The generator writes but does not commit. The ticket files sit in your working directory waiting for you to inspect.</p>
 
     <h3>Safety net — the pre-commit hook and the human</h3>
     <p>When you commit, the pre-commit hook validates the frontmatter against the schema. Invalid output (missing RACI, broken dependency reference, mismatched assignee, schema violations) blocks the commit. The hook is the same gate humans pass through — AI doesn't get a pass.</p>
@@ -327,9 +342,9 @@ flowchart TB
       "Hand-authoring tickets goes from being the default to being the exception."
     </div>
 
-    <p>The math: a 90-minute meeting produces 5-10 tickets. By hand: ~3 hours of someone's time, with details lost. By pipeline: ~5 minutes of Conversa + Prody + PM-Vault, plus 15 minutes of human review. The human spends their time reviewing, not transcribing — which is the higher-leverage version of their job anyway.</p>
+    <p>The math: a 90-minute meeting produces 5-10 tickets. By hand: ~3 hours of someone's time, with details lost. By pipeline: ~5 minutes of agent work, plus 15 minutes of human review. The human spends their time reviewing, not transcribing — which is the higher-leverage version of their job anyway.</p>
 
-    <p>This is the loop you'll feel inside three months. The vault grows by itself. The team's writing time collapses. The signal-to-noise on tickets goes up because Prody, unlike a tired PM at 5pm, actually reads the project's existing tickets before proposing new ones.</p>
+    <p>This is the loop you'll feel inside three months. The vault grows by itself. The team's writing time collapses. The signal-to-noise on tickets goes up because the PM agent, unlike a tired human PM at 5pm, actually reads the project's existing tickets before proposing new ones.</p>
   </div>
 </section>
 
@@ -492,7 +507,7 @@ docs(customers): Doug profile update from Apr 03 call</code></pre>
     <p>End of month one, run <code>/graphify</code> on the vault. The output reveals: which projects are most active, which are starving for attention, which clusters are dense (mature) vs sparse (early). <strong>Use the graph to decide what to invest in next.</strong> This is the first time most teams "see themselves" — it's worth a 30-minute team session walking through the visual.</p>
 
     <h3>Month 2 · AI-PM lights up</h3>
-    <p>By month two, the AI-PM pipeline (Conversa → Prody → PM-Vault) is shipping its first auto-generated tickets into the workflow. Goal: 80% of new tickets come from the pipeline; 20% are still hand-authored (the truly novel work). Hand-authoring goes from being the default to being the exception.</p>
+    <p>By month two, the AI-PM pipeline (transcript agent → PM agent → ticket generator) is shipping its first auto-generated tickets into the workflow. Goal: 80% of new tickets come from the pipeline; 20% are still hand-authored (the truly novel work). Hand-authoring goes from being the default to being the exception.</p>
 
     <h3>Month 3 · The first compounding win</h3>
     <p>Around the 90-day mark, you'll have a moment that feels like magic. A new project lands. Someone asks <em>"have we done something like this before?"</em> Claude Code answers with a real cross-project synthesis from your <code>~/.knowledge/</code> memory. The team uses the synthesis to skip a week of discovery. <strong>That's the compounding showing up. Mark the date.</strong></p>
@@ -521,7 +536,7 @@ docs(customers): Doug profile update from Apr 03 call</code></pre>
     <p><em>Symptom:</em> people type one-line prompts, get a one-line answer, copy it out, never come back. <em>Fix:</em> teach the team to converse. Multi-turn dialogues. Ask for thinking, not just answers. <em>"Walk me through how you'd approach X"</em> beats <em>"give me the answer to X."</em></p>
 
     <h3>2 · Letting AI write but not letting AI reason</h3>
-    <p><em>Symptom:</em> the team uses Claude Code to draft emails and summarize meetings but never to red-team strategy or pressure-test product specs. <em>Fix:</em> use the agents (Conny, Council, Prody) for the high-leverage thinking work, not just the typing. The thinking work is where the leverage is.</p>
+    <p><em>Symptom:</em> the team uses Claude Code to draft emails and summarize meetings but never to red-team strategy or pressure-test product specs. <em>Fix:</em> use the agents (strategy, negotiation, PM) for the high-leverage thinking work, not just the typing. The thinking work is where the leverage is.</p>
 
     <h3>3 · Skipping the schema</h3>
     <p><em>Symptom:</em> everyone agrees frontmatter "would be nice" but nobody writes the pre-commit hook. Six weeks in, the vault is messy and queries don't work. <em>Fix:</em> write the schema and the hook on Day 1. Treat schema violations the same as broken builds — fix immediately, no exceptions. The hook is the immune system.</p>
@@ -569,6 +584,8 @@ docs(customers): Doug profile update from Apr 03 call</code></pre>
 
     <p>I'll see you in the repo.</p>
 
+    <p style="margin-top: 2rem;"><strong>If you want this rolling at your company tomorrow:</strong> book a 15-min intro at <a href="https://cal.com/dima-levin-qivxgq/15min?utm_source=ai-first-handbook&utm_medium=closing" target="_blank" rel="noopener">cal.com/dima-levin</a> or email <a href="mailto:dima@cone.red?subject=AI-First%20rollout%20%E2%80%94%20want%20it%20live%20this%20week">dima@cone.red</a>. First fit-call slots usually open within 48 hours. Bring one workflow you want AI-first by Friday.</p>
+
     <p class="text-conemuted italic mt-12" style="font-family: 'Source Serif 4', serif;">— Dima Levin<br>
     <span class="small-caps text-conesoft" style="font-style: normal;">Practice Lead · Cone Red AI-First Transformation Practice · 2026-04-27</span></p>
   </div>
@@ -612,12 +629,13 @@ git push
     </div>
 
     <div class="panel">
-      <h4 class="!mt-0 text-white">Personas to call</h4>
+      <h4 class="!mt-0 text-white">Agents to call</h4>
       <pre class="!mt-3 !mb-0"><code>@agents/conny_5/        # strategy
 @agents/Prody_8Feb26/   # product
-@agents/RIOT...md       # design
+@agents/RIOT...md       # design critique
 @agents/Conversa.md     # transcripts
 @agents/negotiators/    # negotiation</code></pre>
+      <p style="font-size: 0.75rem; color: #71757A; margin: 0.75rem 0 0;">Codenames are internal shorthand for the role agents above. Path syntax for Claude Code.</p>
     </div>
   </div>
 </section>

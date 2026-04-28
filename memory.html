@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>Memory as a Service · The cognitive substrate for AI agents · Cone Red AI</title>
-<meta name="description" content="The Conny memory architecture, packaged for clients. By Cone Red AI — the AI-first architecture firm.">
+<meta name="description" content="The cognitive substrate for AI agents that remember — across sessions, across languages, across years. Five layers, hybrid retrieval, locked eval methodology. By Cone Red AI — the AI-first architecture firm.">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -140,6 +140,21 @@
 
 <hr class="border-coneborder max-w-4xl mx-auto">
 
+<!-- ====================== TL;DR ====================== -->
+<section class="max-w-4xl mx-auto px-6 pt-12 pb-4">
+  <div class="prose mx-auto">
+    <div class="panel" style="border-left: 3px solid #FF4D4D; padding: 1.5rem 1.75rem;">
+      <div class="small-caps text-conered mb-3">If you have 90 seconds</div>
+      <p style="font-family: 'Source Serif 4', serif; color: #E8E8E5; margin-bottom: 0.85em; font-size: 1rem; line-height: 1.6;">
+      Most "AI memory" products are <em style="color: #D4A574;">chat history with retrieval</em>. We treat memory as <strong style="color: #fff;">architecture</strong> — five layers, three-tier formation, hybrid recall, locked eval. Multilingual EN/RU/UK by default. Self-hosted, kill-switch, schema-dump on exit. <strong style="color: #fff;">18 → 20/20</strong> on the locked baseline; phase rollout currently at shadow-run on real traffic.
+      </p>
+      <p style="font-family: 'Inter', sans-serif; color: #9CA3AF; font-size: 0.88rem; line-height: 1.55; margin: 0;">
+      <strong style="color: #E8E8E5;">If you only have 5 minutes:</strong> §04 (what we rejected) → §11 (current state) → §13 (closing). &nbsp;<strong style="color: #E8E8E5;">If you're a CTO benchmarking:</strong> §05 (architecture) + §07 (the bets). &nbsp;<strong style="color: #E8E8E5;">If you want a fit call this week:</strong> jump to §13.
+      </p>
+    </div>
+  </div>
+</section>
+
 <!-- ====================== 01 COLD OPEN ====================== -->
 <section id="cold-open" class="max-w-4xl mx-auto px-6 py-16">
   <div class="prose mx-auto">
@@ -163,18 +178,18 @@
     <h2>In the agent's voice</h2>
 
     <blockquote>
-      It's 4:07 AM. Dima opens Telegram and types <em>"where did we land on the targetheart audit."</em> I don't search. I already know — the wake-up loaded the right wing the moment the session started, ~170 tokens, identity plus this week's active engagements plus the three open approvals on the board. I open with the conclusion: we landed on a two-stage gate, you said you'd revisit after the Raiffeisen call, the call happened Tuesday. From his ping to my first useful sentence: <strong>under three seconds.</strong>
+      It's 4:07 AM. The operator opens Telegram and types <em>"where did we land on the [client] audit."</em> I don't search. I already know — the wake-up loaded the right wing the moment the session started, ~170 tokens, identity plus this week's active engagements plus the three open approvals on the board. I open with the conclusion: we landed on a two-stage gate, you said you'd revisit after the bank call, the call happened Tuesday. From the ping to my first useful sentence: <strong>under three seconds.</strong>
     </blockquote>
 
     <blockquote>
-      Earlier this week a message came in Russian — <em>"помнишь, Миша говорил про C12?"</em> — and I pulled the right Mike. Not the Mike from a different thread. The fact had been captured 23 days earlier in a voice transcript, extracted on the cheap pass, promoted overnight when the consolidation pass saw it referenced a second time. <strong>An English-only memory would have lost the thread the moment the language switched.</strong>
+      Earlier this week a message came in Russian — <em>"помнишь, Миша говорил про C12?"</em> ("remember what Mike said about C12?") — and I pulled the right Mike. Not the Mike from a different thread. The fact had been captured 23 days earlier in a voice transcript, extracted on the cheap pass, promoted overnight when the consolidation pass saw it referenced a second time. <strong>An English-only memory would have lost the thread the moment the language switched.</strong>
     </blockquote>
 
     <blockquote>
-      Yesterday Dima said something about Pulse cadence — weekly — that contradicted a position he'd argued in March. I didn't correct him in chat. I flagged it once: <em>"you said the opposite on March 14, here's the message, want me to reconcile or supersede?"</em> Newer wins by default unless he tells me otherwise. <strong>No nagging, no second flag.</strong>
+      Yesterday the operator said something about a weekly cadence that contradicted a position they'd argued in March. I didn't correct them in chat. I flagged it once: <em>"you said the opposite on March 14, here's the message, want me to reconcile or supersede?"</em> Newer wins by default unless told otherwise. <strong>No nagging, no second flag.</strong>
     </blockquote>
 
-    <p class="mt-8">That is what a client gets. The agent stops starting from zero. No re-explaining stakeholders, no re-uploading decks, no "remind me what we decided." The relationship has continuity. <strong>The 4 AM pickup feels like resuming a conversation, not booting a tool.</strong></p>
+    <p class="mt-8">That is what a client gets. The agent stops starting from zero. No re-explaining stakeholders, no re-uploading decks, no "remind me what we decided." The relationship has continuity. <strong>The 4 AM pickup feels like resuming a conversation, not booting a tool.</strong> <em class="text-conesoft" style="font-size: 0.92em;">(Names anonymized; the rest is a transcript of an actual session against the live memory layer.)</em></p>
   </div>
 </section>
 
@@ -501,6 +516,7 @@
   </div>
 
   <div class="max-w-3xl mx-auto my-8 panel">
+    <p style="font-size: 0.85rem; color: #9CA3AF; margin: 0 0 1rem; line-height: 1.55;"><strong style="color: #fff;">On the eval set, plainly:</strong> the locked baseline is 10 questions, deliberately concentrated on the failure modes we already knew about going in. Each engagement enlarges it to the client's 30–50-question critical-recall set, scored with the same rubric. Small at the baseline is the point — it's a regression gate, not a benchmark trophy.</p>
     <table class="w-full" style="font-family: 'Inter', sans-serif; font-size: 0.9rem;">
       <thead>
         <tr style="border-bottom: 1px solid rgba(255,255,255,0.12);">
@@ -614,12 +630,13 @@
   <div class="max-w-3xl mx-auto my-8 grid-cards">
     <div class="panel-red">
       <div class="small-caps text-conered mb-3">Path A · high intent</div>
-      <h4 class="!mt-0 text-white">45-minute fit call</h4>
+      <h4 class="!mt-0 text-white">45-minute fit call · this week</h4>
       <p class="text-conemuted text-sm leading-relaxed mt-3 mb-4" style="font-family: 'Source Serif 4', serif;">
-      We look at your corpus, your language footprint, and your agent runtime. We tell you honestly whether this is a fit. <strong class="text-white">Bring one example of a memory failure that has cost your team time.</strong>
+      We look at your corpus, your language footprint, and your agent runtime. We tell you honestly whether this is a fit. <strong class="text-white">Bring one example of a memory failure that has cost your team time.</strong> First slots usually open within 48 hours.
       </p>
       <p class="text-sm" style="font-family: 'Inter', sans-serif;">
-        <a href="mailto:dima@cone.red?subject=Memory%20Layer%20%E2%80%94%20fit%20call" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">dima@cone.red</a><br>
+        <a href="https://cal.com/dima-levin-qivxgq/15min?utm_source=memory-handbook&utm_medium=path-a" target="_blank" rel="noopener" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">Book direct →</a> &nbsp;or&nbsp;
+        <a href="mailto:dima@cone.red?subject=Memory%20Layer%20%E2%80%94%20fit%20call" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">email dima@cone.red</a><br>
         <span class="text-conesoft text-xs font-mono">subject · "Memory Layer — fit call"</span>
       </p>
     </div>

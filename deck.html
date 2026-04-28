@@ -185,7 +185,7 @@
         <div class="muted text-sm">Practice Lead · Cone Red AI-First Transformation Practice</div>
       </div>
       <div class="text-right text-xs muted font-mono">
-        <div>37 slides · ≈ 25 min</div>
+        <div>38 slides · ≈ 25 min · skim in 5</div>
         <div class="soft mt-1">2026-04-27</div>
       </div>
     </div>
@@ -198,6 +198,22 @@
     <p class="display-3 max-w-4xl mx-auto" style="font-family: 'Source Serif 4', serif;">
       Not by <span class="muted">adding</span> AI<br>—<br>by <span class="accent">re-architecting</span> around it.
     </p>
+  </div>
+</section>
+
+<!-- ============== SLIDE 02b — READER'S GUIDE ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <div class="section-tag mb-6">If you only watch 5 slides</div>
+    <h2 class="display-3 mb-10">A 25-minute deck. <span class="accent">Five slides if you're skimming.</span></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl">
+      <div class="stage-card"><div class="font-mono text-conered text-xs mb-2">SLIDE 05</div><div class="text-white font-semibold">The 3 things AI is good at</div><div class="text-sm muted mt-1">Why "AI-first" works at all.</div></div>
+      <div class="stage-card"><div class="font-mono text-conered text-xs mb-2">SLIDE 12</div><div class="text-white font-semibold">The 4-layer architecture</div><div class="text-sm muted mt-1">Vault · schema · agents · graph.</div></div>
+      <div class="stage-card"><div class="font-mono text-conered text-xs mb-2">SLIDE 21</div><div class="text-white font-semibold">90-min meeting → 20-min tickets</div><div class="text-sm muted mt-1">The math everyone remembers.</div></div>
+      <div class="stage-card"><div class="font-mono text-conered text-xs mb-2">SLIDE 35</div><div class="text-white font-semibold">"It's an operating system"</div><div class="text-sm muted mt-1">The thesis in five words.</div></div>
+      <div class="stage-card md:col-span-2" style="border-color: #FF4D4D;"><div class="font-mono text-conered text-xs mb-2">SLIDE 36</div><div class="text-white font-semibold">Three things to do this week</div><div class="text-sm muted mt-1">If you want it live by Friday.</div></div>
+    </div>
+    <p class="lead muted mt-10">Read this with a CFO who has 5 minutes. Read the full deck if you're going to ship it.</p>
   </div>
 </section>
 
@@ -257,7 +273,7 @@
     <div class="section-tag mb-4 accent">Shift 2</div>
     <p class="display-4 muted mb-6" style="font-family: 'Source Serif 4', serif;">From hand-authored work...</p>
     <h2 class="display-2 accent">...to AI-drafted, human-reviewed.</h2>
-    <p class="lead mt-12 max-w-3xl">The bottleneck isn't thinking — it's transcription. Three agents (Conversa, Prody, PM-Vault) read what humans read and draft what humans then review. <span class="text-white font-semibold">Humans edit, never start blank.</span></p>
+    <p class="lead mt-12 max-w-3xl">The bottleneck isn't thinking — it's transcription. Three agents (transcript extractor → product-manager → ticket generator) read what humans read and draft what humans then review. <span class="text-white font-semibold">Humans edit, never start blank.</span></p>
   </div>
 </section>
 
@@ -304,7 +320,7 @@ flowchart TB
         S["📐 Schema — frontmatter conventions"]
     end
     subgraph L3 [" "]
-        A["🧭 Agents — Conny · Prody · Riot · Conversa · Council"]
+        A["🧭 Agents — strategy · product · design · transcripts · negotiation"]
     end
     subgraph L4 [" "]
         G["🕸 Graph + 🧠 Memory"]
@@ -346,14 +362,14 @@ flowchart TB
   <div class="slide-content">
     <div class="section-tag accent mb-4">Layer 3</div>
     <h2 class="display-2 mb-8">The Agents.</h2>
-    <p class="lead-large max-w-3xl mb-8">Each role gets a counterpart.</p>
+    <p class="lead-large max-w-3xl mb-8">Each role on the team gets an agent counterpart — a persona with codified principles, frameworks, and outputs. Not chatbots; reusable thinking partners.</p>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8 max-w-4xl">
-      <div class="stage-card"><div class="text-white font-semibold mb-1">🧭 Conny</div><div class="text-sm muted">Strategy · McKinsey-grade</div></div>
-      <div class="stage-card"><div class="text-white font-semibold mb-1">📝 Prody</div><div class="text-sm muted">Product · estimates · roadmap</div></div>
-      <div class="stage-card"><div class="text-white font-semibold mb-1">🎨 Riot</div><div class="text-sm muted">Design · critique · direction</div></div>
-      <div class="stage-card"><div class="text-white font-semibold mb-1">🎤 Conversa</div><div class="text-sm muted">Transcripts · pains · decisions</div></div>
-      <div class="stage-card"><div class="text-white font-semibold mb-1">⚖️ Council</div><div class="text-sm muted">Negotiation · 3-lens stress test</div></div>
-      <div class="stage-card"><div class="text-white font-semibold mb-1">🤝 Preston-X</div><div class="text-sm muted">Presales · proposals · win plans</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">Strategy agent</div><div class="text-sm muted">McKinsey-grade frameworks · red-team · review</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">Product-manager agent</div><div class="text-sm muted">Tickets · estimates · roadmap synthesis</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">Design-critique agent</div><div class="text-sm muted">Visual direction · taste · adversarial eye</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">Transcript-extraction agent</div><div class="text-sm muted">Pains · decisions · BANT · action items</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">Negotiation-prep agent</div><div class="text-sm muted">Three-lens stress test · concession map</div></div>
+      <div class="stage-card"><div class="text-white font-semibold mb-1">Presales agent</div><div class="text-sm muted">Proposals · win-strategy maps · clarification</div></div>
     </div>
   </div>
 </section>
@@ -405,7 +421,7 @@ flowchart TB
       </div>
       <div class="stage-card">
         <div class="font-mono text-conered text-lg mb-2">/init-agents</div>
-        <div class="muted text-sm">Audit + install personas from the central library. Keeps Conny et al. current.</div>
+        <div class="muted text-sm">Audit + install role agents from the central library — strategy, product, design, transcripts. Keeps them current.</div>
       </div>
       <div class="stage-card md:col-span-2">
         <div class="font-mono text-conered text-lg mb-2">/graphify</div>
@@ -432,9 +448,9 @@ flowchart TB
     <div class="bg-conegrey border border-coneborder rounded-2xl p-8">
       <div class="mermaid">
 flowchart LR
-    T["📜 Transcript"] --> C["🎤 Conversa<br/>extract"]
-    C --> P["📝 Prody<br/>synthesize"]
-    P --> V["📁 PM-Vault<br/>generate"]
+    T["📜 Transcript"] --> C["🎤 Transcript agent<br/>extract"]
+    C --> P["📝 PM agent<br/>synthesize"]
+    P --> V["📁 Ticket generator<br/>write to vault"]
     V --> H["🛡 Pre-commit hook<br/>validate"]
     H --> R["👤 Human<br/>review · edit · commit"]
     style T fill:#1A1A1A,stroke:#71757A,color:#E8E8E5
@@ -709,6 +725,7 @@ claude
       <li><span class="text-white"><strong>Show up to the co-work Wednesday.</strong></span> <span class="muted">Bring one real question.</span></li>
     </ol>
     <p class="lead-large mt-12 max-w-3xl">Do those three. The rest is downhill.</p>
+    <p class="lead muted mt-8" style="font-size: clamp(0.95rem, 1.4vw, 1.1rem);"><span class="text-white">Want it rolling tomorrow?</span> Book a 15-min intro at <a href="https://cal.com/dima-levin-qivxgq/15min?utm_source=ai-first-deck&utm_medium=closing" target="_blank" rel="noopener" style="color: #FF4D4D; border-bottom: 1px solid rgba(255,77,77,0.4);">cal.com/dima-levin</a> — first slots usually within 48 hours.</p>
   </div>
 </section>
 
