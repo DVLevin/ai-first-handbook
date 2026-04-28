@@ -89,11 +89,14 @@
   .subtitle .muted { color: var(--conemuted); }
 
   .hero-stats {
-    display: flex; flex-wrap: wrap; gap: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 2.5rem;
     margin: 2.5rem 0 0;
     padding: 1.5rem 0 0;
     border-top: 1px solid var(--coneborder);
   }
+  @media (min-width: 960px) { .hero-stats { grid-template-columns: repeat(4, 1fr); } }
   .hero-stats .stat .num {
     font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; color: #fff; letter-spacing: -0.02em;
   }
@@ -232,7 +235,7 @@
   .outcome-card:hover { border-color: rgba(255,77,77,0.4); }
   .outcome-card .sector {
     font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--conered); margin-bottom: 0.75rem;
+    text-transform: uppercase; color: var(--conegold); margin-bottom: 0.75rem;
   }
   .outcome-card .scope { color: var(--conetext); font-size: 0.95rem; font-weight: 600; line-height: 1.35; margin-bottom: 1rem; }
   .outcome-card ul { list-style: none; margin: 0; padding: 0; }
@@ -257,12 +260,15 @@
   .clients-block { margin-top: 1.5rem; }
   .clients-label {
     font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--conered); margin: 1.5rem 0 0.85rem;
+    text-transform: uppercase; color: var(--conegold); margin: 1.5rem 0 0.85rem;
   }
   .clients-current {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem; margin-bottom: 1.5rem;
   }
+  @media (min-width: 1100px) { .clients-current { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 600px) { .clients-current { grid-template-columns: 1fr; } }
   .client-card {
     background: var(--conegrey); border: 1px solid var(--coneborder);
     border-radius: 10px; padding: 1.1rem 1.25rem;
@@ -272,7 +278,7 @@
   .client-card .cl-name { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; letter-spacing: -0.005em; }
   .client-card .cl-sector {
     font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--conered); margin-bottom: 0.5rem;
+    text-transform: uppercase; color: var(--conegold); margin-bottom: 0.5rem;
   }
   .client-card .cl-context { color: var(--conemuted); font-size: 0.85rem; line-height: 1.45; }
   .clients-prior {
@@ -644,6 +650,15 @@
           <a href="memory-deck.html" style="color:var(--conegold); border-bottom:1px solid rgba(212,165,116,0.3);">Deck →</a>
         </div>
       </div>
+
+      <div class="deepdive-card">
+        <span class="label">Specialty · for product &amp; ops leads</span>
+        <h3 style="color:#fff;">AI-PM Pipeline · Tickets, drafted →</h3>
+        <p>Conversa → Prody → PM-Vault. A 90-min meeting becomes 5–10 fully-cited tickets in 20 minutes. Three agents read what humans read; humans review, never start blank. Pre-commit hook is the safety net. <strong style="color:#fff;">Not a writing assistant. Production.</strong></p>
+        <div class="links">
+          <span style="color:var(--conesoft);">Long-read &amp; deck — coming soon</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -658,8 +673,8 @@
         <div class="body">
           <p class="name">Dima Levin</p>
           <p class="role">Practice Lead · Co-founder · CAIO</p>
-          <p>Co-founder &amp; Chief AI Officer at Cone Red, the Barcelona-based B2B AI automation lab shipping enterprise AI to <strong>City of Tampere</strong>, <strong>n5bank</strong>, <strong>VESCO</strong>, and <strong>anri-pharm</strong>. Across 12+ years has personally led AI systems for <strong>HSBC</strong>, <strong>Bank of America</strong>, <strong>Hyundai</strong>, <strong>Raiffeisen Bank International</strong>, <strong>ArcelorMittal</strong>, and <strong>Metinvest</strong>.</p>
-          <p style="margin-top:0.6rem;"><strong>150+ enterprise AI projects</strong> · <strong>€50M+ documented savings</strong> · 1 successful exit (Intech Group, 2020). Also co-founder of <strong>GetDeal.AI</strong> ($60M+ M&amp;A pipeline) and <strong>BankStore.ai</strong> ($1.5M raised, 70+ banks). PhD candidate, Smart Cities &amp; AI.</p>
+          <p>Co-founder &amp; Chief AI Officer at Cone Red — the Barcelona-based AI automation lab behind the named engagements above. <strong>150+ enterprise AI projects</strong> · <strong>€50M+ documented savings</strong> · 1 successful exit (Intech Group, 2020).</p>
+          <p style="margin-top:0.6rem;">Also co-founder of <strong>GetDeal.AI</strong> ($60M+ M&amp;A pipeline) and <strong>BankStore.ai</strong> ($1.5M raised · 70+ banks · 180+ payment providers). PhD candidate, Smart Cities &amp; AI.</p>
         </div>
       </div>
 
