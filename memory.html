@@ -167,6 +167,8 @@
 
     <p>A regulator asks for the trail of how a decision was reached. The chat log exists. The reasoning doesn't. The fact that the assistant "remembered" the prior conversation means nothing if the memory is opaque, unrankable, and indistinguishable from a hallucination.</p>
 
+    <p><strong>Sebastian Siemiatkowski, Klarna CEO, to Bloomberg in May 2025</strong>, on the company's about-face from "AI replaces customer service" to hiring humans back: <em>"Cost unfortunately seems to have been a too predominant evaluation factor… what you end up having is lower quality."</em> He was talking about customer service. He could have been talking about memory. <strong>Cheap, stateless agents are the painkiller-shaped wrong answer.</strong></p>
+
     <p>This is what every "AI memory" feature on the market gets wrong. Memory is treated as a logging concern. <strong>We treat it as architecture.</strong></p>
   </div>
 </section>
@@ -409,6 +411,8 @@
     <p>These are not press-release numbers. <strong>They are reproducible from a locked eval set with dates and commit hashes.</strong> The full eval protocol is part of the deliverable. The <em>fact</em> of a locked eval set is the credibility signal — and most products in this space cannot show it.</p>
 
     <p><strong>On sample size, plainly:</strong> the locked baseline is 10 questions, deliberately concentrated on the failure modes we already knew about going in. <strong>It enlarges per-engagement to the client's 30–50-question critical-recall set</strong>, scored with the same rubric. Small at the baseline is the point — it's a regression gate, not a benchmark trophy.</p>
+
+    <p><strong>Why locked eval matters, in CFO language.</strong> Tom Shea, CEO of OneStream, put it in his Q3 FY25 SEC 8-K filing: <em>"80% accurate is 0% useful for finance."</em> Most "AI memory" products report demo accuracy. We report regression-gated accuracy on a set of questions that doesn't change between phases. That's the difference between <em>"the assistant works"</em> and <em>"the assistant has a number on the audit trail."</em></p>
   </div>
 </section>
 
@@ -455,6 +459,7 @@
         <li>A four-week shadow period where the system observes live traffic but does not yet act.</li>
         <li>A feature-flagged rollout — old memory and new memory coexist for at least one billing cycle.</li>
         <li><strong class="text-white">Security posture:</strong> VPC-deployable · RBAC on the audit trail · encryption at rest as the default config · no outbound calls without an explicit allow-list. Compliance certification (GDPR/HIPAA/SOC 2) is per-engagement scoping, not a default claim.</li>
+        <li><strong class="text-white">EU sovereignty by default.</strong> EU/EFTA-only deployment available; we run engagements like the City of Tampere entirely within EU jurisdictions. EU–US Data Privacy Framework is currently valid (General Court dismissed Latombe Sept 2025), with the CJEU appeal pending — Cone Red's Barcelona base is an asset for buyers planning around the long tail.</li>
       </ul>
     </div>
     <div class="panel">
@@ -505,6 +510,9 @@
     </div>
 
     <p>Specific dollar figures vary by deployment shape and language mix; they're part of the commercial conversation. The architectural commitment is unambiguous.</p>
+
+    <h3>The other cost — the shadow AI tax</h3>
+    <p>The cost a buyer doesn't see on the invoice is what they pay when employees route around the official AI rollout. <strong>47% of generative AI use in enterprises is via personal accounts not overseen by the employer</strong> (Netskope, October 2025). <strong>77% of enterprise AI users copy-paste data into chatbot queries; 22% of those pastes contain PII or PCI</strong> (LayerX, 2025). When a breach occurs in this environment, it costs <strong>$670,000 more on average</strong> (<em>The CFO</em>, October 2025). Without memory, audit, and a kill-switch on the official path, you're not running AI — you're running a discovery liability.</p>
   </div>
 </section>
 
