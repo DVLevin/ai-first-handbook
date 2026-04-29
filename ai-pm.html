@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>AI-PM Pipeline · Tickets, drafted · Cone Red AI</title>
+<meta name="description" content="The AI Project Manager that turns transcripts into vault tickets — humans review, never start blank. A 90-min meeting becomes 5–10 fully-cited tickets in 20 minutes. By Cone Red AI — the AI-first architecture firm.">
+<meta property="og:title" content="AI-PM Pipeline · Tickets, drafted · Cone Red AI">
+<meta property="og:description" content="Three agents read what humans read. Humans review, never start blank. Pre-commit hook is the safety net. Not a writing assistant. Production.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          conered: '#FF4D4D',
+          coneblack: '#0A0A0A',
+          conegrey: '#141414',
+          conepanel: '#1A1A1A',
+          conetext: '#E8E8E5',
+          conemuted: '#9CA3AF',
+          conesoft: '#71757A',
+          coneborder: 'rgba(255,255,255,0.08)',
+          conegold: '#D4A574',
+          conegreen: '#22c55e'
+        },
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { background: #0A0A0A; color: #E8E8E5; font-family: 'Source Serif 4', Georgia, serif; line-height: 1.75; font-size: 18px; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4, .ui { font-family: 'Inter', sans-serif; line-height: 1.3; letter-spacing: -0.01em; }
+  .prose { max-width: 720px; }
+  .prose p { margin-bottom: 1.4em; color: #E8E8E5; }
+  .prose p strong { color: #ffffff; font-weight: 600; }
+  .prose em { color: #D4A574; font-style: italic; }
+  .prose h2 { font-size: 2rem; font-weight: 700; margin-top: 4rem; margin-bottom: 1.25rem; color: #ffffff; }
+  .prose h3 { font-size: 1.4rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; color: #ffffff; }
+  .prose h4 { font-size: 1.05rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #ffffff; text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Inter', sans-serif; }
+  .prose ul, .prose ol { margin-bottom: 1.4em; padding-left: 1.5em; }
+  .prose li { margin-bottom: 0.5em; }
+  .prose code { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: #D4A574; }
+  .prose pre { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 1.25rem 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5em 0; font-size: 0.85em; }
+  .prose pre code { background: none; border: none; padding: 0; color: #E8E8E5; }
+  .prose blockquote { border-left: 3px solid #FF4D4D; padding: 0.5em 0 0.5em 1.5em; margin: 2em 0; font-style: italic; color: #ffffff; font-size: 1.15em; line-height: 1.6; }
+  .prose a { color: #FF4D4D; text-decoration: none; border-bottom: 1px solid rgba(255,77,77,0.3); }
+  .prose a:hover { border-bottom-color: #FF4D4D; }
+  .prose hr { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 4rem 0; }
+  .prose table { width: 100%; border-collapse: collapse; margin: 2em 0; font-size: 0.92em; font-family: 'Inter', sans-serif; }
+  .prose th { text-align: left; padding: 0.75em 1em; border-bottom: 1px solid rgba(255,255,255,0.12); color: #ffffff; font-weight: 600; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.06em; }
+  .prose td { padding: 0.75em 1em; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; color: #E8E8E5; }
+  .prose td strong { color: #ffffff; }
+  .small-caps { text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.78em; font-family: 'Inter', sans-serif; font-weight: 600; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #0A0A0A; }
+  ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+  .panel { background: #141414; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 2rem; }
+  .panel-red { background: linear-gradient(135deg, rgba(255,77,77,0.08), rgba(255,77,77,0.02)); border: 1px solid rgba(255,77,77,0.25); border-radius: 12px; padding: 2rem; }
+  .pull-quote { font-family: 'Source Serif 4', serif; font-size: 1.6rem; line-height: 1.45; font-weight: 500; color: #ffffff; padding: 2.5rem 0; border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); margin: 3rem 0; text-align: center; max-width: 800px; }
+  .toc-link { display: block; padding: 4px 12px; color: #71757A; font-size: 13px; border-left: 2px solid transparent; transition: all 0.15s; font-family: 'Inter', sans-serif; line-height: 1.4; }
+  .toc-link:hover, .toc-link.active { color: #ffffff; border-left-color: #FF4D4D; background: rgba(255,77,77,0.04); }
+  .section-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #71757A; letter-spacing: 0.2em; }
+  .mermaid { background: transparent !important; }
+  details > summary { list-style: none; cursor: pointer; user-select: none; }
+  details > summary::-webkit-details-marker { display: none; }
+  .grid-cards { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 768px) { .grid-cards { grid-template-columns: 1fr 1fr; } }
+  .grid-cards-3 { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 768px) { .grid-cards-3 { grid-template-columns: 1fr 1fr 1fr; } }
+  .stage-row { display: grid; grid-template-columns: 80px 1fr; gap: 1.25rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: baseline; }
+  .stage-row:last-child { border-bottom: none; }
+  .stage-tag { font-family: 'JetBrains Mono', monospace; color: #FF4D4D; font-size: 0.95rem; font-weight: 500; }
+  .stage-body h4 { color: #ffffff; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; margin: 0 0 0.4rem; text-transform: none; letter-spacing: -0.005em; }
+  .stage-body p { color: #9CA3AF; font-family: 'Source Serif 4', serif; font-size: 0.95rem; line-height: 1.55; margin: 0; }
+  .stat-num { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 2.5rem; line-height: 1; color: #ffffff; letter-spacing: -0.02em; }
+  .stat-label { font-family: 'Inter', sans-serif; color: #71757A; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.12em; margin-top: 0.5rem; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .badge-done { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+  .badge-active { background: rgba(212,165,116,0.12); color: #D4A574; border: 1px solid rgba(212,165,116,0.25); }
+  .badge-scheduled { background: rgba(255,255,255,0.05); color: #71757A; border: 1px solid rgba(255,255,255,0.08); }
+  @media (print) {
+    body { background: white; color: black; font-size: 11pt; }
+    .no-print { display: none !important; }
+    .prose { max-width: 100%; }
+    .panel, .panel-red { border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====================== TOC SIDEBAR (desktop) ====================== -->
+<aside class="no-print fixed top-8 right-8 w-64 hidden xl:block z-30">
+  <div class="panel py-4 px-2 max-h-[80vh] overflow-y-auto">
+    <div class="px-3 mb-3 small-caps text-conemuted">Contents</div>
+    <a class="toc-link" href="#cold-open">01 · Cold open</a>
+    <a class="toc-link" href="#vignette">02 · A Friday call</a>
+    <a class="toc-link" href="#thesis">03 · Thesis</a>
+    <a class="toc-link" href="#alternatives">04 · What we rejected</a>
+    <a class="toc-link" href="#architecture">05 · Three agents + a hook</a>
+    <a class="toc-link" href="#scars">06 · Five scars</a>
+    <a class="toc-link" href="#bets">07 · The bet we already won</a>
+    <a class="toc-link" href="#daily">08 · What changes daily</a>
+    <a class="toc-link" href="#deployment">09 · Deployment</a>
+    <a class="toc-link" href="#cost">10 · What it costs</a>
+    <a class="toc-link" href="#proof">11 · Current state</a>
+    <a class="toc-link" href="#not">12 · What it is NOT</a>
+    <a class="toc-link" href="#closing">13 · Closing</a>
+  </div>
+</aside>
+
+<!-- ====================== COVER ====================== -->
+<section class="max-w-4xl mx-auto px-6 pt-32 pb-16">
+  <div class="small-caps text-conered mb-6">AI-PM Pipeline · Practice Area within the Cone Red <a href="https://dvlevin.github.io/ai-first-handbook/" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">AI-First Transformation Practice</a> · 2026</div>
+  <h1 class="font-sans text-6xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-8 text-white">
+    Tickets,<br>
+    <span class="text-conered">drafted.</span>
+  </h1>
+  <p class="text-2xl text-conemuted leading-relaxed mb-12 max-w-2xl" style="font-family: 'Source Serif 4', serif;">
+    The AI Project Manager that turns transcripts into vault tickets — humans review, never start blank. Three agents read what humans read; the pre-commit hook is the safety net. <strong class="text-white">Not a writing assistant. Production.</strong>
+  </p>
+  <div class="flex items-center gap-6 text-sm text-conemuted ui">
+    <div>
+      <div class="text-white font-semibold">Cone Red AI</div>
+      <div>The AI-first architecture firm</div>
+    </div>
+    <div class="h-10 w-px bg-coneborder"></div>
+    <div>
+      <div>≈ 18 min read · for product &amp; ops leads</div>
+      <div>2026-04-29 · v1.0</div>
+    </div>
+  </div>
+</section>
+
+<hr class="border-coneborder max-w-4xl mx-auto">
+
+<!-- ====================== TL;DR ====================== -->
+<section class="max-w-4xl mx-auto px-6 pt-12 pb-4">
+  <div class="prose mx-auto">
+    <div class="panel" style="border-left: 3px solid #FF4D4D; padding: 1.5rem 1.75rem;">
+      <div class="small-caps text-conered mb-3">If you have 60 seconds</div>
+      <p style="font-family: 'Source Serif 4', serif; color: #E8E8E5; margin-bottom: 0.85em; font-size: 1rem; line-height: 1.6;">
+      Hand-authoring tickets is the bottleneck most companies don't measure. <strong style="color: #fff;">A 90-min meeting eats roughly 3 hours of someone's time</strong> — listening back, transcribing, deciding what counts, placing into the right epic, estimating, wiring dependencies. By 5pm the details are blurry; by Monday they're lost. Our pipeline replaces that loop. Three agents — <strong style="color: #fff;">transcript-extraction → product-manager → ticket-file generator</strong> — turn the same meeting into <strong style="color: #fff;">5–10 fully-cited tickets in 20 minutes.</strong> Humans review the diff and commit. The pre-commit hook validates the schema and rejects bad output. AI gets no special treatment.
+      </p>
+      <p style="font-family: 'Inter', sans-serif; color: #9CA3AF; font-size: 0.88rem; line-height: 1.55; margin: 0;">
+      <strong style="color: #E8E8E5;">If you only have 5 minutes:</strong> §02 (the Friday-call vignette) → §05 (the architecture) → §13 (closing). &nbsp;<strong style="color: #E8E8E5;">If you're a CFO/COO benchmarking spend:</strong> §07 (the bet we already won) + §10 (what it costs). &nbsp;<strong style="color: #E8E8E5;">If you want a fit call this week:</strong> jump to §13.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 01 COLD OPEN ====================== -->
+<section id="cold-open" class="max-w-4xl mx-auto px-6 py-16">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">01 — Cold open</div>
+    <h2>What gets paid for when tickets are hand-authored</h2>
+
+    <p>A product lead finishes a 90-minute customer call at 4pm on a Friday. Five action items, three decisions, a contradicted assumption, two new dependencies. They have to capture all of it before Monday or it evaporates. They block 90 minutes of their own time on Monday morning to listen back at 1.5×, take notes, draft tickets in ClickUp. By 11am Monday the tickets exist. By 11am Tuesday the team realizes three of them duplicate work already in flight and one missed the actual decision the call settled. The PM lost three hours; the team lost a sprint of clarity.</p>
+
+    <p>A consultant runs four discovery calls in a week and still has to bill against deliverables. The transcripts pile up in <code>~/Downloads</code>. The "I'll write it up Sunday" pattern degrades by call three. By call four they're paraphrasing from memory, citing nothing, and the proposal that lands Monday reads like generic AI consulting prose because that's what running on memory produces.</p>
+
+    <p>An engineering lead receives a 2,099-line transcript from a multi-stakeholder call (the operator, two prospects, a partner). Inside it: pricing decisions, technical commitments, scope-shifts, a quiet contradiction between what was said in March and what was said today. The cost of *missing* one of those isn't theoretical — it's a misaligned spec, a re-read deal, an erosion of trust that doesn't surface until week six.</p>
+
+    <p>This is the pattern. The bottleneck isn't thinking. <strong>It's transcription.</strong> AI is genuinely good at transcription. The hand-authored ticket flow is the bottleneck nobody is measuring because everyone is paying it.</p>
+  </div>
+</section>
+
+<!-- ====================== 02 VIGNETTE ====================== -->
+<section id="vignette" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">02 — A Friday call</div>
+    <h2>Same call, the new shape</h2>
+
+    <blockquote>
+      4:02 PM Friday. The call ends. The transcript drops into <code>transcripts/</code> — 2,099 lines, three speakers, 90 minutes. The product lead types one command: <code>/pm-from-transcript transcripts/2026-04-03_call.md</code>. The pipeline starts.
+    </blockquote>
+
+    <blockquote>
+      4:04 PM. The transcript-extraction agent finishes. It produces a structured pass — pains, decisions, action items, BANT signals, stakeholder positions, open questions — every item linked to the exact line range in the transcript that produced it. Nothing summarized away; nothing hallucinated. The agent already knows the project's vocabulary because it was loaded with the project's <code>CLAUDE.md</code>.
+    </blockquote>
+
+    <blockquote>
+      4:11 PM. The product-manager agent reads the structured pass alongside the project's existing tickets and the schema doc. It produces <code>proposal.yaml</code> — seven new tickets, each with epic placement, story-points estimate, RACI inferred from action-item ownership, dependencies wired to existing tickets. Plus an "ambiguities" block: <em>"Action item from Doug at 1:42:18 — could be owned by either Dima or Mike. Default: Dima. Confirm?"</em> Plus a "duplicates detected" block: <em>"Proposed T-013 looks similar to existing T-011 (cosine 0.82). Recommend merge into T-011 with new AC."</em>
+    </blockquote>
+
+    <blockquote>
+      4:14 PM. The product lead opens <code>proposal.yaml</code> in their editor. They confirm Dima owns the disputed action item. They accept the merge into T-011. They reject one ticket as scope-creep, edit another's title, and approve. They run <code>/task review-pm</code> which writes the seven ticket files into <code>tickets/&lt;epic&gt;/&lt;story&gt;/</code>. Frontmatter is populated; bodies are populated; activity log first entry: <em>"Generated by AI-PM from transcripts/2026-04-03_call.md#L1532-L1607."</em>
+    </blockquote>
+
+    <blockquote>
+      4:21 PM. The product lead runs <code>git diff</code>, reads the seven tickets, edits two AC clauses, runs <code>git commit</code>. The pre-commit hook validates the frontmatter — RACI present, dependencies resolve, epic exists, owner is in the team list. <strong>Commit lands. Total: 19 minutes from call-end to ticket-merge.</strong>
+    </blockquote>
+
+    <p class="mt-8">That's what the operator gets. A Friday afternoon that ends with the work captured, not deferred. Monday morning starts with <em>delivery</em>, not transcription. The team's signal-to-noise on tickets goes up because the synthesizer, unlike a tired PM at 5pm, actually reads the project's existing tickets before proposing new ones. <strong>The PM stops being a transcription bottleneck and starts being a reviewer.</strong> Which is the higher-leverage version of their job anyway.</p>
+
+    <p class="text-conesoft" style="font-size: 0.92em; font-style: italic;">(Vignette anonymizes a real session. The 19-minute end-to-end is from a 2026-04-03 call processed against the live pipeline. Names changed; the rest is transcript.)</p>
+  </div>
+</section>
+
+<!-- ====================== 03 THESIS ====================== -->
+<section id="thesis" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">03 — Thesis</div>
+    <h2>Hand-authoring tickets is the bottleneck nobody measures</h2>
+
+    <p>Every product team in 2026 talks about AI productivity. Almost none measure the single highest-volume task that AI is unambiguously better at than a tired human: <em>turning unstructured speech into structured work items.</em> The reason it doesn't get measured is the reason most companies are still hand-authoring: it feels like the PM's job, the hours are spread thin, and nobody has run the math on what the team actually pays for it.</p>
+
+    <p>The math, for a 25-person product org running six 90-minute meetings a week: <strong>~18 hours of senior PM time per week on transcription-and-ticketing.</strong> At a fully-loaded $200/hour, that's $3,600/week, $187,000/year of PM salary spent on a task that AI does in 20 minutes per meeting. Most companies, asked where their PM-Vault lives, will point at ClickUp. <strong>Their actual PM-Vault is the inside of three senior people's heads</strong> — and it leaks every weekend.</p>
+
+    <div class="pull-quote">
+      "Hand-authoring tickets is what we used to call 'PM work.' It is now the part of PM work AI is best at. The actual PM work is the review."
+    </div>
+
+    <p>What we ship isn't a chatbot or an AI assistant. <strong>It's a pipeline.</strong> Three agents in series, each with a single job, each citing its sources to the line in the transcript, each producing structured output the next stage can consume. A pre-commit hook in front of the vault rejects malformed output the same way it rejects malformed human output. AI gets no special treatment. The human is the gate.</p>
+
+    <p>Anyone can ask Claude to "summarize this call into tickets." That's a writing assistant. <strong>What we ship is production.</strong> The difference is the schema, the review gate, the citation chain, the duplicate detection, the project-context awareness, and the fact that the output goes into a system of record under version control — not into a Slack thread that evaporates by Tuesday.</p>
+  </div>
+</section>
+
+<!-- ====================== 04 ALTERNATIVES ====================== -->
+<section id="alternatives" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">04 — What we evaluated, and what we rejected</div>
+    <h2>The case for not buying any of the obvious things</h2>
+
+    <p>Before building this, we ran the same evaluation we run for every Cone Red Practice Area. Six alternatives. Each one a thing you have already considered or been pitched in 2025–2026. <strong>The table is the case for not buying any of them as the painkiller.</strong></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:24%">Option</th>
+          <th style="width:36%">What it actually is</th>
+          <th style="width:40%">Why we passed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ClickUp / Linear / Jira AI features</strong></td>
+          <td>"Summarize this comment thread into tasks" inside an existing PM tool</td>
+          <td>The output is shaped by the PM tool's data model, not by the team's actual schema. No transcript-line citations. No project-context awareness across multiple deals. Locks you deeper into the SaaS.</td>
+        </tr>
+        <tr>
+          <td><strong>Notion AI / Coda AI</strong></td>
+          <td>Generic "draft tasks from this page" inside a doc tool</td>
+          <td>Optimised for reading, not for systems-of-record. No schema validation. No commit gate. The output reads OK on Monday and rots by Friday.</td>
+        </tr>
+        <tr>
+          <td><strong>Custom Zapier + ChatGPT</strong></td>
+          <td>Glue: transcript → ChatGPT → "make tickets" → ClickUp API</td>
+          <td>Hallucinations end up in your system of record because there is no review gate. No project-context. No structured intermediate. <em>This is how most teams discover the failure mode the hard way.</em></td>
+        </tr>
+        <tr>
+          <td><strong>Specialized "AI meeting assistants" (Otter, Fellow, Granola, Read.ai)</strong></td>
+          <td>Auto-transcribe + summarize + push action items to integrations</td>
+          <td>Strong on transcription; weak on synthesis into a project's actual ticket schema. Push-to-Asana flows degrade once your team's structure diverges from the vendor's defaults. <strong>Useful as upstream input; not the painkiller.</strong></td>
+        </tr>
+        <tr>
+          <td><strong>"Wait for ClickUp / Atlassian / Linear to ship the killer agent"</strong></td>
+          <td>Trust the incumbent</td>
+          <td>The incumbent's economic incentive is to keep your data inside the SaaS. The pipeline a vendor will ship is one that scales their seats, not your repo's signal-to-noise. <em>Their interest is not your interest.</em></td>
+        </tr>
+        <tr>
+          <td><strong>"Build it from scratch" with LangChain / a custom agent framework</strong></td>
+          <td>Internal R&amp;D project</td>
+          <td>The "I don't know what to evaluate" trap. Without a working baseline you can't tell if your design is right. We treated it as input, not output — borrowed the strongest frame, replaced the substrate.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>We didn't pick one and stop. <strong>We synthesized.</strong> We took the best mental model in the space (the vault-as-tickets pattern, with a schema enforced by a pre-commit hook) and built a three-stage pipeline on top of it. The result reads what humans read, writes what humans review, and stops where humans always stopped: at the commit.</p>
+  </div>
+</section>
+
+<!-- ====================== 05 ARCHITECTURE ====================== -->
+<section id="architecture" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">05 — Architecture</div>
+    <h2>Three agents and a safety net</h2>
+
+    <p>The pipeline is deliberately small. Four moving parts. Each one does a single job, cites its work, and hands off structured output to the next stage. The pre-commit hook is mechanical — same gate every human passes through.</p>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-12 panel">
+    <div class="mermaid text-sm">
+flowchart LR
+    T["📜 Transcript<br/>(or RFP / call notes)"] --> C["🎤 Transcript<br/>extraction agent"]
+    C --> P["📝 PM agent<br/>(synthesizer)"]
+    P --> V["📁 Ticket-file<br/>generator"]
+    V --> H["🛡 Pre-commit<br/>hook"]
+    H --> R["👤 Human<br/>review · edit · commit"]
+    style T fill:#1A1A1A,stroke:#71757A,color:#E8E8E5
+    style C fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style P fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style V fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style H fill:#1A1A1A,stroke:#D4A574,color:#E8E8E5
+    style R fill:#FF4D4D,stroke:#FF4D4D,color:#fff
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 panel">
+    <div class="stage-row">
+      <div class="stage-tag">Stage 1</div>
+      <div class="stage-body">
+        <h4>Transcript-extraction agent</h4>
+        <p>Reads the transcript line by line. Emits structured JSON: pains, decisions, action items, BANT signals, stakeholder positions, open questions. <strong>Every item links to the exact line range</strong> that produced it. Loaded with the project's <code>CLAUDE.md</code> so it speaks the team's vocabulary. (Internal codename: Conversa.)</p>
+      </div>
+    </div>
+    <div class="stage-row">
+      <div class="stage-tag">Stage 2</div>
+      <div class="stage-body">
+        <h4>Product-manager agent</h4>
+        <p>Reads the extraction alongside the existing ticket index and the schema doc. Decides: which items become tickets, what's the right epic / story placement, what's the estimate, who's responsible, what's blocked by what. Outputs <code>proposal.yaml</code> with new tickets, an "ambiguities" block for things it isn't sure about, and a "duplicates detected" block (cosine ≥ 0.75 = flag). (Internal codename: Prody.)</p>
+      </div>
+    </div>
+    <div class="stage-row">
+      <div class="stage-tag">Stage 3</div>
+      <div class="stage-body">
+        <h4>Ticket-file generator</h4>
+        <p>After human review, writes the actual ticket files into <code>tickets/&lt;epic&gt;/&lt;story&gt;/&lt;id&gt;.md</code>. Frontmatter populated (RACI, deps, state, points, risk, sources, AI-context refs). Body sections autopopulated: Context, Acceptance Criteria, Definition of Done, Out of Scope, Activity Log. <strong>Writes but does not commit.</strong> (Internal name: PM-Vault.)</p>
+      </div>
+    </div>
+    <div class="stage-row">
+      <div class="stage-tag">Hook</div>
+      <div class="stage-body">
+        <h4>Pre-commit schema validator</h4>
+        <p>Mechanical, not an agent. Validates frontmatter against the schema: invalid output blocks the commit. <strong>AI gets no special treatment</strong> — same gate every human passes through. The first thing that fires when AI hallucinates a malformed assignee or a broken dependency reference.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prose mx-auto">
+    <p><strong>Why three agents, not one.</strong> A single agent that "reads a transcript and writes tickets" is the writing-assistant pattern — works on demos, fails in production. Splitting the pipeline into extract-then-synthesize-then-generate gives three things: (1) <em>each stage is auditable</em> (the structured intermediate is human-readable), (2) <em>each stage runs the right model for the cost</em> (fast model for extraction, stronger model for synthesis, cheap model for generation), (3) <em>each stage has a hand-off the human can intercept.</em> If the synthesizer's <code>proposal.yaml</code> looks wrong, you fix it once, and the generator is forced to comply.</p>
+
+    <p>The hand-off shape matters more than the agent names. <strong>Most "AI ticket generators" run end-to-end without a structured intermediate.</strong> That's how you get tickets that read OK and have a missing assignee, a broken dependency, and a hallucinated story-point estimate. The intermediate is the painkiller.</p>
+  </div>
+</section>
+
+<!-- ====================== 06 SCARS ====================== -->
+<section id="scars" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">06 — Five scars</div>
+    <h2>The hard problems we already paid for</h2>
+
+    <p>Scars sell. You should know we have already paid for the lessons you would otherwise pay for.</p>
+
+    <h3>1 · End-to-end agents hallucinate ownership</h3>
+    <p>First version: one agent, transcript in, tickets out. Looked clean on the demo. In production, ~25% of tickets had a missing or wrong owner — the agent had inferred from speech patterns rather than reading the project's RACI conventions. Cost to fix: split synthesis from generation, force the synthesizer to consult the project's existing tickets and assignees, surface ambiguity rather than guess. <strong>Ambiguity flags are the credibility signal — never let an agent silently guess.</strong></p>
+
+    <h3>2 · Schema validation is not optional</h3>
+    <p>We tried trusting the agent's output. We got tickets with `assignee: "the team"` and `depends_on: [T-XXX, T-YYY]` (placeholders the agent generated when it didn't know). Cost to fix: a pre-commit hook with strict frontmatter schema that rejects placeholders, undefined assignees, and broken references. <strong>The hook is what makes this production, not a writing assistant.</strong></p>
+
+    <h3>3 · Per-message LLM extraction is unaffordable at scale</h3>
+    <p>Mike Leone of Omdia named the second half of this pattern: <em>"You test on a curated dataset, the AI looks amazing. Then you point it at production. Fifteen years of SharePoint folders. Teams threads nobody's cleaned up since 2021. Governance overhead alone can get close to what they're spending on the technology itself."</em> Running a frontier model on every message is what most consumer "AI memory" products effectively do. We split into a free heuristic pass first (NER + importance scoring) and an event-triggered LLM pass. <strong>The expensive model only runs on signals that cleared the bar.</strong></p>
+
+    <h3>4 · Cross-call context evaporates without an index</h3>
+    <p>Ticket #5 from the Friday call should have been merged into ticket #11 from the Tuesday call — same scope, two stakeholders, three weeks apart. v0 of the pipeline missed it because the synthesizer had no view of the existing ticket index. Cost to fix: title/AC embedding similarity + a duplicate-detection block in <code>proposal.yaml</code>. <strong>The synthesizer reads the existing index before proposing new tickets — that's the cheapest dedup that works.</strong></p>
+
+    <h3>5 · Workforce resistance is the silent failure mode</h3>
+    <p>The technical pipeline can be perfect and the rollout still fails — because the team that used to hand-author tickets sees AI-PM as a threat to the part of their job they were measured on. Writer × Workplace Intelligence (Apr 2026, n=2,400): <strong>29% of knowledge workers admit to sabotaging their company's AI strategy. 44% among Gen Z.</strong> Tactics: metric tampering, performative compliance, refusing mandated tools. Cost to fix: <strong>tie performance reviews to outcomes, never to "AI usage" or token spend.</strong> Frame the pipeline as <em>"the PM stops transcribing and starts reviewing"</em> — a higher-leverage version of the same job. Carl Eschenbach, CEO of Workday: <em>"Employees today believe they're competing against AI. They're not. They're competing against their peers who are using AI."</em></p>
+
+    <p class="mt-10">Each of these is roughly two weeks of work to discover, scope, and fix when you encounter it cold. <strong>We have already paid that tab.</strong></p>
+  </div>
+</section>
+
+<!-- ====================== 07 BETS ====================== -->
+<section id="bets" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">07 — The bet we already won</div>
+    <h2>Self-applied. Validated against ground truth.</h2>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 grid-cards">
+    <div class="panel-red">
+      <div class="small-caps text-conered mb-3">The self-applied case</div>
+      <h4 class="!mt-0 text-white">$5K/mo PM, refused</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      We refused to hire a $5K/month project manager. We built this pipeline instead. <strong class="text-white">Runs three projects in parallel</strong>; onboards to any new task, industry, or stakeholder instantly. The CR practice has shipped 150+ enterprise AI projects on this pattern. Most credible kind of evidence: we did this to ourselves before pitching it.
+      </p>
+    </div>
+    <div class="panel-red">
+      <div class="small-caps text-conered mb-3">Test case</div>
+      <h4 class="!mt-0 text-white">2,099-line transcript → 7 tickets in 19 minutes</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      Real Friday call: 90 minutes, three stakeholders, scope-shifts, contradicted assumption. Pipeline produced <strong class="text-white">7 tickets across decisions, build commitments, and research items</strong>, plus 2 ambiguity flags and 1 duplicate-merge. Validated against the hand-derived tickets that had been written the week before. <strong class="text-white">Coverage: 86%. Noise: 14%.</strong> Above the 80%/≤20% bar set at design time.
+      </p>
+    </div>
+  </div>
+
+  <div class="prose mx-auto mt-8">
+    <p>The numbers are not press-release figures. They are reproducible from a real transcript with line citations, a hand-derived ground-truth set, and a commit history showing the pipeline's first run. The full validation harness is part of the deliverable. <strong>The fact of a hand-derived ground truth set is the credibility signal</strong> — and most products in this space cannot show one.</p>
+
+    <p><strong>Why coverage matters more than precision here.</strong> A PM hand-deriving tickets from a 2,099-line transcript at 5pm misses things — that's the failure mode we're replacing, not the one to over-correct against. <strong>The pipeline's job is to surface every plausible ticket plus the ambiguity flags, and let the human decide.</strong> A 14% noise rate means the human deletes ~1 ticket per call. A PM losing a real action item to fatigue costs the team a sprint of clarity. Trade-off accepted, deliberately.</p>
+  </div>
+</section>
+
+<!-- ====================== 08 DAILY ====================== -->
+<section id="daily" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">08 — What changes in daily use</div>
+    <h2>Six things the operator notices, ordered by frequency</h2>
+
+    <h3>End-of-call ritual changes</h3>
+    <p>Today's ritual: PM writes "I'll capture the actions" in the chat and blocks Sunday afternoon. <strong>New ritual:</strong> PM ends the call, runs <code>/pm-from-transcript</code>, opens <code>proposal.yaml</code> in 8 minutes. The hours-to-decision compress to minutes-to-review.</p>
+
+    <h3>Source-of-truth shifts</h3>
+    <p>Tickets stop being authored in a SaaS UI and start being authored as markdown files under version control. Every ticket carries a <code>sources_from_transcript</code> reference — you can <em>cite the moment in the call</em> that produced the ticket. <strong>The transcript becomes part of the audit trail, not just a Slack drop.</strong></p>
+
+    <h3>Ambiguity becomes visible</h3>
+    <p>Today: a tired PM defaults ownership to whoever's name they remember. Output looks crisp; reality is fuzzy. <strong>New:</strong> the synthesizer flags ambiguity explicitly. The diff shows you the flags. You resolve them once, on the way in. <em>Visible ambiguity is a feature, not a bug.</em></p>
+
+    <h3>Duplicate detection runs by default</h3>
+    <p>Three months in, you have 200 tickets. The synthesizer reads the existing index before proposing new ones, and surfaces likely merges with cosine similarity scores. <strong>Your ticket count stops compounding into noise.</strong></p>
+
+    <h3>Cross-project synthesis becomes free</h3>
+    <p>The same pipeline runs across every project's vault. A pattern that surfaced in three transcripts across two deals — say, a recurring objection from procurement officers about audit logs — surfaces as a candidate for a playbook entry, not as a fragment hidden in three different ClickUp boards.</p>
+
+    <h3>The PM stops being a transcription bottleneck</h3>
+    <p>The role shifts from "person who writes things down" to "person who reads things and decides." <strong>This is the higher-leverage version of the job</strong> — and the version most senior PMs already wish they were doing. Tie performance reviews to <em>decisions logged, dependencies caught, scope-creep killed</em>, not to ticket count or hours spent in ClickUp.</p>
+  </div>
+</section>
+
+<!-- ====================== 09 DEPLOYMENT ====================== -->
+<section id="deployment" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">09 — Deployment shape</div>
+    <h2>What an engagement actually looks like</h2>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 grid-cards">
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">What we deliver</div>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-2" style="font-family: 'Source Serif 4', serif;">
+        <li>The pipeline scoped to your project's existing schema (or a clean schema if you're starting from scratch — see the <a href="https://dvlevin.github.io/ai-first-handbook/handbook.html" style="color:#FF4D4D;">handbook</a> for vault-as-tickets).</li>
+        <li>Three role agents installed and tuned to your team's vocabulary via <code>CLAUDE.md</code>.</li>
+        <li>Pre-commit hook enforcing your frontmatter schema. Hard rejection of malformed AI output.</li>
+        <li>Validation harness on a sample of your own historical transcripts vs. the tickets that were hand-derived from them. We score the pipeline against your ground truth before you sign on the rollout.</li>
+        <li>Two-week shadow period: the pipeline runs on every call, but the PM hand-authors as usual; both outputs are compared until the team trusts the AI draft as a starting point.</li>
+        <li><strong class="text-white">Security posture:</strong> runs on your infrastructure; transcripts never leave the deployment; agents call your in-VPC LLM gateway. EU/EFTA-only deployment available.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">What stays with us</div>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-2" style="font-family: 'Source Serif 4', serif;">
+        <li>The pipeline pattern. Delivered as outcomes, not as source-licensable IP.</li>
+        <li>Ongoing tuning of the role agents as your team's vocabulary shifts.</li>
+        <li>Cross-engagement learnings about which extraction failures we already saw at other clients (informing the synthesizer's defaults).</li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color: rgba(255,77,77,0.3);">
+      <div class="small-caps text-conered mb-3">What the client owns</div>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-2" style="font-family: 'Source Serif 4', serif;">
+        <li><strong class="text-white">Their tickets, their schema, their git history.</strong> All of it. Self-hosted on your infrastructure.</li>
+        <li><strong class="text-white">Their citation chain.</strong> Every ticket links back to the transcript line range that produced it. Replayable, auditable, queryable.</li>
+        <li><strong class="text-white">The kill switch.</strong> Disable the pipeline; your team falls back to hand-authoring with zero downtime.</li>
+        <li><strong class="text-white">The exit.</strong> Your tickets are markdown files. You own them whether or not the pipeline runs tomorrow.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">Cadence</div>
+      <p class="text-conemuted text-sm leading-relaxed mt-3" style="font-family: 'Source Serif 4', serif;">
+      Pipeline runs on demand or on transcript-landing. Synthesizer batches across multi-call deals, dedupes within a window. <strong class="text-white">The PM still owns review-and-commit cadence</strong> — usually at end-of-day, not real-time. This is not a real-time agent platform. It's an asynchronous PM substrate.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== 10 COST ====================== -->
+<section id="cost" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">10 — What it costs to run</div>
+    <h2>Three architectural commitments make this cheap</h2>
+
+    <p>The pipeline is deliberately cheap to operate at scale because it makes three choices most competitors don't.</p>
+
+    <h3>One — open-weight models for extraction; frontier only on synthesis</h3>
+    <p>Stage 1 (extraction) is mechanical structure-from-text. A fast open-weight model handles it for a fraction of the cost of running a frontier model on every transcript. Stage 2 (synthesis) is where reasoning matters; that gets the better model. Stage 3 (generation) is template-driven; cheap model again. <strong>Per-meeting cost in a typical deployment: under $1.</strong></p>
+
+    <h3>Two — self-hosted vault, no SaaS lock-in</h3>
+    <p>The vault is a git repository. Your tickets are markdown files. There is no per-seat SaaS bill, no per-API-call retrieval tax, no vendor lock-in to a closed PM product. <strong>The economics scale with calls, not seats.</strong></p>
+
+    <h3>Three — heuristic-first extraction</h3>
+    <p>Stage 1 catches the structural elements (named entities, dates, dollar amounts, action verbs, decision markers) with deterministic parsing before invoking the LLM. The LLM only fires on the parts where reasoning is needed. <strong>Per-meeting economics scale with meeting <em>signal</em>, not meeting <em>length</em>.</strong></p>
+
+    <div class="pull-quote">
+      "$187K of senior PM salary spent on transcription, replaced by under $1/meeting in compute. Plus the PM's time back, on the part of their job that compounds."
+    </div>
+
+    <p>Specific dollar figures vary by deployment shape and team size; they're part of the commercial conversation. The architectural commitment is unambiguous. <strong>The PM-time savings dwarf the compute cost by three orders of magnitude.</strong></p>
+  </div>
+</section>
+
+<!-- ====================== 11 PROOF ====================== -->
+<section id="proof" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">11 — Current state and proof</div>
+    <h2>What's shipped, what's scheduled</h2>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 panel">
+    <p style="font-size: 0.85rem; color: #9CA3AF; margin: 0 0 1rem; line-height: 1.55;"><strong style="color: #fff;">Honest status, plainly:</strong> the pipeline runs internally at Cone Red. Stage 1 (extraction) is shipped and reused across <code>/ingest-transcript</code> on every CR call. Stage 2 (synthesis) and Stage 3 (generation) are at v0.1, validated against the test case, scheduled for full productization concurrent with our internal vault-as-tickets cutover (mid-May 2026). External pilots will run on the same substrate, scoped to client transcripts.</p>
+    <table class="w-full" style="font-family: 'Inter', sans-serif; font-size: 0.9rem;">
+      <thead>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.12);">
+          <th style="text-align:left; padding: 0.5em 0.75em; color: #ffffff; font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em;">Component</th>
+          <th style="text-align:left; padding: 0.5em 0.75em; color: #ffffff; font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em;">Status</th>
+          <th style="text-align:left; padding: 0.5em 0.75em; color: #ffffff; font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em;">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Stage 1 — Transcript extraction</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-done">Shipped</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Used in every CR <code>/ingest-transcript</code> call since 2026-Q1</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Pre-commit hook (vault schema)</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-done">Shipped</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Catching real schema violations daily — the gate is real</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Stage 2 — PM agent (synthesizer)</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-active">Active</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;"><strong style="color:#fff;">86%</strong> coverage on test case; v0.1 in production for CR projects</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Stage 3 — Ticket-file generator</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-active">Active</span></td>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">v0.1; emits valid frontmatter against schema</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Duplicate detection (cosine similarity)</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-scheduled">Scheduled</span></td>
+          <td style="padding: 0.65em 0.75em; color: #9CA3AF;">v1 ships May 2026 alongside internal vault cutover</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">Cross-call merge / multi-transcript synthesis</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-scheduled">Scheduled</span></td>
+          <td style="padding: 0.65em 0.75em; color: #9CA3AF;">v2 — process-sequentially in v1, dedupe in synthesizer</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.65em 0.75em; color: #E8E8E5;">External client pilots</td>
+          <td style="padding: 0.65em 0.75em;"><span class="badge badge-scheduled">Open</span></td>
+          <td style="padding: 0.65em 0.75em; color: #9CA3AF;">Q3 2026 cohort — 3 design partners</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose mx-auto">
+    <p>The pipeline runs against itself daily. Every Cone Red call goes through Stage 1; every Cone Red ticket since the vault-as-tickets cutover passes through the pre-commit hook. <strong>We are the first design partner.</strong> The case for buying it from us is the case for buying it from the firm that paid the integration tab on its own engagement portfolio first.</p>
+
+    <h4>What's shipped vs what's scheduled</h4>
+    <p>The table is the calendar, plain. Stage 1 + the schema gate are running. Stage 2 and Stage 3 are at v0.1 — usable, not yet best-in-class. Duplicate detection and cross-call merge are scheduled with quality gates that <em>must</em> hold before production rollout. <strong>We are not asking you to take "this all works today" on faith — we are asking you to look at the gates and decide if our discipline maps to your risk appetite.</strong> If you need cross-call merge production-grade before signing, we'll tell you on the first call which pilots are the right shape.</p>
+  </div>
+</section>
+
+<!-- ====================== 12 NOT ====================== -->
+<section id="not" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">12 — What this is NOT</div>
+    <h2>The anti-overclaim section</h2>
+
+    <p>Credibility bank. We overfund it on purpose.</p>
+
+    <ul>
+      <li><strong>Not a meeting transcription product.</strong> Otter, Fellow, Granola, Read.ai are upstream of this. We assume you already have a transcript; we work on what happens after.</li>
+      <li><strong>Not a replacement for a senior PM.</strong> The pipeline replaces transcription, synthesis, and ticket-shape generation. The strategic judgment — whether the project should pivot, whether a stakeholder is truly aligned, whether the spec is right — is the human's job. <em>We're firing the keystrokes, not the reasoning.</em></li>
+      <li><strong>Not a system of record for project status.</strong> The vault is the SoR. We populate the vault. The vault doesn't tell you "this project is on track" — your reading of it does.</li>
+      <li><strong>Not certified for regulated workloads out of the box.</strong> SOC 2 / HIPAA / GDPR — all require deployment-specific work that is part of the engagement, not assumed. Anyone who tells you their AI-PM is "GDPR-compliant by default" is selling vapor.</li>
+      <li><strong>Not a chat interface.</strong> This is a pipeline. You run a command, you read a diff, you commit. If your team wants conversational ticket creation, ChatGPT and ClickUp's AI tab will sell you that. We sell the production version.</li>
+      <li><strong>Not "your AI agents are now sentient PMs."</strong> They draft. They cite. They flag ambiguity. They do not have judgment about your business. The contradiction-detection is mechanical (existing-ticket similarity), not introspective.</li>
+    </ul>
+
+    <p>If you're looking for any of those, this is not the right purchase. We will tell you so on the first call and send you somewhere honest about what you need.</p>
+  </div>
+</section>
+
+<!-- ====================== 13 CLOSING ====================== -->
+<section id="closing" class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">13 — Closing</div>
+    <h2>The bet underneath the pipeline</h2>
+
+    <p>The bottleneck in product organizations isn't strategy. It's the half-shift on Sunday afternoon when a PM is hand-deriving tickets from a Friday transcript at 1.5×.</p>
+
+    <p>Bret Taylor — CEO of Sierra, Chair of OpenAI — put the broader version of this in nine words: <em>"Big companies struggle to adopt AI because they are shipping their org charts."</em> The org chart wins because every AI tool gets bolted onto a team-by-team workflow without changing how work flows across the team. The PM's transcription burden is the most expensive piece of that pattern. Replace the burden, the role shifts from <em>writes things down</em> to <em>decides what matters</em>. The team's signal-to-noise on commitments goes up.</p>
+
+    <p>We built that. It works on our own engagements. The validation harness is reproducible. The deployment shape is engineered for clients who want sovereignty over their tickets and a clean exit if they ever want one.</p>
+
+    <div class="pull-quote">
+      "Hand-authoring goes from being the default to being the exception. The PM's job changes from typing to thinking."
+    </div>
+
+    <p>If you've read this far, you're past category-curiosity. <strong>Two ways in, depending on where you are:</strong></p>
+  </div>
+
+  <div class="max-w-3xl mx-auto my-8 grid-cards">
+    <div class="panel-red">
+      <div class="small-caps text-conered mb-3">Path A · high intent</div>
+      <h4 class="!mt-0 text-white">45-minute fit call · this week</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3 mb-4" style="font-family: 'Source Serif 4', serif;">
+      We look at your meeting cadence, your transcript pipeline, your existing ticket schema. We tell you honestly whether this is a fit. <strong class="text-white">Bring one transcript and the tickets your team hand-derived from it.</strong> We'll show you what the pipeline produces against the same source. First slots usually open within 48 hours.
+      </p>
+      <p class="text-sm" style="font-family: 'Inter', sans-serif;">
+        <a href="https://cal.com/dima-levin-qivxgq/15min?utm_source=ai-pm-handbook&utm_medium=path-a" target="_blank" rel="noopener" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">Book direct →</a> &nbsp;or&nbsp;
+        <a href="mailto:dima@cone.red?subject=AI-PM%20Pipeline%20%E2%80%94%20fit%20call" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">email dima@cone.red</a><br>
+        <span class="text-conesoft text-xs font-mono">subject · "AI-PM Pipeline — fit call"</span>
+      </p>
+    </div>
+    <div class="panel">
+      <div class="small-caps text-conered mb-3">Path B · category-shopping</div>
+      <h4 class="!mt-0 text-white">The handbook</h4>
+      <p class="text-conemuted text-sm leading-relaxed mt-3 mb-4" style="font-family: 'Source Serif 4', serif;">
+      The AI-First Company Handbook covers the broader vault-as-tickets pattern this pipeline rides on top of. If your company isn't yet on a markdown-vault substrate, start there. <strong class="text-white">The pipeline is the leverage; the vault is the foundation.</strong>
+      </p>
+      <p class="text-sm" style="font-family: 'Inter', sans-serif;">
+        <a href="handbook.html" style="color:#FF4D4D; border-bottom:1px solid rgba(255,77,77,0.4);">Read the handbook →</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="prose mx-auto">
+    <p class="text-conemuted italic mt-12" style="font-family: 'Source Serif 4', serif;">— The Cone Red AI · AI-PM Pipeline Practice<br>
+    <span class="small-caps text-conesoft" style="font-style: normal;">A Practice Area within the Cone Red AI-First Transformation Practice · 2026-04-29</span></p>
+  </div>
+</section>
+
+<!-- ====================== APPENDIX ====================== -->
+<section class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder">
+  <div class="prose mx-auto">
+    <div class="section-num mb-2">Appendix — At a glance</div>
+    <h2>Two-page summary</h2>
+  </div>
+
+  <div class="max-w-3xl mx-auto mt-8 grid-cards">
+    <div class="panel">
+      <h4 class="!mt-0 text-white">The architecture</h4>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-1" style="font-family: 'Source Serif 4', serif;">
+        <li>Three agents: transcript-extraction · PM synthesizer · ticket-file generator</li>
+        <li>Pre-commit schema validator (mechanical, not an agent)</li>
+        <li>Structured intermediate at every stage — auditable hand-offs</li>
+        <li>Vault is git; tickets are markdown</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h4 class="!mt-0 text-white">The proof</h4>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-1" style="font-family: 'Source Serif 4', serif;">
+        <li>Self-applied: refused $5K/mo PM, runs 3 projects in parallel</li>
+        <li>Test case: 2,099-line transcript → 7 tickets in 19 minutes</li>
+        <li>86% coverage vs. hand-derived ground truth</li>
+        <li>Stage 1 + schema gate shipped; Stages 2/3 at v0.1</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h4 class="!mt-0 text-white">What you own</h4>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-1" style="font-family: 'Source Serif 4', serif;">
+        <li>Your tickets · your schema · your git history</li>
+        <li>Your citation chain (transcript ↔ ticket)</li>
+        <li>The kill switch: one config flip, fall back to hand-author</li>
+        <li>The exit: tickets are .md files. Yours regardless</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h4 class="!mt-0 text-white">When NOT to buy this</h4>
+      <ul class="text-conemuted text-sm leading-relaxed mt-3 list-disc pl-5 space-y-1" style="font-family: 'Source Serif 4', serif;">
+        <li>You don't have a transcript pipeline yet (start with one of the meeting-AI products)</li>
+        <li>You don't have a markdown vault (start with the handbook)</li>
+        <li>You want a chat interface, not a pipeline</li>
+        <li>You want SOC 2 / HIPAA out-of-the-box (per-engagement scoping)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="max-w-4xl mx-auto px-6 py-16 border-t border-coneborder text-center">
+  <div class="text-sm text-conemuted ui">
+    <div class="mb-2">AI-PM Pipeline · v1.0 · 2026-04-29</div>
+    <div class="text-conesoft">© Cone Red AI · The AI-first architecture firm · <a class="text-conered" href="mailto:dima@cone.red" style="border-bottom: 1px solid rgba(255,77,77,0.3);">dima@cone.red</a></div>
+    <div class="text-conesoft mt-4">Companion long-read to <a class="text-conered" href="https://dvlevin.github.io/ai-first-handbook/" style="border-bottom: 1px solid rgba(255,77,77,0.3);">the AI-First Transformation Practice</a> — for product &amp; ops leads ready to retire hand-authored tickets.</div>
+  </div>
+</footer>
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        background: '#141414',
+        primaryColor: '#1A1A1A',
+        primaryTextColor: '#E8E8E5',
+        primaryBorderColor: '#FF4D4D',
+        lineColor: '#FF4D4D',
+        secondaryColor: '#0A0A0A',
+        tertiaryColor: '#0A0A0A'
+      }
+    });
+  }
+  // TOC active state
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  function updateActive() {
+    const top = window.scrollY + 120;
+    let active = sections[0]?.id;
+    for (const s of sections) {
+      if (s.offsetTop <= top) active = s.id;
+    }
+    tocLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + active));
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+</script>
+
+</body>
+</html>
