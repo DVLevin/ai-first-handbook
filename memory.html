@@ -248,7 +248,7 @@
         <tr>
           <td><strong>Mem0 / similar agent-memory frameworks</strong></td>
           <td>Open-source library: vector recall + LLM extraction over a SaaS or self-host backend</td>
-          <td>Per-message LLM extraction by default — economics break above moderate volume. Single retrieval branch. No structure layer. No locked eval methodology. <em>Useful as a baseline; we score above it on the same eval.</em></td>
+          <td>Per-message LLM extraction by default — economics break above moderate volume. Single retrieval branch. No structure layer. No locked eval methodology. <strong class="text-conered">Production audit evidence:</strong> a Mem0 deployment of 10,134 stored memories was judged <strong class="text-white">97.8% junk over 32 days</strong> (mem0 issue #4573, public). The mechanism: free-form summarization without write-side filtering or schema-typed extraction stores everything with equal confidence; signal-to-noise collapses to ~2% within a month. <em>We score above Mem0 on the same eval; more importantly, our write-side filter (heuristic gate + verifier-LLM second pass) keeps junk under 5%.</em></td>
         </tr>
         <tr>
           <td><strong>Letta (formerly MemGPT)</strong></td>
