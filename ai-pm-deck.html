@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>AI-PM Pipeline · Deck · Cone Red AI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          conered: '#FF4D4D',
+          coneblack: '#0A0A0A',
+          conegrey: '#141414',
+          conepanel: '#1A1A1A',
+          conetext: '#E8E8E5',
+          conemuted: '#9CA3AF',
+          conesoft: '#71757A',
+          coneborder: 'rgba(255,255,255,0.08)',
+          conegold: '#D4A574'
+        },
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html, body { height: 100%; margin: 0; padding: 0; background: #0A0A0A; color: #E8E8E5; font-family: 'Inter', sans-serif; overflow: hidden; }
+  body.fullscreen { cursor: none; }
+  body.fullscreen.show-cursor { cursor: default; }
+
+  .deck { position: relative; width: 100vw; height: 100vh; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; align-items: safe center; justify-content: safe center;
+    padding: 5vh 8vw;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+    transform: translateY(16px) scale(0.985);
+    filter: blur(4px);
+  }
+  .slide.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); filter: blur(0); }
+  .slide-content { width: 100%; max-width: 1200px; }
+  .slide::-webkit-scrollbar { width: 0; height: 0; }
+  .slide { scrollbar-width: none; }
+
+  .slide-cover { background: radial-gradient(ellipse at top right, rgba(255,77,77,0.08), transparent 60%), #0A0A0A; }
+  .slide-divider { background: #0A0A0A; }
+  .slide-divider-red { background: linear-gradient(135deg, #FF4D4D 0%, #cc3a3a 100%); color: white; }
+  .slide-statement { background: #0A0A0A; }
+  .slide-end { background: radial-gradient(ellipse at center, rgba(255,77,77,0.12), transparent 60%), #0A0A0A; }
+
+  .display-1 { font-size: clamp(3rem, 8vw, 7rem); line-height: 1.02; font-weight: 800; letter-spacing: -0.03em; color: #fff; }
+  .display-2 { font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.05; font-weight: 800; letter-spacing: -0.025em; color: #fff; }
+  .display-3 { font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; color: #fff; }
+  .display-4 { font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.25; font-weight: 600; color: #fff; }
+  .lead { font-size: clamp(1.1rem, 1.6vw, 1.5rem); line-height: 1.5; color: #9CA3AF; max-width: 56ch; }
+  .lead-large { font-size: clamp(1.4rem, 2vw, 1.8rem); line-height: 1.45; color: #E8E8E5; max-width: 56ch; }
+  .small-caps { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.78em; font-weight: 600; }
+
+  .accent { color: #FF4D4D; }
+  .gold { color: #D4A574; }
+  .muted { color: #9CA3AF; }
+  .soft { color: #71757A; }
+
+  .section-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.25em; color: #71757A; text-transform: uppercase; }
+
+  code, pre { font-family: 'JetBrains Mono', monospace; }
+  pre { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 1.5rem 2rem; border-radius: 12px; font-size: clamp(0.9rem, 1.4vw, 1.1rem); line-height: 1.7; color: #E8E8E5; overflow-x: auto; }
+  .inline-code { background: #141414; border: 1px solid rgba(255,255,255,0.08); padding: 0.15em 0.5em; border-radius: 4px; font-size: 0.78em; color: #D4A574; }
+
+  .chrome { position: fixed; z-index: 100; pointer-events: auto; }
+  .progress-bar { top: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,0.06); }
+  .progress-fill { height: 100%; background: #FF4D4D; transition: width 0.4s ease; }
+  .counter { bottom: 1.5rem; right: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #71757A; letter-spacing: 0.1em; }
+  .nav-hint { bottom: 1.5rem; left: 2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #71757A; letter-spacing: 0.05em; }
+  .nav-hint kbd { background: #141414; border: 1px solid rgba(255,255,255,0.1); padding: 1px 6px; border-radius: 3px; font-family: inherit; color: #9CA3AF; }
+
+  .click-zone { position: fixed; top: 0; height: 100vh; width: 25vw; z-index: 50; cursor: pointer; }
+  .click-zone-prev { left: 0; }
+  .click-zone-next { right: 0; }
+
+  .mermaid { background: transparent !important; }
+
+  .big-list li { font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.4; padding: 0.5em 0; color: #fff; font-weight: 500; }
+  .big-list li::marker { color: #FF4D4D; }
+  .big-list .muted-item { color: #9CA3AF; font-weight: 400; }
+  .compact-list li { font-size: clamp(0.95rem, 1.5vw, 1.15rem); line-height: 1.45; padding: 0.35em 0; color: #fff; font-weight: 500; }
+  .compact-list li::marker { color: #FF4D4D; font-weight: 700; }
+  .compact-list .muted-item { color: #9CA3AF; font-weight: 400; }
+
+  .stage-card { background: #141414; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 2rem; }
+  .stage-card-red { background: linear-gradient(135deg, rgba(255,77,77,0.08), rgba(255,77,77,0.02)); border: 1px solid rgba(255,77,77,0.25); border-radius: 12px; padding: 2rem; }
+
+  .compare-table { width: 100%; border-collapse: collapse; font-size: clamp(0.85rem, 1.2vw, 1rem); }
+  .compare-table th { text-align: left; padding: 0.65em 1em; border-bottom: 1px solid rgba(255,255,255,0.12); color: #fff; font-weight: 600; font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.06em; }
+  .compare-table td { padding: 0.65em 1em; border-bottom: 1px solid rgba(255,255,255,0.06); color: #E8E8E5; vertical-align: top; }
+  .compare-table td strong { color: #fff; }
+  .compare-table td.label { color: #fff; font-weight: 600; white-space: nowrap; }
+
+  .phase-row { display: grid; grid-template-columns: 1fr 100px 1.5fr; gap: 1rem; padding: 0.6em 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: baseline; font-size: clamp(0.9rem, 1.3vw, 1.05rem); }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .badge-done { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+  .badge-active { background: rgba(212,165,116,0.12); color: #D4A574; border: 1px solid rgba(212,165,116,0.25); }
+  .badge-scheduled { background: rgba(255,255,255,0.05); color: #71757A; border: 1px solid rgba(255,255,255,0.08); }
+
+  .timeline-row { display: grid; grid-template-columns: 80px 1fr; gap: 1.25rem; padding: 0.85em 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: baseline; font-size: clamp(0.95rem, 1.4vw, 1.15rem); }
+  .timeline-row:last-child { border-bottom: none; }
+  .timeline-time { font-family: 'JetBrains Mono', monospace; color: #FF4D4D; font-weight: 500; }
+  .timeline-body { color: #E8E8E5; }
+  .timeline-body strong { color: #fff; }
+
+  @media print {
+    body { overflow: visible; background: white; color: black; }
+    .deck { height: auto; }
+    .slide { position: relative; opacity: 1 !important; pointer-events: auto !important; transform: none !important; page-break-after: always; min-height: 100vh; padding: 5vh 8vw; }
+    .chrome, .click-zone { display: none !important; }
+    .display-1, .display-2, .display-3, .display-4 { color: black; }
+    pre { background: #f5f5f5; border-color: #ddd; color: black; }
+    .slide-divider-red { color: white; }
+  }
+
+  .first-load-hint { animation: fade-out 6s ease forwards; animation-delay: 4s; }
+  @keyframes fade-out { to { opacity: 0; visibility: hidden; } }
+
+  @media (max-width: 768px) {
+    .slide { padding: 7vh 6vw 9vh; }
+    .display-1 { font-size: clamp(2.25rem, 9vw, 3.5rem); line-height: 1.05; }
+    .display-2 { font-size: clamp(2rem, 8vw, 3rem); line-height: 1.08; }
+    .display-3 { font-size: clamp(1.6rem, 6.5vw, 2.4rem); line-height: 1.15; }
+    .display-4 { font-size: clamp(1.25rem, 5vw, 1.6rem); line-height: 1.3; }
+    .lead { font-size: clamp(0.95rem, 3.8vw, 1.15rem); }
+    .lead-large { font-size: clamp(1.05rem, 4.2vw, 1.3rem); }
+    .big-list li { font-size: clamp(1.1rem, 4.2vw, 1.4rem); padding: 0.4em 0; }
+    .compact-list li { font-size: clamp(0.9rem, 3.6vw, 1.05rem); padding: 0.3em 0; }
+    pre { padding: 1rem 1.25rem; font-size: 0.8rem; }
+    .stage-card, .stage-card-red { padding: 1.25rem; }
+    .counter { right: 1rem; bottom: 1rem; font-size: 0.7rem; }
+    .nav-hint { display: none; }
+    .click-zone { width: 30vw; }
+    .compare-table { font-size: 0.85rem; }
+    .compare-table th, .compare-table td { padding: 0.5em 0.6em; }
+    .phase-row { grid-template-columns: 1fr; gap: 0.25rem; padding: 0.5em 0; }
+    .timeline-row { grid-template-columns: 70px 1fr; gap: 0.75rem; }
+  }
+</style>
+</head>
+<body class="font-sans">
+
+<!-- ====================== CHROME ====================== -->
+<div class="chrome progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+<div class="chrome counter"><span id="current">01</span> <span class="soft">/</span> <span id="total">30</span></div>
+<div class="chrome nav-hint first-load-hint"><kbd>→</kbd> next · <kbd>←</kbd> prev · <kbd>F</kbd> fullscreen · <kbd>?</kbd> overview</div>
+<div class="click-zone click-zone-prev" id="prev-zone"></div>
+<div class="click-zone click-zone-next" id="next-zone"></div>
+
+<!-- ====================== DECK ====================== -->
+<div class="deck">
+
+<!-- ============== 01 — COVER ============== -->
+<section class="slide slide-cover active">
+  <div class="slide-content">
+    <div class="flex items-center gap-3 mb-8">
+      <div class="h-px w-12 bg-conered"></div>
+      <div class="small-caps accent">AI-PM Pipeline · A Practice Area within Cone Red's AI-First Transformation Practice · 2026</div>
+    </div>
+    <h1 class="display-1">Tickets,<br><span class="accent">drafted.</span></h1>
+    <p class="lead-large mt-12 max-w-3xl" style="font-family: 'Source Serif 4', serif;">
+      The AI Project Manager that turns transcripts into vault tickets — humans review, never start blank.
+    </p>
+    <div class="flex items-end justify-between mt-20">
+      <div>
+        <div class="text-white font-semibold text-lg">Cone Red AI</div>
+        <div class="muted text-sm">The AI-first architecture firm</div>
+      </div>
+      <div class="text-right text-xs muted font-mono">
+        <div>30 slides · ≈ 16 min · skim in 5</div>
+        <div class="soft mt-1">For product &amp; ops leads · 2026-04-29</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 02 — SUBTITLE ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content text-center">
+    <p class="display-3 max-w-4xl mx-auto" style="font-family: 'Source Serif 4', serif;">
+      Not a <span class="muted">writing assistant</span>.<br>—<br><span class="accent">Production.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ============== 02b — READER'S GUIDE ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <div class="section-tag mb-6">If you only watch 5 slides</div>
+    <h2 class="display-3 mb-10">A 16-minute deck. <span class="accent">Five slides if you're skimming.</span></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl">
+      <div class="stage-card"><div class="font-mono text-conered text-xs mb-2">SLIDE 06</div><div class="text-white font-semibold">$187K of PM salary on transcription</div><div class="text-sm muted mt-1">The math nobody's running.</div></div>
+      <div class="stage-card"><div class="font-mono text-conered text-xs mb-2">SLIDE 09</div><div class="text-white font-semibold">4:02 PM → 4:21 PM</div><div class="text-sm muted mt-1">19 minutes from call-end to ticket-merge.</div></div>
+      <div class="stage-card"><div class="font-mono text-conered text-xs mb-2">SLIDE 16</div><div class="text-white font-semibold">The pipeline diagram</div><div class="text-sm muted mt-1">Three agents and a hook.</div></div>
+      <div class="stage-card"><div class="font-mono text-conered text-xs mb-2">SLIDE 22</div><div class="text-white font-semibold">$5K/mo PM, refused</div><div class="text-sm muted mt-1">Self-applied. Most credible kind of evidence.</div></div>
+      <div class="stage-card md:col-span-2" style="border-color: #FF4D4D;"><div class="font-mono text-conered text-xs mb-2">SLIDE 30</div><div class="text-white font-semibold">Two paths to a fit call</div><div class="text-sm muted mt-1">Bring one transcript and the tickets your team hand-derived from it.</div></div>
+    </div>
+    <p class="lead muted mt-10">Send this deck to a Head of Product with 5 minutes. They'll know whether to take the call.</p>
+  </div>
+</section>
+
+<!-- ============== 03 — DIVIDER 01 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">01 — Section</div>
+    <h2 class="display-2">The cost of getting<br>tickets wrong.</h2>
+  </div>
+</section>
+
+<!-- ============== 04 — Sunday afternoon scenes ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <div class="section-tag mb-6">Three Sunday afternoons you've already had</div>
+    <div class="space-y-6">
+      <div class="stage-card">
+        <p class="lead-large" style="font-family: 'Source Serif 4', serif;"><span class="accent font-semibold">A product lead</span> finishes a 90-min customer call Friday at 4pm. Blocks 90 minutes Monday. Drafts tickets. By Tuesday: <span class="text-white font-semibold">three tickets duplicate work in flight; one missed the actual decision the call settled.</span></p>
+      </div>
+      <div class="stage-card">
+        <p class="lead-large" style="font-family: 'Source Serif 4', serif;"><span class="accent font-semibold">A consultant</span> runs four discovery calls in a week. By call three, paraphrasing from memory. Proposal Monday reads like generic AI consulting prose. <span class="text-white font-semibold">Because that's what running on memory produces.</span></p>
+      </div>
+      <div class="stage-card">
+        <p class="lead-large" style="font-family: 'Source Serif 4', serif;"><span class="accent font-semibold">An engineering lead</span> gets a 2,099-line transcript. Pricing decisions, technical commitments, scope-shifts, a quiet contradiction. <span class="text-white font-semibold">The cost of missing one isn't theoretical — it's a misaligned spec by week six.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 05 — The PM math ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <div class="section-tag mb-4 accent">Run the math nobody's running</div>
+    <h2 class="display-3 mb-12">A 25-person product org. Six 90-min meetings a week.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="stage-card text-center py-10">
+        <div class="muted small-caps text-xs mb-3">Senior PM time</div>
+        <div class="display-2 muted">~18 hrs<span class="text-base">/wk</span></div>
+        <div class="text-sm muted mt-4">on transcription-and-ticketing</div>
+      </div>
+      <div class="stage-card text-center py-10">
+        <div class="muted small-caps text-xs mb-3">Fully-loaded cost</div>
+        <div class="display-2 muted">$3.6K<span class="text-base">/wk</span></div>
+        <div class="text-sm muted mt-4">at $200/hr loaded</div>
+      </div>
+      <div class="stage-card text-center py-10" style="border-color: #FF4D4D; background: linear-gradient(135deg, rgba(255,77,77,0.08) 0%, transparent 100%);">
+        <div class="accent small-caps text-xs mb-3">Per year</div>
+        <div class="display-2 accent">$187K</div>
+        <div class="text-sm muted mt-4">of PM salary on a task<br>AI does in 20 min/meeting</div>
+      </div>
+    </div>
+    <p class="lead muted mt-12">Most companies, asked where their PM-Vault lives, will point at ClickUp. <span class="text-white">Their actual PM-Vault is the inside of three senior people's heads. It leaks every weekend.</span></p>
+  </div>
+</section>
+
+<!-- ============== 06 — Statement ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content max-w-5xl">
+    <p class="display-3 mb-8" style="font-family: 'Source Serif 4', serif;">The bottleneck isn't <span class="muted">thinking.</span></p>
+    <p class="display-2 accent">It's transcription.</p>
+    <p class="lead muted mt-12">AI is genuinely good at transcription. The hand-authored ticket flow is the bottleneck nobody's measuring because everyone's paying it.</p>
+  </div>
+</section>
+
+<!-- ============== 07 — DIVIDER 02 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">02 — Section</div>
+    <h2 class="display-2">A Friday call,<br>the new shape.</h2>
+    <p class="lead mt-6">Same call. Same team. New flow.</p>
+  </div>
+</section>
+
+<!-- ============== 08 — Timeline ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <h2 class="display-4 mb-8">Friday, 4:02 PM. The call ends.</h2>
+    <div class="bg-conegrey border border-coneborder rounded-2xl p-6 md:p-8">
+      <div class="timeline-row">
+        <div class="timeline-time">4:02 PM</div>
+        <div class="timeline-body">Call ends. Transcript drops into <code class="inline-code">transcripts/</code>. Lead types <code class="inline-code">/pm-from-transcript</code>.</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time">4:04 PM</div>
+        <div class="timeline-body">Transcript-extraction agent finishes. Pains, decisions, action items, BANT — <strong>every item linked to the line range</strong> that produced it.</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time">4:11 PM</div>
+        <div class="timeline-body">PM agent emits <code class="inline-code">proposal.yaml</code>. Seven tickets, epics placed, points estimated, RACI inferred. <strong>Plus an "ambiguities" block and a "duplicates detected" block.</strong></div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time">4:14 PM</div>
+        <div class="timeline-body">Lead opens <code class="inline-code">proposal.yaml</code>. Confirms one disputed owner. Accepts a merge. Rejects one ticket as scope-creep. Edits a title. Approves.</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time">4:21 PM</div>
+        <div class="timeline-body"><code class="inline-code">git commit</code>. Pre-commit hook validates. <strong>Seven tickets land in the vault.</strong></div>
+      </div>
+    </div>
+    <p class="lead muted mt-8 text-center"><span class="accent font-semibold">19 minutes</span> from call-end to ticket-merge.</p>
+  </div>
+</section>
+
+<!-- ============== 09 — Pull quote ============== -->
+<section class="slide slide-divider-red">
+  <div class="slide-content text-center max-w-5xl">
+    <p class="display-2" style="color:#fff; font-family: 'Source Serif 4', serif; font-style: italic;">
+      "Friday afternoon ends with the work captured.<br>Monday morning starts with delivery,<br><span style="font-weight: 700;">not transcription.</span>"
+    </p>
+  </div>
+</section>
+
+<!-- ============== 10 — DIVIDER 03 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">03 — Section</div>
+    <h2 class="display-2">Thesis.</h2>
+  </div>
+</section>
+
+<!-- ============== 11 — Writing assistant vs production ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content max-w-5xl">
+    <p class="display-3 mb-10">Anyone can ask Claude to <em class="gold">"summarize this call into tickets."</em></p>
+    <p class="display-3 mb-12">That's a <span class="muted">writing assistant.</span></p>
+    <p class="display-2 accent">What we ship is production.</p>
+    <p class="lead muted mt-12 max-w-3xl mx-auto">The schema. The review gate. The citation chain. The duplicate detection. The project-context awareness. Output goes into a system of record under version control — not a Slack thread that evaporates by Tuesday.</p>
+  </div>
+</section>
+
+<!-- ============== 12 — DIVIDER 04 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">04 — Section</div>
+    <h2 class="display-2">What we evaluated,<br>and what we rejected.</h2>
+    <p class="lead mt-6">Six alternatives you've already been pitched.</p>
+  </div>
+</section>
+
+<!-- ============== 13 — Comparison table ============== -->
+<section class="slide">
+  <div class="slide-content max-w-6xl">
+    <h2 class="display-4 mb-6">The case for <span class="accent">not buying any of them.</span></h2>
+    <table class="compare-table">
+      <thead>
+        <tr><th style="width:28%">Option</th><th>Why we passed</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="label">ClickUp / Linear / Jira AI</td><td>Output shaped by the SaaS data model, not your schema. <strong>No transcript-line citations.</strong></td></tr>
+        <tr><td class="label">Notion AI / Coda AI</td><td>Optimised for reading, not systems-of-record. No schema validation. No commit gate.</td></tr>
+        <tr><td class="label">Custom Zapier + ChatGPT</td><td>Hallucinations end up in your system of record. <em>This is how most teams discover the failure mode the hard way.</em></td></tr>
+        <tr><td class="label">Otter / Fellow / Granola / Read.ai</td><td>Strong on transcription; weak on synthesis into your actual ticket schema. <strong>Useful upstream; not the painkiller.</strong></td></tr>
+        <tr><td class="label">"Wait for the incumbent"</td><td>Their economic incentive is to keep your data inside their SaaS. <em>Their interest is not your interest.</em></td></tr>
+        <tr><td class="label">"Build it from scratch"</td><td>The "I don't know what to evaluate" trap. We treated it as input, not output.</td></tr>
+      </tbody>
+    </table>
+    <p class="lead muted mt-8">We didn't pick one. <span class="text-white font-semibold">We synthesized.</span> Took the strongest mental model — vault-as-tickets with a pre-commit hook — built a three-stage pipeline on top.</p>
+  </div>
+</section>
+
+<!-- ============== 14 — DIVIDER 05 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">05 — Section</div>
+    <h2 class="display-2">Architecture.</h2>
+    <p class="lead mt-6">Three agents and a safety net.</p>
+  </div>
+</section>
+
+<!-- ============== 15 — Pipeline diagram ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <h2 class="display-3 mb-8 text-center">Three agents. One human. One safety net.</h2>
+    <div class="bg-conegrey border border-coneborder rounded-2xl p-8">
+      <div class="mermaid">
+flowchart LR
+    T["📜 Transcript"] --> C["🎤 Transcript<br/>extraction"]
+    C --> P["📝 PM agent<br/>synthesize"]
+    P --> V["📁 Ticket-file<br/>generator"]
+    V --> H["🛡 Pre-commit<br/>hook"]
+    H --> R["👤 Human<br/>review · commit"]
+    style T fill:#1A1A1A,stroke:#71757A,color:#E8E8E5
+    style C fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style P fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style V fill:#1A1A1A,stroke:#FF4D4D,color:#E8E8E5
+    style H fill:#1A1A1A,stroke:#D4A574,color:#E8E8E5
+    style R fill:#FF4D4D,stroke:#FF4D4D,color:#fff
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 16 — Three components ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <h2 class="display-4 mb-8">Each agent does one job. Cites its work. Hands off structured output.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+      <div class="stage-card">
+        <div class="small-caps accent mb-3">Stage 1</div>
+        <div class="text-white font-semibold mb-2">Transcript extraction</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Reads line-by-line. Pains · decisions · action items · BANT. <strong class="text-white">Every item linked to the transcript line range.</strong></p>
+      </div>
+      <div class="stage-card">
+        <div class="small-caps accent mb-3">Stage 2</div>
+        <div class="text-white font-semibold mb-2">PM synthesizer</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Reads existing ticket index + schema. Emits <code class="inline-code">proposal.yaml</code>. <strong class="text-white">Surfaces ambiguity rather than guessing.</strong></p>
+      </div>
+      <div class="stage-card">
+        <div class="small-caps accent mb-3">Stage 3</div>
+        <div class="text-white font-semibold mb-2">Ticket-file generator</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Writes valid markdown into <code class="inline-code">tickets/</code>. Frontmatter + body autopopulated. <strong class="text-white">Writes but does not commit.</strong></p>
+      </div>
+    </div>
+    <div class="stage-card-red mt-4">
+      <div class="small-caps accent mb-3">The Hook</div>
+      <div class="text-white font-semibold text-lg mb-2">Pre-commit schema validator</div>
+      <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Mechanical, not an agent. Same gate every human passes through. <strong class="text-white">Invalid frontmatter blocks the commit. AI gets no special treatment.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 17 — Why three not one ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content max-w-5xl">
+    <p class="display-3 mb-8">A single agent that "reads a transcript and writes tickets" is the <span class="muted">writing-assistant pattern.</span></p>
+    <p class="lead-large mb-12" style="font-family: 'Source Serif 4', serif;">Works on demos. Fails in production.</p>
+    <p class="display-3"><span class="accent">Three agents</span> in series gives:</p>
+    <ul class="big-list mt-8 list-disc list-inside">
+      <li><span class="muted-item">Auditable hand-offs</span> — each intermediate is human-readable</li>
+      <li><span class="muted-item">Right model for each stage</span> — fast / strong / cheap</li>
+      <li><span class="muted-item">Hand-offs the human can intercept</span> — fix once, regenerate</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== 18 — DIVIDER 06 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">06 — Section</div>
+    <h2 class="display-2">Five scars.</h2>
+    <p class="lead mt-6">The hard problems we already paid for.</p>
+  </div>
+</section>
+
+<!-- ============== 19 — Five scars ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <ol class="compact-list space-y-1 list-decimal list-inside">
+      <li><span class="text-white"><strong>End-to-end agents hallucinate ownership.</strong></span> <span class="muted-item">Split synthesis from generation. Surface ambiguity instead of guessing.</span></li>
+      <li><span class="text-white"><strong>Schema validation is not optional.</strong></span> <span class="muted-item">Pre-commit hook rejects placeholders, undefined assignees, broken references.</span></li>
+      <li><span class="text-white"><strong>Per-message LLM extraction is unaffordable.</strong></span> <span class="muted-item">Free heuristic gate first; LLM only on signal-crossings (Mike Leone, Omdia).</span></li>
+      <li><span class="text-white"><strong>Cross-call context evaporates without an index.</strong></span> <span class="muted-item">Synthesizer reads the existing ticket index before proposing new tickets.</span></li>
+      <li><span class="text-white"><strong>Workforce resistance is the silent failure mode.</strong></span> <span class="muted-item">29% admit to AI-strategy sabotage; 44% Gen Z (Writer × Workplace, Apr 2026, n=2,400). Tie reviews to outcomes, never to "AI usage."</span></li>
+    </ol>
+    <p class="lead muted mt-12">Each one is roughly two weeks of work to discover, scope, and fix when you encounter it cold. <span class="text-white font-semibold">We already paid that tab.</span></p>
+  </div>
+</section>
+
+<!-- ============== 20 — DIVIDER 07 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">07 — Section</div>
+    <h2 class="display-2">The bet we already won.</h2>
+    <p class="lead mt-6">Self-applied. Validated against ground truth.</p>
+  </div>
+</section>
+
+<!-- ============== 21 — $5K self-applied ============== -->
+<section class="slide slide-statement">
+  <div class="slide-content text-center max-w-5xl">
+    <p class="display-3 mb-8 muted" style="font-family: 'Source Serif 4', serif; font-style: italic;">"We refused to hire a $5K/mo PM."</p>
+    <p class="display-2 accent mb-12">"We built this instead."</p>
+    <p class="lead-large max-w-3xl mx-auto" style="font-family: 'Source Serif 4', serif;">Runs three projects in parallel. Onboards to any new task, industry, or stakeholder instantly. The CR practice has shipped <span class="text-white font-semibold">150+ enterprise AI projects</span> on this pattern.</p>
+    <p class="lead muted mt-12">Most credible kind of evidence: we did this to ourselves before pitching it.</p>
+  </div>
+</section>
+
+<!-- ============== 22 — Test case ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <div class="section-tag mb-6 accent">Validation against hand-derived ground truth</div>
+    <h2 class="display-3 mb-12">2,099 lines. 7 tickets. <span class="accent">19 minutes.</span></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="stage-card-red text-center py-10">
+        <div class="accent small-caps text-xs mb-3">Coverage</div>
+        <div class="display-2 accent">86%</div>
+        <div class="text-sm muted mt-4">vs. tickets the team<br>hand-derived the week before</div>
+      </div>
+      <div class="stage-card-red text-center py-10">
+        <div class="accent small-caps text-xs mb-3">Noise</div>
+        <div class="display-2 accent">14%</div>
+        <div class="text-sm muted mt-4">false-positive tickets<br>(human deletes ~1 per call)</div>
+      </div>
+    </div>
+    <p class="lead muted mt-12 text-center">Above the 80% / ≤20% bar set at design time. <span class="text-white">Reproducible from a real transcript with line citations and a hand-derived ground-truth set.</span></p>
+  </div>
+</section>
+
+<!-- ============== 23 — DIVIDER 08 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">08 — Section</div>
+    <h2 class="display-2">What changes daily.<br>What you own.</h2>
+  </div>
+</section>
+
+<!-- ============== 24 — Six daily UX ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <div class="section-tag mb-6 accent">What the operator notices</div>
+    <ul class="compact-list space-y-1 list-disc list-inside">
+      <li><span class="text-white"><strong>End-of-call ritual changes.</strong></span> <span class="muted-item">"I'll capture it Sunday" becomes <code class="inline-code">/pm-from-transcript</code> + 8 minutes.</span></li>
+      <li><span class="text-white"><strong>Source-of-truth shifts.</strong></span> <span class="muted-item">Tickets are .md files under git. Every ticket cites the call moment that produced it.</span></li>
+      <li><span class="text-white"><strong>Ambiguity becomes visible.</strong></span> <span class="muted-item">Synthesizer flags it explicitly. Resolve once, on the way in.</span></li>
+      <li><span class="text-white"><strong>Duplicate detection runs by default.</strong></span> <span class="muted-item">Cosine ≥ 0.75 surfaces likely merges with the existing index.</span></li>
+      <li><span class="text-white"><strong>Cross-project synthesis is free.</strong></span> <span class="muted-item">Recurring patterns surface as playbook candidates, not buried fragments.</span></li>
+      <li><span class="text-white"><strong>The PM stops being a transcription bottleneck.</strong></span> <span class="muted-item">Role shifts from typing to deciding.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============== 25 — What you own ============== -->
+<section class="slide">
+  <div class="slide-content">
+    <div class="section-tag mb-6 accent">What stays with the client</div>
+    <h2 class="display-3 mb-10"><span class="accent">Sovereignty</span> is the close.</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="stage-card-red">
+        <div class="text-white font-semibold text-lg mb-2">Your tickets</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Markdown files under your git history. Self-hosted. Your schema, your conventions.</p>
+      </div>
+      <div class="stage-card-red">
+        <div class="text-white font-semibold text-lg mb-2">Your citation chain</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Every ticket links back to the transcript line range. Replayable, auditable, queryable.</p>
+      </div>
+      <div class="stage-card-red">
+        <div class="text-white font-semibold text-lg mb-2">The kill switch</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Disable the pipeline. Team falls back to hand-authoring. <span class="text-white">Zero downtime.</span></p>
+      </div>
+      <div class="stage-card-red">
+        <div class="text-white font-semibold text-lg mb-2">The exit</div>
+        <p class="text-sm muted leading-relaxed" style="font-family: 'Source Serif 4', serif;">Tickets are .md files. <span class="text-white">Yours regardless of whether the pipeline runs tomorrow.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 26 — DIVIDER 09 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">09 — Section</div>
+    <h2 class="display-2">Proof.</h2>
+    <p class="lead mt-6">What's shipped, what's scheduled.</p>
+  </div>
+</section>
+
+<!-- ============== 27 — Phase status ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <h2 class="display-4 mb-6">Status, plainly.</h2>
+    <div class="bg-conegrey border border-coneborder rounded-2xl p-6 md:p-8">
+      <div class="phase-row" style="border-bottom: 1px solid rgba(255,255,255,0.12);">
+        <div class="text-white font-semibold text-sm" style="text-transform: uppercase; letter-spacing: 0.06em;">Component</div>
+        <div class="text-white font-semibold text-sm" style="text-transform: uppercase; letter-spacing: 0.06em;">Status</div>
+        <div class="text-white font-semibold text-sm" style="text-transform: uppercase; letter-spacing: 0.06em;">Result</div>
+      </div>
+      <div class="phase-row">
+        <div>Stage 1 — Transcript extraction</div>
+        <div><span class="badge badge-done">Shipped</span></div>
+        <div>Used in every CR <code class="inline-code">/ingest-transcript</code> call</div>
+      </div>
+      <div class="phase-row">
+        <div>Pre-commit schema hook</div>
+        <div><span class="badge badge-done">Shipped</span></div>
+        <div>Catching real violations daily</div>
+      </div>
+      <div class="phase-row">
+        <div>Stage 2 — PM agent</div>
+        <div><span class="badge badge-active">Active</span></div>
+        <div><strong style="color:#fff;">86%</strong> coverage on test case</div>
+      </div>
+      <div class="phase-row">
+        <div>Stage 3 — Ticket generator</div>
+        <div><span class="badge badge-active">Active</span></div>
+        <div>v0.1; valid frontmatter against schema</div>
+      </div>
+      <div class="phase-row">
+        <div>Duplicate detection (cosine)</div>
+        <div><span class="badge badge-scheduled">Scheduled</span></div>
+        <div class="muted">v1 May 2026</div>
+      </div>
+      <div class="phase-row" style="border-bottom: none;">
+        <div>External client pilots</div>
+        <div><span class="badge badge-scheduled">Open</span></div>
+        <div class="muted">Q3 2026 cohort — 3 design partners</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 28 — DIVIDER 10 ============== -->
+<section class="slide slide-divider">
+  <div class="slide-content">
+    <div class="section-tag mb-8">10 — Section</div>
+    <h2 class="display-2">What this is NOT.</h2>
+    <p class="lead mt-6">Anti-overclaim. The credibility bank.</p>
+  </div>
+</section>
+
+<!-- ============== 29 — NOT list ============== -->
+<section class="slide">
+  <div class="slide-content max-w-5xl">
+    <ul class="compact-list space-y-1 list-disc list-inside">
+      <li><span class="text-white"><strong>Not a meeting transcription product.</strong></span> <span class="muted-item">Otter / Fellow / Granola / Read.ai are upstream of this.</span></li>
+      <li><span class="text-white"><strong>Not a replacement for a senior PM.</strong></span> <span class="muted-item">Replaces transcription, synthesis, ticket-shape. Strategic judgment is the human's job.</span></li>
+      <li><span class="text-white"><strong>Not a system of record for project status.</strong></span> <span class="muted-item">The vault is the SoR. We populate it.</span></li>
+      <li><span class="text-white"><strong>Not certified for regulated workloads out of the box.</strong></span> <span class="muted-item">SOC 2 / HIPAA / GDPR — per-engagement scoping.</span></li>
+      <li><span class="text-white"><strong>Not a chat interface.</strong></span> <span class="muted-item">It's a pipeline. Run a command, read a diff, commit.</span></li>
+      <li><span class="text-white"><strong>Not "your AI agents are now sentient PMs."</strong></span> <span class="muted-item">They draft. They cite. They flag ambiguity. No business judgment.</span></li>
+    </ul>
+    <p class="lead muted mt-10">If any of those is what you need, we'll tell you on the first call and send you somewhere honest.</p>
+  </div>
+</section>
+
+<!-- ============== 30 — Closing CTA ============== -->
+<section class="slide slide-end">
+  <div class="slide-content text-center max-w-5xl">
+    <p class="display-3 mb-10" style="font-family: 'Source Serif 4', serif; font-style: italic;">
+      Bring one transcript and the tickets your team hand-derived from it.
+    </p>
+    <p class="display-3 accent mb-12">We'll show you the pipeline against the same source.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto text-left">
+      <div class="stage-card-red">
+        <div class="small-caps accent mb-3">Path A · high intent</div>
+        <div class="text-white font-semibold text-lg mb-2">45-minute fit call · this week</div>
+        <p class="text-sm muted leading-relaxed mb-3" style="font-family: 'Source Serif 4', serif;">Your meeting cadence, your transcript pipeline, your ticket schema. We tell you honestly if it's a fit. First slots usually within 48 hrs.</p>
+        <p class="text-sm font-mono"><a href="https://cal.com/dima-levin-qivxgq/15min?utm_source=ai-pm-deck&utm_medium=path-a" target="_blank" rel="noopener" style="color:#FF4D4D;">Book direct →</a> · <a href="mailto:dima@cone.red?subject=AI-PM%20Pipeline%20%E2%80%94%20fit%20call" style="color:#FF4D4D;">dima@cone.red</a></p>
+      </div>
+      <div class="stage-card">
+        <div class="small-caps accent mb-3">Path B · category-shopping</div>
+        <div class="text-white font-semibold text-lg mb-2">The handbook</div>
+        <p class="text-sm muted leading-relaxed mb-3" style="font-family: 'Source Serif 4', serif;">The vault-as-tickets pattern this pipeline rides on. The pipeline is the leverage; the vault is the foundation.</p>
+        <p class="text-sm font-mono"><a href="handbook.html" style="color:#FF4D4D;">Read the handbook →</a></p>
+      </div>
+    </div>
+    <div class="muted text-xs mt-12 font-mono">A Practice Area within the Cone Red AI-First Transformation Practice · 2026-04-29</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  document.getElementById('total').textContent = String(total).padStart(2, '0');
+
+  function show(i) {
+    if (i < 0 || i >= total) return;
+    slides[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    document.getElementById('current').textContent = String(current + 1).padStart(2, '0');
+    document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+    history.replaceState(null, '', '#s' + (current + 1));
+  }
+
+  function next() { show(Math.min(current + 1, total - 1)); }
+  function prev() { show(Math.max(current - 1, 0)); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'j') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'k') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { e.preventDefault(); show(0); }
+    else if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+    else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+    else if (e.key === '?') { showOverview(); }
+    else if (e.key === 'Escape') { closeOverview(); }
+  });
+
+  document.getElementById('prev-zone').addEventListener('click', prev);
+  document.getElementById('next-zone').addEventListener('click', next);
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+      document.body.classList.add('fullscreen');
+    } else {
+      document.exitFullscreen?.();
+      document.body.classList.remove('fullscreen');
+    }
+  }
+
+  let cursorTimer;
+  document.addEventListener('mousemove', () => {
+    if (document.body.classList.contains('fullscreen')) {
+      document.body.classList.add('show-cursor');
+      clearTimeout(cursorTimer);
+      cursorTimer = setTimeout(() => document.body.classList.remove('show-cursor'), 2000);
+    }
+  });
+
+  if (location.hash.startsWith('#s')) {
+    const i = parseInt(location.hash.slice(2)) - 1;
+    if (!isNaN(i) && i >= 0 && i < total) show(i);
+  }
+
+  function showOverview() {
+    let overlay = document.getElementById('overview');
+    if (overlay) { overlay.remove(); return; }
+    overlay = document.createElement('div');
+    overlay.id = 'overview';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,10,0.97);z-index:1000;overflow-y:auto;padding:4vh 4vw;';
+    overlay.innerHTML = `<div style="max-width:1400px;margin:0 auto;">
+      <h2 style="font-family:Inter;color:#fff;font-size:2rem;margin-bottom:2rem;font-weight:700;">Slide overview <span style="color:#71757A;font-size:1rem;font-weight:400;">— click to jump · Esc to close</span></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;"></div>
+    </div>`;
+    const grid = overlay.querySelector('div div');
+    slides.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1.25rem;cursor:pointer;transition:all 0.15s;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;';
+      const titleEl = s.querySelector('h1, h2, p.display-3, p.display-2');
+      const title = titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim().slice(0, 80) : '(slide)';
+      card.innerHTML = `<div style="font-family:JetBrains Mono;font-size:11px;color:#71757A;letter-spacing:0.15em;">${String(i+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}</div>
+                        <div style="font-family:Inter;color:#E8E8E5;font-size:0.95rem;line-height:1.35;margin-top:0.5rem;">${title}</div>`;
+      if (i === current) card.style.borderColor = '#FF4D4D';
+      card.addEventListener('mouseenter', () => card.style.borderColor = '#FF4D4D');
+      card.addEventListener('mouseleave', () => card.style.borderColor = i === current ? '#FF4D4D' : 'rgba(255,255,255,0.08)');
+      card.addEventListener('click', () => { show(i); closeOverview(); });
+      grid.appendChild(card);
+    });
+    document.body.appendChild(overlay);
+  }
+  function closeOverview() {
+    const overlay = document.getElementById('overview');
+    if (overlay) overlay.remove();
+  }
+
+  if (window.mermaid) {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        background: '#141414',
+        primaryColor: '#1A1A1A',
+        primaryTextColor: '#E8E8E5',
+        primaryBorderColor: '#FF4D4D',
+        lineColor: '#FF4D4D',
+        secondaryColor: '#0A0A0A',
+        tertiaryColor: '#0A0A0A'
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
