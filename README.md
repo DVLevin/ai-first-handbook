@@ -23,6 +23,6 @@ Examples are illustrative; they are not client results or reliability benchmarks
 
 Static HTML, local Golos font, shared CSS/JavaScript and a native captioned MP4 player. No backend or build step. Serve with an HTTP server that supports byte ranges for video seeking. A deployment must include the complete assets directory.
 
-This branch contains the October2026 local production candidate. Repository publication and deployment are separate from building it.
+October 2026 sales handbook with a captioned 97-second film. GitHub Pages publishes the main branch.
 
 ©2026 Cone Red
